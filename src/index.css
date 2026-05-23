@@ -1,0 +1,84 @@
+@import './theme/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-ink font-sans antialiased;
+    margin: 0;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  /* Toddlers tap and swipe everywhere - avoid text selection and iOS callouts */
+  body,
+  button,
+  a,
+  img,
+  svg,
+  div {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* A calm, visible focus ring for keyboard / switch-control users */
+  :focus-visible {
+    outline: 3px solid hsl(var(--focus));
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+}
+
+@layer utilities {
+  .safe-t {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-b {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-x {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .pan-none {
+    touch-action: none;
+  }
+}
+
+/* Honour OS-level reduced motion and the in-app toggle for CSS transitions.
+   JS-driven (Framer Motion) animations are handled separately via useCalmMotion(). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

@@ -1,0 +1,37 @@
+# Spielgarten - run the published Docker Hub image.
+#
+#   1. cp .env.example .env   (then edit if needed)
+#   2. docker compose up -d
+#   3. open http://localhost:8080
+#
+services:
+  spielgarten:
+    image: techlotse/tl-games:${IMAGE_TAG:-latest}
+    container_name: spielgarten
+    restart: unless-stopped
+    ports:
+      # host:container - the container always listens on 8080.
+      - "${HOST_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+    # ---- Runtime hardening ----
+    read_only: true                 # immutable root filesystem
+    tmpfs:                           # the only writable paths nginx needs
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true       # block privilege escalation
+    cap_drop:
+      - ALL                          # image already runs as a non-root user
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,34 @@
+# Dependencies & build output
+node_modules
+dist
+dev-dist
+
+# Version control & CI
+.git
+.gitignore
+.gitattributes
+.github
+
+# Docs & meta (not needed to build the image)
+docs
+*.md
+VERSION
+LICENSE
+
+# Docker / Compose / env
+Dockerfile
+.dockerignore
+compose.yml
+docker-compose.yml
+.env
+.env.*
+
+# Editor / OS artifacts
+.vscode
+.idea
+.DS_Store
+.fuse_hidden*
+
+# Logs
+*.log
+npm-debug.log*

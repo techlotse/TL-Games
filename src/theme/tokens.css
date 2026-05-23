@@ -1,0 +1,74 @@
+/*
+ * Spielgarten design tokens.
+ * All colors are stored as raw HSL channels so Tailwind can apply opacity
+ * via `hsl(var(--token) / <alpha-value>)`.
+ */
+
+:root {
+  /* ---- Light theme (default) ---- */
+  --bg: 40 44% 95%;
+  --surface: 42 52% 99%;
+  --surface-2: 38 34% 91%;
+  --ink: 25 26% 23%;
+  --ink-soft: 27 13% 45%;
+  --line: 34 28% 86%;
+  --primary: 205 44% 47%;
+  --primary-soft: 205 52% 90%;
+  --accent: 24 80% 61%;
+  --focus: 205 64% 52%;
+  --shadow: 26 38% 26%;
+
+  /* Soft tile backgrounds for the home screen */
+  --tile-garage: 205 50% 87%;
+  --tile-garden: 138 38% 86%;
+  --tile-shapes: 34 54% 86%;
+
+  /* Motion - kept intentionally gentle (180-220ms) */
+  --dur-fast: 180ms;
+  --dur: 200ms;
+  --dur-slow: 220ms;
+  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius: 1.6rem;
+
+  color-scheme: light;
+}
+
+/* ---- Dark theme (calm, muted - never neon, never pure black) ---- */
+.dark {
+  --bg: 222 20% 14%;
+  --surface: 222 18% 19%;
+  --surface-2: 222 15% 25%;
+  --ink: 40 30% 91%;
+  --ink-soft: 38 13% 67%;
+  --line: 222 12% 31%;
+  --primary: 205 46% 64%;
+  --primary-soft: 210 20% 30%;
+  --accent: 24 66% 64%;
+  --focus: 205 56% 66%;
+  --shadow: 222 55% 3%;
+
+  --tile-garage: 208 26% 31%;
+  --tile-garden: 140 20% 29%;
+  --tile-shapes: 32 26% 31%;
+
+  color-scheme: dark;
+}
+
+/* ---- High contrast (light) ---- */
+.contrast-high {
+  --ink: 25 48% 10%;
+  --ink-soft: 26 32% 24%;
+  --line: 28 32% 54%;
+  --primary: 205 66% 34%;
+  --focus: 205 84% 32%;
+}
+
+/* ---- High contrast (dark) ---- */
+.dark.contrast-high {
+  --ink: 42 54% 98%;
+  --ink-soft: 40 26% 86%;
+  --line: 222 18% 60%;
+  --primary: 205 64% 76%;
+  --focus: 205 74% 80%;
+}
