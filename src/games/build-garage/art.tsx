@@ -1,4 +1,6 @@
 import type { ComponentType } from 'react'
+import { motion } from 'framer-motion'
+import { useCalmMotion, calmTween } from '@/lib/motion'
 import { PART_COLORS, type PartKind, type PartPalette } from './data'
 
 const COLOR: PartPalette = { ...PART_COLORS }
@@ -12,6 +14,8 @@ const MONO: PartPalette = {
   light: 'currentColor',
   lightBase: 'currentColor',
 }
+
+/* --------------------- Standalone parts (the tray) ----------------------- */
 
 function Body({ p }: { p: PartPalette }) {
   return (
@@ -64,7 +68,7 @@ const VIEWBOX: Record<PartKind, string> = {
   light: '0 0 100 64',
 }
 
-/** A single vehicle part. `ghost` renders the soft placeholder on the frame. */
+/** A single vehicle part, drawn standalone for the tray. */
 export function PartArt({ kind, ghost = false }: { kind: PartKind; ghost?: boolean }) {
   const Shape = PARTS[kind]
   const palette = ghost ? MONO : COLOR
@@ -82,6 +86,46 @@ export function PartArt({ kind, ghost = false }: { kind: PartKind; ghost?: boole
       ) : (
         <Shape p={palette} />
       )}
+    </svg>
+  )
+}
+
+/* ------------------- The vehicle being built (the frame) ----------------- */
+
+/**
+ * The whole vehicle as one coherent drawing. Each part is faint until it has
+ * been placed, then fades in to full colour - so the parts always line up.
+ */
+export function VehicleScene({ placed }: { placed: ReadonlySet<string> }) {
+  const calm = useCalmMotion()
+  const c = PART_COLORS
+  const part = (id: string) => ({
+    initial: false as const,
+    animate: { opacity: placed.has(id) ? 1 : 0.16 },
+    transition: calm ? { duration: 0 } : calmTween,
+  })
+  return (
+    <svg viewBox="0 0 300 220" className="h-full w-full" role="img" aria-label="Fahrzeug">
+      <motion.g {...part('body')}>
+        <rect x="36" y="92" width="228" height="74" rx="28" fill={c.body} />
+        <rect x="44" y="142" width="212" height="22" rx="11" fill={c.bodyTrim} />
+        <circle cx="250" cy="116" r="9" fill={c.glass} />
+      </motion.g>
+      <motion.g {...part('wheelBack')}>
+        <circle cx="96" cy="172" r="33" fill={c.wheel} />
+        <circle cx="96" cy="172" r="13" fill={c.wheelHub} />
+      </motion.g>
+      <motion.g {...part('wheelFront')}>
+        <circle cx="204" cy="172" r="33" fill={c.wheel} />
+        <circle cx="204" cy="172" r="13" fill={c.wheelHub} />
+      </motion.g>
+      <motion.g {...part('cabin')}>
+        <rect x="160" y="44" width="104" height="56" rx="20" fill={c.cabin} />
+        <rect x="174" y="56" width="50" height="34" rx="9" fill={c.glass} />
+      </motion.g>
+      <motion.g {...part('light')}>
+        <rect x="196" y="20" width="34" height="26" rx="11" fill={c.light} />
+      </motion.g>
     </svg>
   )
 }

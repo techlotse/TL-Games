@@ -80,8 +80,8 @@ Each game is a **distinct type of play** - keep it that way:
 
 - **Build Garage** (`build-garage/`) - assembly: drag parts onto a vehicle.
   `useBuildGarage` + `AssemblyBoard`.
-- **Flower Garden** (`flower-garden/`) - find & tap: tap covers to reveal
-  creatures. `useFlowerGarden` + `GardenBoard`.
+- **Flower Garden** (`flower-garden/`) - colour matching: match flowers to
+  pots, on the shared engine. `useFlowerGarden` + `MatchingBoard`.
 - **Shape Sorting** (`shape-sorting/`) - matching: the shared engine,
   `useMatchingGame` + `MatchingBoard`.
 - **Race** (`race/`) - steering: a `requestAnimationFrame` loop in

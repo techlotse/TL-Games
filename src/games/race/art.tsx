@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import type { ObstacleKind } from './data'
+import type { GoodKind, ObstacleKind } from './data'
 
 const C = {
   carBody: '#D9614C',
@@ -18,6 +18,14 @@ const C = {
   puddleHi: '#9EC6DF',
   road: '#6E7378',
   roadLine: '#EAE6D8',
+  star: '#F4C84E',
+  starEdge: '#E0A93C',
+  heart: '#E2607A',
+  apple: '#D9514C',
+  appleHi: '#E8857C',
+  appleStem: '#6E4F2E',
+  appleLeaf: '#6FA86A',
+  sparkle: '#F6D45E',
 }
 
 /** The player's car, seen from above and pointing up the road. */
@@ -87,12 +95,76 @@ const OBSTACLES: Record<ObstacleKind, ComponentType> = {
   puddle: Puddle,
 }
 
-/** A single road obstacle. */
+/** A single road obstacle to drive around. */
 export function ObstacleArt({ kind }: { kind: ObstacleKind }) {
   const Shape = OBSTACLES[kind]
   return (
     <svg viewBox="0 0 100 100" className="block h-auto w-full" role="img" aria-label="Hindernis">
       <Shape />
+    </svg>
+  )
+}
+
+/* ----------------------------- Collectibles ------------------------------ */
+
+function Star() {
+  return (
+    <path
+      d="M50 16 L58.2 38.7 L82.3 39.5 L63.3 54.3 L70 77.5 L50 64 L30 77.5 L36.7 54.3 L17.7 39.5 L41.8 38.7 Z"
+      fill={C.star}
+      stroke={C.starEdge}
+      strokeWidth="6"
+      strokeLinejoin="round"
+    />
+  )
+}
+
+function Heart() {
+  return <path d="M50 82 C 14 58 18 26 50 42 C 82 26 86 58 50 82 Z" fill={C.heart} />
+}
+
+function Apple() {
+  return (
+    <g>
+      <path
+        d="M40 26 Q44 12 58 12"
+        stroke={C.appleStem}
+        strokeWidth="6"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <ellipse cx="61" cy="19" rx="13" ry="8" fill={C.appleLeaf} transform="rotate(-28 61 19)" />
+      <circle cx="50" cy="58" r="33" fill={C.apple} />
+      <ellipse cx="39" cy="47" rx="9" ry="6" fill={C.appleHi} />
+    </g>
+  )
+}
+
+const GOODS: Record<GoodKind, ComponentType> = {
+  star: Star,
+  heart: Heart,
+  apple: Apple,
+}
+
+/** A cheerful collectible to drive into. */
+export function GoodArt({ kind }: { kind: GoodKind }) {
+  const Shape = GOODS[kind]
+  return (
+    <svg viewBox="0 0 100 100" className="block h-auto w-full" role="img" aria-label="Belohnung">
+      <Shape />
+    </svg>
+  )
+}
+
+/** The happy burst shown when a collectible is gathered. */
+export function SparkleArt() {
+  return (
+    <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
+      <path d="M50 12 L59 41 L88 50 L59 59 L50 88 L41 59 L12 50 L41 41 Z" fill={C.sparkle} />
+      <circle cx="22" cy="24" r="6" fill={C.sparkle} />
+      <circle cx="80" cy="28" r="5" fill={C.sparkle} />
+      <circle cx="76" cy="78" r="6" fill={C.sparkle} />
+      <circle cx="24" cy="76" r="5" fill={C.sparkle} />
     </svg>
   )
 }

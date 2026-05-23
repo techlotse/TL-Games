@@ -3,15 +3,16 @@ import { motion, useAnimationControls } from 'framer-motion'
 import { useAppStore } from '@/store/appStore'
 import { GameScreen } from '@/components/layout/GameScreen'
 import { useCalmMotion } from '@/lib/motion'
-import { RACE } from './data'
+import { RACE, type GoodKind, type ObstacleKind } from './data'
 import { useRaceGame } from './logic'
-import { CarArt, ObstacleArt } from './art'
+import { CarArt, GoodArt, ObstacleArt, SparkleArt } from './art'
 
 /**
  * Game 4 - Race.
- * Hold the left or right side of the road to steer, and drive around the
- * obstacles. A bump just pauses the car for a moment with a soft wobble -
- * there is no score and no "game over". The speed rises a little every 30s.
+ * Hold the left or right side of the road to steer. Drive AROUND the obstacles
+ * and INTO the cheerful collectibles (stars, hearts, apples) for a happy
+ * sparkle. A bump just pauses the car for a moment with a soft wobble - there
+ * is no score and no "game over". The speed rises a little every 30s.
  */
 export function Race() {
   const calm = useCalmMotion()
@@ -28,6 +29,16 @@ export function Race() {
       })
     }
   }, [snapshot.bumped, calm, carControls])
+
+  // A happy hop when a collectible is gathered.
+  useEffect(() => {
+    if (snapshot.collected > 0 && !calm) {
+      void carControls.start({
+        scale: [1, 1.16, 1],
+        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+      })
+    }
+  }, [snapshot.collected, calm, carControls])
 
   return (
     <GameScreen tone="race">
@@ -61,20 +72,43 @@ export function Race() {
             }}
           />
 
-          {/* Obstacles */}
-          {snapshot.obstacles.map((o) => (
+          {/* Obstacles and collectibles */}
+          {snapshot.items.map((item) => (
             <div
-              key={o.id}
+              key={item.id}
               className="pointer-events-none absolute"
               style={{
-                left: `${o.x}%`,
-                top: `${o.y}%`,
-                width: `${RACE.obstacleW}%`,
+                left: `${item.x}%`,
+                top: `${item.y}%`,
+                width: `${RACE.itemW}%`,
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              <ObstacleArt kind={o.kind} />
+              {item.good ? (
+                <GoodArt kind={item.kind as GoodKind} />
+              ) : (
+                <ObstacleArt kind={item.kind as ObstacleKind} />
+              )}
             </div>
+          ))}
+
+          {/* Collect sparkles */}
+          {snapshot.sparkles.map((sparkle) => (
+            <motion.div
+              key={sparkle.id}
+              className="pointer-events-none absolute"
+              style={{
+                left: `${sparkle.x}%`,
+                top: `${sparkle.y}%`,
+                width: '22%',
+                transform: 'translate(-50%, -50%)',
+              }}
+              initial={{ scale: 0.4, opacity: 0.95 }}
+              animate={{ scale: 1.7, opacity: 0 }}
+              transition={{ duration: RACE.sparkleMs / 1000, ease: 'easeOut' }}
+            >
+              <SparkleArt />
+            </motion.div>
           ))}
 
           {/* Car */}

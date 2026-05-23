@@ -1,77 +1,32 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
-import { useCalmMotion, calmTween, settleSpring } from '@/lib/motion'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useCalmMotion, calmTween } from '@/lib/motion'
 import { hapticSuccess, hapticTap } from '@/lib/platform'
 import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
 import { DraggablePiece } from '@/games/shared/DraggablePiece'
 import type { Point } from '@/games/shared/types'
-import { PartArt } from './art'
+import { PartArt, VehicleScene } from './art'
 import type { Slot } from './data'
 import type { AssemblyGame, TrayPiece } from './logic'
 
-/* ------------------------------ Slot view -------------------------------- */
+/* ------------------------------ Slot glow -------------------------------- */
 
-interface SlotViewProps {
-  slot: Slot
-  placed: boolean
-  glowing: boolean
-  shakeSeq: number
-  registerRef: (el: HTMLDivElement | null) => void
-  onTap: () => void
-}
-
-function SlotView({ slot, placed, glowing, shakeSeq, registerRef, onTap }: SlotViewProps) {
+function SlotGlow({ slot }: { slot: Slot }) {
   const calm = useCalmMotion()
-  const controls = useAnimationControls()
-
-  useEffect(() => {
-    if (shakeSeq > 0 && !calm) {
-      void controls.start({ x: [0, -6, 6, -4, 4, 0], transition: { duration: 0.34 } })
-    }
-  }, [shakeSeq, calm, controls])
-
   return (
-    <div
-      ref={registerRef}
-      className="absolute"
+    <motion.span
+      className="pointer-events-none absolute rounded-full ring-4 ring-focus"
       style={{
         left: `${slot.x}%`,
         top: `${slot.y}%`,
         width: `${slot.size}%`,
+        aspectRatio: '1',
         transform: 'translate(-50%, -50%)',
       }}
-    >
-      <motion.div animate={controls} onClick={onTap} className="relative">
-        <AnimatePresence>
-          {glowing && (
-            <motion.span
-              key="glow"
-              className="pointer-events-none absolute -inset-[15%] rounded-[32%] ring-4 ring-focus"
-              initial={{ opacity: 0 }}
-              animate={
-                calm ? { opacity: 0.7 } : { opacity: [0.35, 0.85, 0.35], scale: [1, 1.05, 1] }
-              }
-              exit={{ opacity: 0 }}
-              transition={
-                calm ? { duration: 0 } : { duration: 1.5, repeat: Infinity, ease: 'easeInOut' }
-              }
-            />
-          )}
-        </AnimatePresence>
-
-        {placed ? (
-          <motion.div
-            initial={{ opacity: 0, scale: calm ? 1 : 0.55 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={calm ? { duration: 0 } : settleSpring}
-          >
-            <PartArt kind={slot.kind} />
-          </motion.div>
-        ) : (
-          <PartArt kind={slot.kind} ghost />
-        )}
-      </motion.div>
-    </div>
+      initial={{ opacity: 0 }}
+      animate={calm ? { opacity: 0.75 } : { opacity: [0.4, 0.9, 0.4], scale: [1, 1.08, 1] }}
+      transition={calm ? { duration: 0 } : { duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+    />
   )
 }
 
@@ -143,19 +98,18 @@ export interface AssemblyBoardProps {
 }
 
 /**
- * Build a vehicle by dragging or tapping each part onto its glowing place on
- * the frame. Wrong parts bounce gently back; correct ones settle in.
+ * Build a vehicle by dragging or tapping each part onto the car. Placing is
+ * forgiving: drop a part anywhere on the vehicle and it snaps to the nearest
+ * spot that fits. The vehicle is one coherent drawing, so parts always align.
  */
 export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) {
   const { round, isComplete } = game
   const [activePiece, setActivePiece] = useState<string | null>(null)
-  const [shake, setShake] = useState<{ slotId: string; seq: number } | null>(null)
-  const slotRefs = useRef(new Map<string, HTMLElement>())
+  const frameRef = useRef<HTMLDivElement | null>(null)
   const completedRef = useRef(false)
 
   useEffect(() => {
     setActivePiece(null)
-    setShake(null)
     completedRef.current = false
   }, [round.id])
 
@@ -170,64 +124,60 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
   const activeKind =
     activePiece != null ? (round.tray.find((p) => p.id === activePiece)?.kind ?? null) : null
 
-  const slotAtPoint = useCallback((point: Point): string | null => {
-    for (const [id, el] of slotRefs.current) {
-      const r = el.getBoundingClientRect()
-      const left = r.left + window.scrollX
-      const top = r.top + window.scrollY
-      if (
-        point.x >= left &&
-        point.x <= left + r.width &&
-        point.y >= top &&
-        point.y <= top + r.height
-      ) {
-        return id
+  const placeNearest = useCallback(
+    (pieceId: string, kind: string, point: Point | null): boolean => {
+      const candidates = round.slots.filter(
+        (s) => s.kind === kind && !game.placedSlots.has(s.id),
+      )
+      if (candidates.length === 0) return false
+      let chosen = candidates[0]
+      const frame = frameRef.current
+      if (frame && point) {
+        const r = frame.getBoundingClientRect()
+        let bestD = Infinity
+        for (const s of candidates) {
+          const sx = r.left + (s.x / 100) * r.width
+          const sy = r.top + (s.y / 100) * r.height
+          const d = (point.x - sx) ** 2 + (point.y - sy) ** 2
+          if (d < bestD) {
+            bestD = d
+            chosen = s
+          }
+        }
       }
-    }
-    return null
-  }, [])
-
-  const tryPlace = useCallback(
-    (pieceId: string, slotId: string): boolean => {
-      if (game.attempt(pieceId, slotId) === 'correct') {
+      if (game.attempt(pieceId, chosen.id) === 'correct') {
         hapticTap()
         return true
       }
-      setShake((prev) => ({ slotId, seq: (prev?.seq ?? 0) + 1 }))
       return false
     },
-    [game],
+    [round, game],
   )
 
   const handleLetGo = useCallback(
-    (pieceId: string, point: Point | null) => {
+    (pieceId: string, kind: string, point: Point | null) => {
       setActivePiece(null)
-      if (!point) return
-      const slotId = slotAtPoint(point)
-      if (slotId) tryPlace(pieceId, slotId)
+      const frame = frameRef.current
+      if (!point || !frame) return
+      const r = frame.getBoundingClientRect()
+      const inside =
+        point.x >= r.left - 28 &&
+        point.x <= r.right + 28 &&
+        point.y >= r.top - 28 &&
+        point.y <= r.bottom + 28
+      if (inside) placeNearest(pieceId, kind, point)
     },
-    [slotAtPoint, tryPlace],
+    [placeNearest],
   )
 
   const handleTapPiece = useCallback((id: string) => {
     setActivePiece((prev) => (prev === id ? null : id))
   }, [])
 
-  const handleTapSlot = useCallback(
-    (slotId: string) => {
-      if (activePiece == null) return
-      if (tryPlace(activePiece, slotId)) setActivePiece(null)
-    },
-    [activePiece, tryPlace],
-  )
-
-  const registerSlot = useCallback(
-    (id: string) => (el: HTMLDivElement | null) => {
-      if (el) slotRefs.current.set(id, el)
-      else slotRefs.current.delete(id)
-    },
-    [],
-  )
+  const handleTapFrame = useCallback(() => {
+    if (activeKind == null || activePiece == null) return
+    if (placeNearest(activePiece, activeKind, null)) setActivePiece(null)
+  }, [activeKind, activePiece, placeNearest])
 
   const trayCount = round.tray.length
   const cellBasis = `calc((100% - ${(trayCount - 1) * 0.5}rem) / ${trayCount})`
@@ -235,20 +185,19 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
   return (
     <div className="relative flex flex-1 flex-col">
       <div className="flex flex-1 flex-col items-center justify-center gap-[5vh] px-4">
-        {/* Build frame */}
-        <div className="relative w-full max-w-[23rem]" style={{ aspectRatio: '3 / 2' }}>
-          <div className="absolute inset-x-[6%] bottom-[7%] h-[4%] rounded-full bg-ink/10" />
-          {round.slots.map((slot) => (
-            <SlotView
-              key={`${round.id}:${slot.id}`}
-              slot={slot}
-              placed={game.placedSlots.has(slot.id)}
-              glowing={activeKind === slot.kind && !game.placedSlots.has(slot.id)}
-              shakeSeq={shake?.slotId === slot.id ? shake.seq : 0}
-              registerRef={registerSlot(slot.id)}
-              onTap={() => handleTapSlot(slot.id)}
-            />
-          ))}
+        {/* Build frame - the vehicle being assembled */}
+        <div
+          ref={frameRef}
+          onClick={handleTapFrame}
+          className="relative w-full max-w-[23rem]"
+          style={{ aspectRatio: '300 / 220' }}
+        >
+          <VehicleScene placed={game.placedSlots} />
+          {round.slots.map((slot) =>
+            activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
+              <SlotGlow key={slot.id} slot={slot} />
+            ) : null,
+          )}
         </div>
 
         {/* Parts tray */}
@@ -265,7 +214,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
                 selected={activePiece === piece.id}
                 floatDelay={index * 0.35}
                 onPickUp={() => setActivePiece(piece.id)}
-                onLetGo={(point) => handleLetGo(piece.id, point)}
+                onLetGo={(point) => handleLetGo(piece.id, piece.kind, point)}
                 onTap={() => handleTapPiece(piece.id)}
               />
             </div>

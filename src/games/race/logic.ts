@@ -1,26 +1,40 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { clamp } from '@/lib/utils'
 import { hapticTap } from '@/lib/platform'
-import { OBSTACLE_KINDS, RACE, type ObstacleKind } from './data'
+import { GOOD_KINDS, OBSTACLE_KINDS, RACE, type GoodKind, type ObstacleKind } from './data'
 
-export interface Obstacle {
+export interface RaceItem {
   id: number
   x: number
   y: number
-  kind: ObstacleKind
+  /** True for a cheerful collectible, false for an obstacle to avoid. */
+  good: boolean
+  kind: ObstacleKind | GoodKind
+}
+
+export interface Sparkle {
+  id: number
+  x: number
+  y: number
+  age: number
 }
 
 export interface RaceSnapshot {
   carX: number
-  obstacles: Obstacle[]
+  items: RaceItem[]
+  sparkles: Sparkle[]
   bumped: boolean
+  /** Number of collectibles gathered - drives the car's happy hop. */
+  collected: number
 }
 
 export type Steer = -1 | 0 | 1
 
 interface Sim {
   carX: number
-  obstacles: Obstacle[]
+  items: RaceItem[]
+  sparkles: Sparkle[]
+  collected: number
   speed: number
   steer: Steer
   spawnTimer: number
@@ -35,7 +49,9 @@ interface Sim {
 function createSim(): Sim {
   return {
     carX: 50,
-    obstacles: [],
+    items: [],
+    sparkles: [],
+    collected: 0,
     speed: RACE.speedBase,
     steer: 0,
     spawnTimer: 0,
@@ -48,22 +64,22 @@ function createSim(): Sim {
   }
 }
 
-function spawnObstacle(id: number): Obstacle {
-  const margin = RACE.obstacleW / 2 + 5
-  return {
-    id,
-    x: margin + Math.random() * (100 - margin * 2),
-    y: -14,
-    kind: OBSTACLE_KINDS[Math.floor(Math.random() * OBSTACLE_KINDS.length)],
-  }
+function spawnItem(id: number): RaceItem {
+  const margin = RACE.itemW / 2 + 5
+  const x = margin + Math.random() * (100 - margin * 2)
+  const good = Math.random() < RACE.goodChance
+  const kind = good
+    ? GOOD_KINDS[Math.floor(Math.random() * GOOD_KINDS.length)]
+    : OBSTACLE_KINDS[Math.floor(Math.random() * OBSTACLE_KINDS.length)]
+  return { id, x, y: -14, good, kind }
 }
 
-function hits(carX: number, o: Obstacle): boolean {
-  const dx = Math.abs(carX - o.x)
-  const dy = Math.abs(RACE.carY - o.y)
+function hits(carX: number, item: RaceItem): boolean {
+  const dx = Math.abs(carX - item.x)
+  const dy = Math.abs(RACE.carY - item.y)
   return (
-    dx < ((RACE.carW + RACE.obstacleW) / 2) * RACE.collisionScale &&
-    dy < ((RACE.carH + RACE.obstacleH) / 2) * RACE.collisionScale
+    dx < ((RACE.carW + RACE.itemW) / 2) * RACE.collisionScale &&
+    dy < ((RACE.carH + RACE.itemH) / 2) * RACE.collisionScale
   )
 }
 
@@ -74,16 +90,17 @@ export interface RaceGame {
 
 /**
  * Headless-ish race loop. Runs a requestAnimationFrame simulation while the
- * screen is mounted; everything resets when the player leaves (the component
- * unmounts), which is exactly the "resets at home" difficulty behaviour.
+ * screen is mounted; everything resets when the player leaves.
  *
  * `onMilestone` fires each time the speed steps up (roughly every 30s played).
  */
 export function useRaceGame(onMilestone?: () => void): RaceGame {
   const [snapshot, setSnapshot] = useState<RaceSnapshot>({
     carX: 50,
-    obstacles: [],
+    items: [],
+    sparkles: [],
     bumped: false,
+    collected: 0,
   })
 
   const simRef = useRef<Sim | null>(null)
@@ -103,8 +120,13 @@ export function useRaceGame(onMilestone?: () => void): RaceGame {
       sim.lastTime = now
       const ms = dt * 1000
 
+      // Sparkles always fade, even during a pause.
+      for (const sp of sim.sparkles) sp.age += ms
+      if (sim.sparkles.some((sp) => sp.age >= RACE.sparkleMs)) {
+        sim.sparkles = sim.sparkles.filter((sp) => sp.age < RACE.sparkleMs)
+      }
+
       if (sim.bumped) {
-        // Brief pause + wobble, then carry on from the same spot.
         sim.bumpTimer -= ms
         if (sim.bumpTimer <= 0) {
           sim.bumped = false
@@ -128,28 +150,45 @@ export function useRaceGame(onMilestone?: () => void): RaceGame {
           RACE.carMaxX,
         )
 
-        for (const o of sim.obstacles) o.y += sim.speed * dt
-        sim.obstacles = sim.obstacles.filter((o) => o.y < 120)
+        for (const it of sim.items) it.y += sim.speed * dt
 
         sim.spawnTimer += ms
         if (sim.spawnTimer >= RACE.spawnGapMs) {
           sim.spawnTimer -= RACE.spawnGapMs
-          sim.obstacles.push(spawnObstacle(sim.nextId++))
+          sim.items.push(spawnItem(sim.nextId++))
         }
 
-        if (sim.graceTimer <= 0) {
-          for (const o of sim.obstacles) {
-            if (hits(sim.carX, o)) {
-              sim.bumped = true
-              sim.bumpTimer = RACE.bumpMs
+        // Collect good items, bump on obstacles, drop off-screen items.
+        const survivors: RaceItem[] = []
+        let bumpedNow = false
+        for (const it of sim.items) {
+          if (it.y >= 120) continue
+          if (hits(sim.carX, it)) {
+            if (it.good) {
+              sim.sparkles.push({ id: sim.nextId++, x: it.x, y: it.y, age: 0 })
+              sim.collected += 1
               hapticTap()
-              break
+              continue
             }
+            if (sim.graceTimer <= 0) bumpedNow = true
           }
+          survivors.push(it)
+        }
+        sim.items = survivors
+        if (bumpedNow) {
+          sim.bumped = true
+          sim.bumpTimer = RACE.bumpMs
+          hapticTap()
         }
       }
 
-      setSnapshot({ carX: sim.carX, obstacles: sim.obstacles.slice(), bumped: sim.bumped })
+      setSnapshot({
+        carX: sim.carX,
+        items: sim.items.slice(),
+        sparkles: sim.sparkles.slice(),
+        bumped: sim.bumped,
+        collected: sim.collected,
+      })
       raf = requestAnimationFrame(step)
     }
 

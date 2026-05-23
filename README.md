@@ -22,14 +22,14 @@ loud celebrations, no ads, no tracking, no accounts.
 
 - **App shell** - installable PWA, offline after first load, iPhone-first.
 - **Home screen** - four large, readable-free game tiles.
-- **Four games, each a genuinely different kind of play:**
+- **Four games:**
   1. **Build Garage** (`Werkstatt`) - *assembly*: build a vehicle by dragging
-     each part onto its place.
-  2. **Flower Garden** (`Blumengarten`) - *find & tap*: tap the bushes, leaves
-     and flowers to reveal the creatures hiding in the garden.
-  3. **Shape Sorting** (`Formen`) - *matching*: sort each block into its hole.
-  4. **Race** (`Rennen`) - *steering*: hold a side of the road to steer and
-     drive around the obstacles.
+     each part onto it.
+  2. **Flower Garden** (`Blumengarten`) - *colour match*: match each flower to
+     the plant pot of the same colour.
+  3. **Shape Sorting** (`Formen`) - *shape match*: sort each block into its hole.
+  4. **Race** (`Rennen`) - *steering*: hold a side of the road to steer, drive
+     around the obstacles and collect the cheerful stars and hearts.
 - **Difficulty progression** - every game starts gentle and ramps up the
   longer the child plays, then resets to easy at the home screen.
 - **Light & dark themes** (calm, muted - never neon), saved on-device.
@@ -132,10 +132,10 @@ src/
     layout/       AppShell, GameScreen frames
     toddler/      GameTile, RoundButton, ParentGate, CompletionOverlay, ...
   games/
-    shared/       Matching engine + the draggable piece
+    shared/       Matching engine (useMatchingGame, MatchingBoard) + DraggablePiece
     build-garage/ Assembly game - build a vehicle from parts
-    flower-garden/ Find-and-tap discovery game
-    shape-sorting/ Sort-into-holes matching game
+    flower-garden/ Colour-matching game
+    shape-sorting/ Shape-matching game
     race/         Steering game with a gentle game loop
   screens/        HomeScreen, ParentScreen
   store/          Zustand state + localStorage persistence
@@ -152,12 +152,13 @@ component.
 ## How it is designed for a toddler
 
 - **No reading required.** Guidance is visual: glowing targets, bouncing
-  arrows, revealed creatures. German text is short and for the parent.
+  arrows, happy sparkles. German text is short and for the parent.
 - **Huge, obvious targets.** Every touch target is at least 64px.
-- **Forgiving by design.** Wrong choices drift gently back; an empty spot just
-  rustles; a bump in Race only pauses the car. There is no failure state.
-- **Touch-first.** Drag-and-drop, tap-to-place, tap-to-find and hold-to-steer -
-  whichever suits the game and small motor skills.
+- **Forgiving by design.** Wrong choices drift gently back; a part dropped on
+  the car snaps to the nearest spot; a bump in Race only pauses the car.
+  There is no failure state.
+- **Touch-first.** Drag-and-drop, tap-to-place and hold-to-steer - whichever
+  suits the game and small motor skills.
 - **Calm.** Animations are gentle (180-220ms): no flashing, no confetti.
 - **Few choices at once**, growing slowly as the child keeps playing.
 

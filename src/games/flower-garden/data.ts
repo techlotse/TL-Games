@@ -1,37 +1,28 @@
 /**
  * Flower Garden - static content.
  *
- * A find-and-tap discovery game: tap the bushes, leaves and flowers to reveal
- * the little creatures hiding in the garden. Montessori focus: observation,
- * cause and effect, gentle exploration.
+ * The game is a colour match: a flower is matched to the plant pot of the
+ * same colour. Montessori focus: colour matching, classification, sorting.
  */
 
-export type CoverKind = 'bush' | 'leaf' | 'flower' | 'log' | 'mushroom' | 'rock'
-export type CreatureKind = 'butterfly' | 'ladybug' | 'bee' | 'snail' | 'chick'
-
-export const COVER_KINDS: readonly CoverKind[] = [
-  'bush',
-  'leaf',
-  'flower',
-  'log',
-  'mushroom',
-  'rock',
-]
-
-export const CREATURE_KINDS: readonly CreatureKind[] = [
-  'butterfly',
-  'ladybug',
-  'bee',
-  'snail',
-  'chick',
-]
-
-/** How many hiding spots are shown at a given difficulty level (3 - 7). */
-export function spotCountForLevel(level: number): number {
-  return Math.min(3 + level, 7)
+export interface FlowerColor {
+  petal: string
+  petalDark: string
+  center: string
 }
 
-/** How many spots are empty decoys - grows slowly, capped at 2. */
-export function decoysForLevel(level: number): number {
-  return Math.min(level, 2)
+export const FLOWER_KEYS = ['rose', 'sunny', 'sky', 'mint', 'lilac'] as const
+export type FlowerKey = (typeof FLOWER_KEYS)[number]
+
+/** Soft, warm pastel garden palette. */
+export const FLOWER_COLORS: Record<FlowerKey, FlowerColor> = {
+  rose: { petal: '#E48AA6', petalDark: '#CE7090', center: '#F6DE9C' },
+  sunny: { petal: '#EBC255', petalDark: '#D4A833', center: '#E59A3C' },
+  sky: { petal: '#79A9D1', petalDark: '#5F8FBA', center: '#F6DE9C' },
+  mint: { petal: '#77BF9A', petalDark: '#5EA681', center: '#F6DE9C' },
+  lilac: { petal: '#B296D0', petalDark: '#997CB9', center: '#F6DE9C' },
 }
+
+export const STEM_COLOR = '#6E9C5C'
+export const LEAF_COLOR = '#7EAC68'
+export const SOIL_COLOR = '#7C5839'

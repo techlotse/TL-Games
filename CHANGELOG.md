@@ -11,32 +11,32 @@ _Nothing yet._
 
 ## [0.0.5] - 2026-05-23
 
-This release makes every game a distinct kind of play, adds a fourth game, and
-introduces a gentle in-session difficulty ramp.
+This release adds a fourth game, makes Build Garage a distinct kind of play,
+and gives every game a gentle in-session difficulty ramp.
 
 ### Added
 
 - **Race** - a new fourth game. A calm steering game: hold the left or right
-  side of the screen to steer and drive around the obstacles. The speed rises
-  a little every 30 seconds. A bump just pauses the car briefly with a soft
-  wobble - there is still no score and no "game over".
+  side of the screen to steer. Drive **around** the obstacles and **into** the
+  cheerful collectibles (stars, hearts, apples) for a happy sparkle. The speed
+  rises a little every 30 seconds. A bump just pauses the car briefly with a
+  soft wobble - there is still no score and no "game over".
 - **Difficulty progression** in every game. Each game starts gentle and ramps
   up the longer the child plays, then resets to easy at the home screen.
 - A fourth home-screen tile.
 
 ### Changed
 
-- The three original games are now **genuinely different game types** instead
-  of the same matching game re-themed:
-  - **Build Garage** is now an **assembly** game - build a vehicle by dragging
-    each part onto its place. The vehicle gains a part each round (3 - 5).
-  - **Flower Garden** is now a **find-and-tap discovery** game - tap the
-    bushes, leaves and flowers to reveal hidden creatures. More spots and
-    decoys appear as play continues.
-  - **Shape Sorting** stays the **sort-into-holes matching** game and now adds
-    more shapes (3 - 5) as difficulty ramps.
-- The matching engine is now shared by Shape Sorting only; the other games
-  have their own logic and boards.
+- **Build Garage** is now an **assembly** game - build a vehicle by dragging
+  (or tapping) each part onto it. Placing is forgiving: a part dropped anywhere
+  on the vehicle snaps to the nearest spot that fits, and the vehicle is one
+  coherent drawing so the parts always line up. The vehicle gains a part each
+  round (3 - 5).
+- **Flower Garden** keeps its calm **colour-matching** gameplay (match each
+  flower to the pot of its colour) and now adds more flowers (3 - 5) as
+  difficulty ramps.
+- **Shape Sorting** keeps its **shape-matching** gameplay and now adds more
+  shapes (3 - 5) as difficulty ramps.
 
 ## [0.0.1] - 2026-05-23
 

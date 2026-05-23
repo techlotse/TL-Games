@@ -20,8 +20,8 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ### v0.0.5
 
-Four distinct game types - Build Garage (assembly), Flower Garden (find and
-tap), Shape Sorting (matching) and Race (steering) - plus a gentle in-session
+Four games - Build Garage (assembly), Flower Garden (colour matching),
+Shape Sorting (shape matching) and Race (steering: collect and avoid) - plus a gentle in-session
 difficulty ramp in every game.
 
 ### v0.0.1 - MVP

@@ -1,13 +1,14 @@
 import { useAppStore } from '@/store/appStore'
 import { GameScreen } from '@/components/layout/GameScreen'
-import { GardenBoard } from './GardenBoard'
+import { MatchingBoard } from '@/games/shared/MatchingBoard'
 import { useFlowerGarden } from './logic'
+import { BedArt, FlowerArt } from './art'
 
 /**
  * Game 2 - Flower Garden.
- * A gentle discovery game: tap the bushes, leaves and flowers to find the
- * little creatures hiding in the garden. Empty spots simply rustle - nothing
- * is ever wrong. More spots and decoys appear as the child keeps playing.
+ * Match each flower to the plant pot of the same colour. Drag or tap.
+ * Calm, forgiving colour-matching - no score, no failure. One more flower is
+ * added each round (3 -> 5).
  */
 export function FlowerGarden() {
   const go = useAppStore((s) => s.go)
@@ -16,10 +17,12 @@ export function FlowerGarden() {
 
   return (
     <GameScreen tone="garden">
-      <GardenBoard
+      <MatchingBoard
         game={game}
         onHome={() => go('home')}
         onComplete={() => recordRound('garden')}
+        renderItem={(key) => <FlowerArt id={key} />}
+        renderTarget={(key) => <BedArt id={key} />}
       />
     </GameScreen>
   )

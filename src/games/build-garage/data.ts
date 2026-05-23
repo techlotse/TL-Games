@@ -1,9 +1,9 @@
 /**
  * Build Garage - static content.
  *
- * An assembly game: drag each part onto its place on the vehicle. The vehicle
- * gains one part per round. Montessori focus: construction, part-whole
- * relationships, fine motor coordination.
+ * An assembly game: drag each part onto the vehicle and it snaps into its
+ * place. The vehicle is drawn as one coherent picture, so parts always line
+ * up. Montessori focus: construction, part-whole relationships, fine motor.
  */
 
 export type PartKind = 'body' | 'wheel' | 'cabin' | 'light'
@@ -11,18 +11,20 @@ export type PartKind = 'body' | 'wheel' | 'cabin' | 'light'
 export interface Slot {
   id: string
   kind: PartKind
+  /** Centre x / y as a percentage of the build frame (used for glow + drop). */
   x: number
   y: number
+  /** Glow-ring diameter as a percentage of the frame width. */
   size: number
 }
 
 /** The whole vehicle. Level N builds the first (3 + N) parts, capped at 5. */
 export const ALL_SLOTS: readonly Slot[] = [
-  { id: 'body', kind: 'body', x: 50, y: 58, size: 84 },
-  { id: 'wheelBack', kind: 'wheel', x: 30, y: 82, size: 26 },
-  { id: 'wheelFront', kind: 'wheel', x: 70, y: 82, size: 26 },
-  { id: 'cabin', kind: 'cabin', x: 65, y: 34, size: 34 },
-  { id: 'light', kind: 'light', x: 65, y: 14, size: 20 },
+  { id: 'body', kind: 'body', x: 50, y: 59, size: 58 },
+  { id: 'wheelBack', kind: 'wheel', x: 32, y: 78, size: 26 },
+  { id: 'wheelFront', kind: 'wheel', x: 68, y: 78, size: 26 },
+  { id: 'cabin', kind: 'cabin', x: 71, y: 33, size: 36 },
+  { id: 'light', kind: 'light', x: 71, y: 15, size: 18 },
 ]
 
 export const MIN_PARTS = 3

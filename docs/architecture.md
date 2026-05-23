@@ -25,23 +25,21 @@ separated, so the project can later be wrapped as a native app
 
 ## The four games
 
-Each game is a **distinct kind of play**, not the same mechanic re-themed:
-
 | Game | Type | Mechanic |
 |---|---|---|
-| Build Garage | Assembly | Drag parts onto a vehicle frame to build it. |
-| Flower Garden | Find & tap | Tap covers to reveal hidden creatures. |
-| Shape Sorting | Matching | Drag/tap shapes into matching holes. |
-| Race | Steering | Hold a side to steer; dodge obstacles; gentle speed ramp. |
+| Build Garage | Assembly | Drag parts onto the vehicle; they snap into place. |
+| Flower Garden | Matching | Match each flower to the pot of its colour. |
+| Shape Sorting | Matching | Match each shape into its hole. |
+| Race | Steering | Hold a side to steer; dodge obstacles; collect stars. |
 
 Every game has a per-session **difficulty ramp**: it starts gentle, gets harder
 the longer the child plays, and resets when they return to the home screen
 (which simply unmounts the game component).
 
-Shared systems live in `src/games/shared/`: `useMatchingGame` (the headless
-matching engine, now used by Shape Sorting) and `DraggablePiece` (the forgiving
-drag/tap piece, reused by Build Garage and Shape Sorting). Build Garage, Flower
-Garden and Race each have their own `logic.ts` and board.
+Shared systems live in `src/games/shared/`: `useMatchingGame` + `MatchingBoard`
+(the headless matching engine and its board, used by Shape Sorting and Flower
+Garden) and `DraggablePiece` (the forgiving drag/tap piece). Build Garage and
+Race each have their own logic and board.
 
 ```mermaid
 flowchart TD
@@ -53,8 +51,8 @@ flowchart TD
   R --> G3[ShapeSorting]
   R --> G4[Race]
   G1 --> AB[AssemblyBoard]
-  G2 --> GB[GardenBoard]
-  G3 --> MB[MatchingBoard + useMatchingGame]
+  G2 --> MB[MatchingBoard + useMatchingGame]
+  G3 --> MB
   G4 --> RL[useRaceGame loop]
   H --> ST[(Zustand store)]
   P --> ST
@@ -75,8 +73,8 @@ src/
   games/
     shared/     useMatchingGame, MatchingBoard, DraggablePiece
     build-garage/  Assembly game (data, logic, art, AssemblyBoard, screen)
-    flower-garden/ Find-and-tap game (data, logic, art, GardenBoard, screen)
-    shape-sorting/ Matching game (data, logic, art, screen)
+    flower-garden/ Colour-matching game (data, logic, art, screen)
+    shape-sorting/ Shape-matching game (data, logic, art, screen)
     race/          Steering game (data, logic loop, art, screen)
   screens/      HomeScreen, ParentScreen
   store/        Zustand store (app state + persistence)
@@ -88,14 +86,14 @@ src/
 
 ## Game logic
 
-- **Build Garage** / **Flower Garden** / **Shape Sorting** logic is a headless
+- **Build Garage**, **Flower Garden** and **Shape Sorting** logic is a headless
   hook (`useBuildGarage`, `useFlowerGarden`, `useMatchingGame`) holding only the
   rules - the round, placements, completion, the difficulty level. No DOM.
 - **Race** runs a `requestAnimationFrame` loop in `useRaceGame`: it owns car
-  position, obstacles, speed and collisions in a ref, and publishes a render
+  position, items, speed and collisions in a ref, and publishes a render
   snapshot each frame. It is the one game with a real-time loop.
-- Boards (`MatchingBoard`, `AssemblyBoard`, `GardenBoard`, the Race field) own
-  presentation - drag/tap, hit-testing, gentle feedback, completion.
+- Boards (`MatchingBoard`, `AssemblyBoard`, the Race field) own presentation -
+  drag/tap, hit-testing, gentle feedback, completion.
 
 ## State management
 
