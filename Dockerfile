@@ -1,9 +1,13 @@
 # syntax=docker/dockerfile:1
 
 # ----------------------------------------------------------------------------
-# Build stage - compile the production bundle
+# Build stage - compile the production bundle.
+# Pinned to the native build CPU ($BUILDPLATFORM): the build always runs on the
+# runner's own architecture - no QEMU emulation, and it sidesteps npm's
+# cross-arch optional-dependency bug (npm/cli#4828). The dist/ output is just
+# static files, so it is architecture-independent and safe for every runtime image.
 # ----------------------------------------------------------------------------
-FROM node:22-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM node:22-bookworm-slim AS build
 
 WORKDIR /app
 ENV CI=true
