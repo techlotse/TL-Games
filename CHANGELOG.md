@@ -9,18 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
-## [0.0.5] - 2026-05-23
+## [0.0.7] - 2026-05-23
 
-This release adds a fourth game, makes Build Garage a distinct kind of play,
-and gives every game a gentle in-session difficulty ramp.
+A fourth game, four distinct kinds of play, a gentle per-session difficulty
+ramp, and a refresh of the safe dependencies.
 
 ### Added
 
 - **Race** - a new fourth game. A calm steering game: hold the left or right
   side of the screen to steer. Drive **around** the obstacles and **into** the
-  cheerful collectibles (stars, hearts, apples) for a happy sparkle. The speed
-  rises a little every 30 seconds. A bump just pauses the car briefly with a
-  soft wobble - there is still no score and no "game over".
+  cheerful collectibles (stars, hearts, apples) for a happy sparkle and a
+  little hop. The speed rises a little every 30 seconds. A bump just pauses the
+  car briefly with a soft wobble - there is still no score and no "game over".
 - **Difficulty progression** in every game. Each game starts gentle and ramps
   up the longer the child plays, then resets to easy at the home screen.
 - A fourth home-screen tile.
@@ -37,6 +37,13 @@ and gives every game a gentle in-session difficulty ramp.
   difficulty ramps.
 - **Shape Sorting** keeps its **shape-matching** gameplay and now adds more
   shapes (3 - 5) as difficulty ramps.
+
+### Dependencies
+
+- Updated within proven major versions: `framer-motion` 12, `lucide-react` 1,
+  `tailwind-merge` 3, `vite-plugin-pwa` 1. `npm audit` reports 0 vulnerabilities.
+- Deferred (need their own reviewed migration): React 19, Tailwind 4,
+  TypeScript 6, Vite 8, `@vitejs/plugin-react` 6, and the Node 26 base image.
 
 ## [0.0.1] - 2026-05-23
 
@@ -66,6 +73,6 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.0.5...HEAD
-[0.0.5]: https://github.com/techlotse/TL-Games/compare/v0.0.1...v0.0.5
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.0.7...HEAD
+[0.0.7]: https://github.com/techlotse/TL-Games/compare/v0.0.1...v0.0.7
 [0.0.1]: https://github.com/techlotse/TL-Games/releases/tag/v0.0.1
