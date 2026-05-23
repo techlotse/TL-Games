@@ -22,6 +22,7 @@ export const de = {
   gameGarage: 'Werkstatt',
   gameGarden: 'Blumengarten',
   gameShapes: 'Formen',
+  gameRace: 'Rennen',
 
   // Parent gate
   parentGateTitle: 'Für Eltern',

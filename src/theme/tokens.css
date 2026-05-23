@@ -22,6 +22,7 @@
   --tile-garage: 205 50% 87%;
   --tile-garden: 138 38% 86%;
   --tile-shapes: 34 54% 86%;
+  --tile-race: 220 13% 83%;
 
   /* Motion - kept intentionally gentle (180-220ms) */
   --dur-fast: 180ms;
@@ -51,6 +52,7 @@
   --tile-garage: 208 26% 31%;
   --tile-garden: 140 20% 29%;
   --tile-shapes: 32 26% 31%;
+  --tile-race: 220 11% 32%;
 
   color-scheme: dark;
 }

@@ -20,6 +20,7 @@ const TONE_BG: Record<GameTone, string> = {
   garage: 'bg-tile-garage',
   garden: 'bg-tile-garden',
   shapes: 'bg-tile-shapes',
+  race: 'bg-tile-race',
 }
 
 /**
@@ -44,7 +45,7 @@ export function GameTile({ label, tone, Art, progress, onPress, className }: Gam
         className,
       )}
     >
-      <div className="flex aspect-square h-full max-h-[9.5rem] shrink-0 items-center justify-center rounded-[1.7rem] bg-surface/55 p-3">
+      <div className="flex aspect-square h-full max-h-[9rem] shrink-0 items-center justify-center rounded-[1.7rem] bg-surface/55 p-3">
         <Art />
       </div>
       <div className="flex flex-col gap-3">

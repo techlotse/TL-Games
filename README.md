@@ -5,11 +5,11 @@
 [![Open PRs](https://img.shields.io/github/issues-pr/techlotse/TL-Games?label=open%20PRs&color=4f86af)](https://github.com/techlotse/TL-Games/pulls)
 
 A calm, Montessori-inspired **toddler game platform**, built as a mobile-first
-**Progressive Web App**. Designed for a 3-year-old who **cannot read yet** —
+**Progressive Web App**. Designed for a 3-year-old who **cannot read yet** -
 every interaction is understood through colour, shape, motion and exploration.
 
-It is intentionally **not** a dopamine casino: no timers, no scores, no
-"game over", no loud celebrations, no ads, no tracking, no accounts.
+It is intentionally **not** a dopamine casino: no scores, no "game over", no
+loud celebrations, no ads, no tracking, no accounts.
 
 > Badge, repository and image references assume the GitHub repository
 > `techlotse/TL-Games` and the Docker Hub image `techlotse/tl-games`. Docker Hub
@@ -20,21 +20,27 @@ It is intentionally **not** a dopamine casino: no timers, no scores, no
 
 ## What's inside
 
-- **App shell** — installable PWA, offline after first load, iPhone-first.
-- **Home screen** — three large, readable-free game tiles.
-- **3 playable games**, all built on one reusable matching engine:
-  1. **Build Garage** (`Werkstatt`) — match each vehicle to its outline.
-  2. **Flower Garden** (`Blumengarten`) — match each flower to its colour pot.
-  3. **Shape Sorting** (`Formen`) — fit each wooden block into its hole.
-- **Light & dark themes** (calm, muted — never neon), saved on-device.
+- **App shell** - installable PWA, offline after first load, iPhone-first.
+- **Home screen** - four large, readable-free game tiles.
+- **Four games, each a genuinely different kind of play:**
+  1. **Build Garage** (`Werkstatt`) - *assembly*: build a vehicle by dragging
+     each part onto its place.
+  2. **Flower Garden** (`Blumengarten`) - *find & tap*: tap the bushes, leaves
+     and flowers to reveal the creatures hiding in the garden.
+  3. **Shape Sorting** (`Formen`) - *matching*: sort each block into its hole.
+  4. **Race** (`Rennen`) - *steering*: hold a side of the road to steer and
+     drive around the obstacles.
+- **Difficulty progression** - every game starts gentle and ramps up the
+  longer the child plays, then resets to easy at the home screen.
+- **Light & dark themes** (calm, muted - never neon), saved on-device.
 - **Parent area** behind a hold-to-enter gate: theme, accessibility, progress.
-- Hand-drawn **SVG artwork** — no external image assets.
+- Hand-drawn **SVG artwork** - no external image assets.
 
 ## Tech stack
 
-React 18 · Vite 6 · TypeScript (strict) · Tailwind CSS 3 · shadcn/ui-style
-components · Lucide icons · Framer Motion (used sparingly) · Zustand ·
-vite-plugin-pwa · Inter (bundled locally for offline use).
+React 18 - Vite 6 - TypeScript (strict) - Tailwind CSS 3 - shadcn/ui-style
+components - Lucide icons - Framer Motion (used sparingly) - Zustand -
+vite-plugin-pwa - Inter (bundled locally for offline use).
 
 ## Getting started
 
@@ -49,11 +55,11 @@ npm run preview  # serve the production build locally
 
 ### Install it on a phone (PWA)
 
-1. `npm run build`, then deploy `dist/` to any static host — or run the
+1. `npm run build`, then deploy `dist/` to any static host - or run the
    container (below). It must be served over **HTTPS** for the service worker.
 2. Open the site in **Safari** (iPhone) or **Chrome** (Android).
-3. iPhone: Share → *Add to Home Screen*. Android: menu → *Install app*.
-4. Launch it from the home screen — it runs full-screen and works offline.
+3. iPhone: Share -> *Add to Home Screen*. Android: menu -> *Install app*.
+4. Launch it from the home screen - it runs full-screen and works offline.
 
 ## Run with Docker
 
@@ -65,7 +71,7 @@ docker run --rm -p 8080:8080 techlotse/tl-games:latest
 # then open http://localhost:8080
 ```
 
-Or with Compose — recommended, as it adds health checks and runtime hardening
+Or with Compose - recommended, as it adds health checks and runtime hardening
 (read-only filesystem, dropped capabilities, no privilege escalation):
 
 ```bash
@@ -75,24 +81,24 @@ docker compose up -d
 
 Available image tags:
 
-- `latest` — the most recent tagged release
-- `0.0.1`, `0.0` — specific semantic versions
-- `edge` — the latest build from `main`
+- `latest` - the most recent tagged release
+- `0.0.5`, `0.0` - specific semantic versions
+- `edge` - the latest build from `main`
 
 Build the image yourself with `docker build -t techlotse/tl-games:dev .`
 
 ## Versioning & releases
 
 This project follows [Semantic Versioning](https://semver.org). The version in
-`package.json` is the single source of truth — it is injected into the build
+`package.json` is the single source of truth - it is injected into the build
 and shown in the in-app parent area; `VERSION` mirrors it and `CHANGELOG.md`
 records every release.
 
 Cut a release by pushing a Git tag:
 
 ```bash
-git tag v0.0.1
-git push origin v0.0.1
+git tag v0.0.5
+git push origin v0.0.5
 ```
 
 That triggers the publish workflow, which builds the image, scans it with
@@ -100,9 +106,9 @@ Trivy, pushes the versioned tags to Docker Hub, and creates a GitHub Release.
 
 ## Continuous integration
 
-- **CI** (`.github/workflows/ci.yml`) — type-checks and builds on every push
+- **CI** (`.github/workflows/ci.yml`) - type-checks and builds on every push
   and pull request; `npm audit` runs here.
-- **Publish** (`.github/workflows/publish.yml`) — on push to `main`, on `v*`
+- **Publish** (`.github/workflows/publish.yml`) - on push to `main`, on `v*`
   tags, and monthly: builds the image, **fails if Trivy finds fixable
   CRITICAL/HIGH CVEs**, then builds multi-arch and pushes to Docker Hub.
 - **Dependabot** keeps npm packages, GitHub Actions and the Docker base image
@@ -110,11 +116,11 @@ Trivy, pushes the versioned tags to Docker Hub, and creates a GitHub Release.
 
 ## Documentation
 
-- [`docs/architecture.md`](docs/architecture.md) — how the app is built
-- [`docs/security.md`](docs/security.md) — security & privacy posture
-- [`docs/roadmap.md`](docs/roadmap.md) — what is planned next
-- [`CLAUDE.md`](CLAUDE.md) — guide for continuing development
-- [`CHANGELOG.md`](CHANGELOG.md) — release history
+- [`docs/architecture.md`](docs/architecture.md) - how the app is built
+- [`docs/security.md`](docs/security.md) - security & privacy posture
+- [`docs/roadmap.md`](docs/roadmap.md) - what is planned next
+- [`CLAUDE.md`](CLAUDE.md) - guide for continuing development
+- [`CHANGELOG.md`](CHANGELOG.md) - release history
 
 ## Project structure
 
@@ -126,8 +132,11 @@ src/
     layout/       AppShell, GameScreen frames
     toddler/      GameTile, RoundButton, ParentGate, CompletionOverlay, ...
   games/
-    shared/       Reusable matching engine (useMatchingGame, MatchingBoard)
-    build-garage/ flower-garden/ shape-sorting/   One folder per game
+    shared/       Matching engine + the draggable piece
+    build-garage/ Assembly game - build a vehicle from parts
+    flower-garden/ Find-and-tap discovery game
+    shape-sorting/ Sort-into-holes matching game
+    race/         Steering game with a gentle game loop
   screens/        HomeScreen, ParentScreen
   store/          Zustand state + localStorage persistence
   theme/          tokens.css (CSS variables) + ThemeProvider
@@ -136,21 +145,21 @@ src/
   lib/            Framework-agnostic helpers
 ```
 
-Each game folder is self-contained: `logic.ts` (rules), `data.ts` (content),
-`art.tsx` (modular inline SVG), and the screen component.
+Each game folder is self-contained: `data.ts` (content), `logic.ts` (rules),
+`art.tsx` (modular inline SVG), the board where one is needed, and the screen
+component.
 
 ## How it is designed for a toddler
 
-- **No reading required.** Guidance is visual: a glowing target, a bouncing
-  arrow, large highlighted objects. German text is short and for the parent.
+- **No reading required.** Guidance is visual: glowing targets, bouncing
+  arrows, revealed creatures. German text is short and for the parent.
 - **Huge, obvious targets.** Every touch target is at least 64px.
-- **Forgiving by design.** Wrong choices drift gently back; correct ones settle
-  softly into place. There is no failure state and nothing is ever punished.
-- **Two ways to play.** Pieces can be **dragged**, or **tapped** then the target
-  tapped — whichever suits small motor skills.
-- **Calm.** Animations are gentle (180–220ms): no flashing, no confetti, no
-  particle storms, no countdowns.
-- **Limited choices.** Each round shows only three items at a time.
+- **Forgiving by design.** Wrong choices drift gently back; an empty spot just
+  rustles; a bump in Race only pauses the car. There is no failure state.
+- **Touch-first.** Drag-and-drop, tap-to-place, tap-to-find and hold-to-steer -
+  whichever suits the game and small motor skills.
+- **Calm.** Animations are gentle (180-220ms): no flashing, no confetti.
+- **Few choices at once**, growing slowly as the child keeps playing.
 
 ## Accessibility
 
@@ -162,9 +171,9 @@ Each game folder is self-contained: `logic.ts` (rules), `data.ts` (content),
 ## Parent area
 
 Reachable from the small corner button on the home screen, then a
-**hold-the-circle gate** — easy for an adult, unlikely for a toddler. Inside:
+**hold-the-circle gate** - easy for an adult, unlikely for a toddler. Inside:
 light/dark theme, high-contrast, reduced-motion, per-game progress and a
-progress reset. No accounts, no cloud — everything stays on the device.
+progress reset. No accounts, no cloud - everything stays on the device.
 
 ## Privacy & security
 
@@ -179,19 +188,19 @@ response carries a strict Content-Security-Policy. See
 The architecture anticipates a later move to **Capacitor / Expo / React Native
 / Tauri**:
 
-- Game **rules** live in framework-light hooks (`useMatchingGame`, each
-  `logic.ts`) with no DOM or browser dependencies.
+- Game **rules** live in framework-light hooks (each game's `logic.ts`) with no
+  DOM dependencies.
 - All browser-only calls (haptics, install detection) are isolated in
-  `src/lib/platform.ts` — the single file a native build would re-implement.
+  `src/lib/platform.ts` - the single file a native build would re-implement.
 - Navigation is a small store-driven router, not URL-coupled.
 - Artwork is modular inline SVG, so it travels with the components.
 
-## Extending — adding a game
+## Extending - adding a game
 
-The home screen supports up to **6** tiles. A new matching-style game needs
-only `data.ts`, `art.tsx`, a thin `logic.ts` and a screen component, plus
-registration in `src/app/routes.tsx`. See [`CLAUDE.md`](CLAUDE.md) for the
-step-by-step.
+The home screen supports up to **6** tiles. A new game needs a `src/games/<id>/`
+folder (`data.ts`, `logic.ts`, `art.tsx`, a board if needed, screen component),
+registration in `src/app/routes.tsx`, a `GameId` in the store, a tile-tone
+token, and a German label. See [`CLAUDE.md`](CLAUDE.md) for the step-by-step.
 
 ## Notes
 

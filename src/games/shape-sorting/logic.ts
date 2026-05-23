@@ -1,9 +1,11 @@
 import { useMatchingGame, type MatchingGame } from '@/games/shared/useMatchingGame'
-import { SHAPE_KEYS, ROUND_SIZE } from './data'
+import { SHAPE_KEYS } from './data'
 
 /**
- * Shape Sorting game logic. Thin wrapper over the shared matching engine.
+ * Shape Sorting game logic. The classic sort-into-holes matching game.
+ * Difficulty ramps within a session: each finished round adds one more
+ * shape, from 3 up to 5.
  */
 export function useShapeSorting(): MatchingGame {
-  return useMatchingGame({ keys: SHAPE_KEYS, count: ROUND_SIZE })
+  return useMatchingGame({ keys: SHAPE_KEYS, count: 3, maxCount: 5 })
 }

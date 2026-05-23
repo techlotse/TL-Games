@@ -6,7 +6,7 @@
 #
 services:
   spielgarten:
-    image: techlotse/tl-games:${IMAGE_TAG:-latest}
+    image: techlotse/tl-games:${IMAGE_TAG:-edge}
     container_name: spielgarten
     restart: unless-stopped
     ports:

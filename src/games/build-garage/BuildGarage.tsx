@@ -1,13 +1,13 @@
 import { useAppStore } from '@/store/appStore'
 import { GameScreen } from '@/components/layout/GameScreen'
-import { MatchingBoard } from '@/games/shared/MatchingBoard'
+import { AssemblyBoard } from './AssemblyBoard'
 import { useBuildGarage } from './logic'
-import { VehicleArt } from './art'
 
 /**
  * Game 1 - Build Garage.
- * Match each coloured vehicle to its grey outline. Drag it, or tap the
- * vehicle then tap its space. Wrong choices drift gently back.
+ * Assemble a vehicle: drag (or tap) each part onto its glowing place. The
+ * vehicle gains a part every round (3 -> 5 parts). Wrong parts drift gently
+ * back - no failure, no score.
  */
 export function BuildGarage() {
   const go = useAppStore((s) => s.go)
@@ -16,12 +16,10 @@ export function BuildGarage() {
 
   return (
     <GameScreen tone="garage">
-      <MatchingBoard
+      <AssemblyBoard
         game={game}
         onHome={() => go('home')}
         onComplete={() => recordRound('garage')}
-        renderItem={(key) => <VehicleArt id={key} />}
-        renderTarget={(key) => <VehicleArt id={key} mono />}
       />
     </GameScreen>
   )

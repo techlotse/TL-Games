@@ -21,6 +21,7 @@ export default {
         'tile-garage': 'hsl(var(--tile-garage) / <alpha-value>)',
         'tile-garden': 'hsl(var(--tile-garden) / <alpha-value>)',
         'tile-shapes': 'hsl(var(--tile-shapes) / <alpha-value>)',
+        'tile-race': 'hsl(var(--tile-race) / <alpha-value>)',
       },
       borderRadius: {
         xl: '1.1rem',
@@ -38,7 +39,7 @@ export default {
         calm: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       fontSize: {
-        'tile': ['1.05rem', { lineHeight: '1.2', letterSpacing: '0.01em' }],
+        tile: ['1.05rem', { lineHeight: '1.2', letterSpacing: '0.01em' }],
       },
     },
   },

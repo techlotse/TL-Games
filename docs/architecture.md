@@ -6,10 +6,9 @@ Spielgarten is a **single-page, fully client-side Progressive Web App**. It is
 built as a static bundle (HTML, CSS, JS, assets), runs entirely in the browser,
 and is served in production by nginx inside a container. There is no backend.
 
-The architecture has one organising goal beyond "work well today": keep game
-**rules**, **presentation** and **browser APIs** separated, so the project can
-later be wrapped as a native app (Capacitor / Expo / React Native / Tauri)
-without rewriting the games.
+The architecture keeps game **rules**, **presentation** and **browser APIs**
+separated, so the project can later be wrapped as a native app
+(Capacitor / Expo / React Native / Tauri) without rewriting the games.
 
 ## Tech stack
 
@@ -24,26 +23,43 @@ without rewriting the games.
 | PWA | vite-plugin-pwa (injectManifest) + a hand-authored service worker |
 | Runtime (container) | nginx (non-root, static file server) |
 
-## Layered structure
+## The four games
+
+Each game is a **distinct kind of play**, not the same mechanic re-themed:
+
+| Game | Type | Mechanic |
+|---|---|---|
+| Build Garage | Assembly | Drag parts onto a vehicle frame to build it. |
+| Flower Garden | Find & tap | Tap covers to reveal hidden creatures. |
+| Shape Sorting | Matching | Drag/tap shapes into matching holes. |
+| Race | Steering | Hold a side to steer; dodge obstacles; gentle speed ramp. |
+
+Every game has a per-session **difficulty ramp**: it starts gentle, gets harder
+the longer the child plays, and resets when they return to the home screen
+(which simply unmounts the game component).
+
+Shared systems live in `src/games/shared/`: `useMatchingGame` (the headless
+matching engine, now used by Shape Sorting) and `DraggablePiece` (the forgiving
+drag/tap piece, reused by Build Garage and Shape Sorting). Build Garage, Flower
+Garden and Race each have their own `logic.ts` and board.
 
 ```mermaid
 flowchart TD
-  subgraph shell[App shell]
-    A[App.tsx] --> R[routes.tsx]
-  end
+  A[App.tsx] --> R[routes.tsx]
   R --> H[HomeScreen]
   R --> P[ParentScreen]
   R --> G1[BuildGarage]
   R --> G2[FlowerGarden]
   R --> G3[ShapeSorting]
-  G1 --> ENG[useMatchingGame + MatchingBoard]
-  G2 --> ENG
-  G3 --> ENG
+  R --> G4[Race]
+  G1 --> AB[AssemblyBoard]
+  G2 --> GB[GardenBoard]
+  G3 --> MB[MatchingBoard + useMatchingGame]
+  G4 --> RL[useRaceGame loop]
   H --> ST[(Zustand store)]
   P --> ST
-  ENG --> ST
   ST --> LS[(localStorage)]
-  A --> TH[ThemeProvider -> tokens.css]
+  A --> TH[ThemeProvider]
   A --> SW[Service worker / offline cache]
 ```
 
@@ -51,69 +67,64 @@ flowchart TD
 
 ```
 src/
-  app/         App shell + the tiny store-driven router
+  app/          App shell + the tiny store-driven router
   components/
-    ui/        shadcn/ui-style primitives (Button)
-    layout/    AppShell, GameScreen frames
-    toddler/   Large toddler-facing components (tiles, round buttons, gate ...)
+    ui/         shadcn/ui-style primitives (Button)
+    layout/     AppShell, GameScreen frames
+    toddler/    Large toddler-facing components (tiles, round buttons, gate)
   games/
-    shared/    Reusable matching engine (logic + board + draggable piece)
-    build-garage/ flower-garden/ shape-sorting/   One folder per game
-  screens/     HomeScreen, ParentScreen
-  store/       Zustand store (app state + persistence)
-  theme/       CSS-variable tokens + ThemeProvider
-  pwa/         Manifest, service worker, registration
-  i18n/        German strings
-  lib/         Framework-agnostic helpers (utils, motion, platform)
+    shared/     useMatchingGame, MatchingBoard, DraggablePiece
+    build-garage/  Assembly game (data, logic, art, AssemblyBoard, screen)
+    flower-garden/ Find-and-tap game (data, logic, art, GardenBoard, screen)
+    shape-sorting/ Matching game (data, logic, art, screen)
+    race/          Steering game (data, logic loop, art, screen)
+  screens/      HomeScreen, ParentScreen
+  store/        Zustand store (app state + persistence)
+  theme/        CSS-variable tokens + ThemeProvider
+  pwa/          Manifest, service worker, registration
+  i18n/         German strings
+  lib/          Framework-agnostic helpers (utils, motion, platform)
 ```
 
-Each game folder is self-contained: `data.ts` (content), `logic.ts` (rules),
-`art.tsx` (modular inline SVG), and the screen component.
+## Game logic
 
-## Core: the matching-game engine
-
-All three MVP games are the same kind of activity — match an item to a target —
-so they share one engine in `src/games/shared/`:
-
-- **`useMatchingGame`** — a *headless* hook. It owns the rules only: building a
-  round, tracking placements, deciding correct vs. wrong, completion, reset. It
-  has **no rendering and no browser APIs**, so it is trivially portable and
-  testable.
-- **`MatchingBoard`** — the presentation layer. It renders targets and the item
-  tray, wires up drag-and-drop *and* tap-to-place, and shows gentle feedback.
-- **`DraggablePiece`** — a single forgiving, touch-first interactive piece.
-
-A new matching-style game therefore only needs data, artwork and a thin
-`logic.ts` wrapper — see `CLAUDE.md` for the step-by-step.
+- **Build Garage** / **Flower Garden** / **Shape Sorting** logic is a headless
+  hook (`useBuildGarage`, `useFlowerGarden`, `useMatchingGame`) holding only the
+  rules - the round, placements, completion, the difficulty level. No DOM.
+- **Race** runs a `requestAnimationFrame` loop in `useRaceGame`: it owns car
+  position, obstacles, speed and collisions in a ref, and publishes a render
+  snapshot each frame. It is the one game with a real-time loop.
+- Boards (`MatchingBoard`, `AssemblyBoard`, `GardenBoard`, the Race field) own
+  presentation - drag/tap, hit-testing, gentle feedback, completion.
 
 ## State management
 
 A single Zustand store (`src/store/appStore.ts`) holds the current screen,
 theme, accessibility flags and per-game progress. The `persist` middleware
 saves the durable subset (everything except the current screen) to
-`localStorage`. There is no other global state.
+`localStorage`, deep-merging so games added in later versions still get a
+value. Difficulty level is **not** global state - it lives in each game and
+resets on unmount.
 
 ## Theming
 
 `src/theme/tokens.css` defines every colour as an HSL-channel CSS variable, with
 overrides for `.dark`, `.contrast-high` and `.dark.contrast-high`. Tailwind maps
 those variables to utility classes. `ThemeProvider` is the only code that
-touches the document root — it toggles the theme/contrast/reduced-motion
-classes from the store.
+touches the document root.
 
 ## Navigation
 
-Navigation is a tiny store-driven router rather than URL-based routing: the
-store holds a `screen` id and `routes.tsx` maps ids to components. This keeps
-toddlers from getting lost via browser history and matches how a future native
-build would navigate.
+A tiny store-driven router: the store holds a `screen` id and `routes.tsx` maps
+ids to components. Leaving a game unmounts it - which is also how the
+difficulty ramp resets.
 
 ## PWA & offline
 
-`vite-plugin-pwa` (injectManifest strategy) builds the hand-authored service
-worker in `src/pwa/service-worker.ts` and injects the precache list. The worker
-precaches the app shell on install and serves assets cache-first, so the app is
-fully usable offline after the first load. The manifest enables installation.
+`vite-plugin-pwa` (injectManifest) builds the hand-authored service worker in
+`src/pwa/service-worker.ts` and injects the precache list. The worker precaches
+the app shell on install and serves assets cache-first, so the app is fully
+usable offline after the first load.
 
 ## Build & deployment
 
@@ -124,13 +135,14 @@ npm run build  ->  dist/   (tsc type-check + Vite build + service worker)
 Dockerfile (multi-stage)  ->  nginx image  ->  Docker Hub  ->  any host
 ```
 
-The build stage compiles the bundle; the runtime stage is a minimal non-root
-nginx image serving `dist/`. See `docs/security.md` for hardening details.
+The build stage is pinned to the native build CPU so multi-arch images build
+without QEMU; the runtime stage is a minimal non-root nginx serving `dist/`.
+See `docs/security.md` for hardening details.
 
 ## Path to native
 
 - Game rules live in framework-light hooks with no DOM dependency.
 - Every browser-only call (haptics, install detection) is isolated in
-  `src/lib/platform.ts` — the single file a native target re-implements.
+  `src/lib/platform.ts` - the single file a native target re-implements.
 - Navigation is not URL-coupled.
 - Artwork is inline SVG that travels with its components.

@@ -13,11 +13,8 @@ export interface MatchingBoardProps {
   renderItem: (key: MatchKey) => ReactNode
   renderTarget: (key: MatchKey, filled: boolean) => ReactNode
   onHome: () => void
-  /** Fired exactly once, when the round is finished. */
   onComplete?: () => void
 }
-
-/* ----------------------------- Target slot ------------------------------ */
 
 interface TargetSlotProps {
   slotKey: MatchKey
@@ -43,7 +40,6 @@ function TargetSlot({
   const calm = useCalmMotion()
   const controls = useAnimationControls()
 
-  // A gentle, non-punishing "not here" wiggle when a wrong piece arrives.
   useEffect(() => {
     if (shakeSeq > 0 && !calm) {
       void controls.start({ x: [0, -7, 7, -5, 5, 0], transition: { duration: 0.36 } })
@@ -55,13 +51,12 @@ function TargetSlot({
       ref={registerRef}
       animate={controls}
       onClick={onTap}
-      className="relative flex aspect-square w-full items-center justify-center rounded-[1.6rem] bg-surface shadow-soft"
+      className="relative flex h-full w-full items-center justify-center rounded-[1.6rem] bg-surface shadow-soft"
     >
       <div className="absolute inset-0 flex items-center justify-center p-[12%]">
         {renderTarget(slotKey, filled)}
       </div>
 
-      {/* A glowing ring + bobbing arrow gently show where the active piece belongs. */}
       <AnimatePresence>
         {glowing && !filled && (
           <motion.div
@@ -92,7 +87,6 @@ function TargetSlot({
         )}
       </AnimatePresence>
 
-      {/* The matched piece softly settles into place. */}
       <AnimatePresence>
         {filled && (
           <motion.div
@@ -109,8 +103,6 @@ function TargetSlot({
     </motion.div>
   )
 }
-
-/* ------------------------------ Item cell -------------------------------- */
 
 interface ItemCellProps {
   itemKey: MatchKey
@@ -135,7 +127,7 @@ function ItemCell({
 }: ItemCellProps) {
   const calm = useCalmMotion()
   return (
-    <div className="relative flex aspect-square w-full items-center justify-center">
+    <div className="relative flex h-full w-full items-center justify-center">
       <AnimatePresence mode="wait">
         {placed ? (
           <motion.div
@@ -171,12 +163,10 @@ function ItemCell({
   )
 }
 
-/* ----------------------------- Matching board ---------------------------- */
-
 /**
- * The shared play surface for all matching games. Targets sit on top, the
+ * The shared play surface for the matching game. Targets sit on top, the
  * items tray below. Pieces can be dragged or tapped onto targets; wrong
- * choices bounce back, correct ones settle in. No score, no timer, no loss.
+ * choices bounce back, correct ones settle in. The row adapts to 3 - 5 items.
  */
 export function MatchingBoard({
   game,
@@ -190,6 +180,9 @@ export function MatchingBoard({
   const [shake, setShake] = useState<{ key: MatchKey; seq: number } | null>(null)
   const targetRefs = useRef(new Map<MatchKey, HTMLElement>())
   const completedRef = useRef(false)
+
+  const count = round.keys.length
+  const cellBasis = `calc((100% - ${(count - 1) * 0.5}rem) / ${count})`
 
   useEffect(() => {
     setActiveKey(null)
@@ -267,36 +260,46 @@ export function MatchingBoard({
 
   return (
     <div className="relative flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-[6vh] px-5">
-        <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+      <div className="flex flex-1 flex-col items-center justify-center gap-[6vh] px-4">
+        <div className="flex w-full items-center justify-center gap-2">
           {round.targetOrder.map((key) => (
-            <TargetSlot
+            <div
               key={`${round.id}:t:${key}`}
-              slotKey={key}
-              filled={game.isPlaced(key)}
-              glowing={activeKey === key}
-              shakeSeq={shake?.key === key ? shake.seq : 0}
-              renderTarget={renderTarget}
-              renderItem={renderItem}
-              registerRef={registerTarget(key)}
-              onTap={() => handleTapTarget(key)}
-            />
+              className="aspect-square shrink-0"
+              style={{ flexBasis: cellBasis }}
+            >
+              <TargetSlot
+                slotKey={key}
+                filled={game.isPlaced(key)}
+                glowing={activeKey === key}
+                shakeSeq={shake?.key === key ? shake.seq : 0}
+                renderTarget={renderTarget}
+                renderItem={renderItem}
+                registerRef={registerTarget(key)}
+                onTap={() => handleTapTarget(key)}
+              />
+            </div>
           ))}
         </div>
 
-        <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+        <div className="flex w-full items-center justify-center gap-2">
           {round.itemOrder.map((key, index) => (
-            <ItemCell
+            <div
               key={`${round.id}:i:${key}`}
-              itemKey={key}
-              placed={game.isPlaced(key)}
-              selected={activeKey === key}
-              floatDelay={index * 0.4}
-              renderItem={renderItem}
-              onPickUp={() => setActiveKey(key)}
-              onLetGo={(point) => handleLetGo(key, point)}
-              onTap={() => handleTapItem(key)}
-            />
+              className="aspect-square shrink-0"
+              style={{ flexBasis: cellBasis }}
+            >
+              <ItemCell
+                itemKey={key}
+                placed={game.isPlaced(key)}
+                selected={activeKey === key}
+                floatDelay={index * 0.4}
+                renderItem={renderItem}
+                onPickUp={() => setActiveKey(key)}
+                onLetGo={(point) => handleLetGo(key, point)}
+                onTap={() => handleTapItem(key)}
+              />
+            </div>
           ))}
         </div>
       </div>
