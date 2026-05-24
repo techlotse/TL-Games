@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type GameId = 'garage' | 'garden' | 'shapes' | 'race' | 'colouring' | 'find'
+export type GameId = 'garage' | 'garden' | 'shapes' | 'race' | 'colouring' | 'find' | 'dig'
 export type ScreenId = 'home' | GameId | 'parents'
 export type ThemeName = 'light' | 'dark'
 
@@ -15,6 +15,7 @@ const EMPTY_PROGRESS: Record<GameId, number> = {
   race: 0,
   colouring: 0,
   find: 0,
+  dig: 0,
 }
 
 interface AppState {

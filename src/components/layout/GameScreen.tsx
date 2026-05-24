@@ -13,6 +13,7 @@ const TONE_WASH: Record<GameTone, string> = {
   race: 'bg-tile-race/35',
   colouring: 'bg-tile-colouring/35',
   find: 'bg-tile-find/35',
+  dig: 'bg-tile-dig/35',
 }
 
 /**

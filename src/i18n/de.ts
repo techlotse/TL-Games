@@ -25,6 +25,7 @@ export const de = {
   gameRace: 'Rennen',
   gameColouring: 'Malen',
   gameFind: 'Suchen',
+  gameDig: 'Bagger',
 
   // Parent gate
   parentGateTitle: 'Für Eltern',

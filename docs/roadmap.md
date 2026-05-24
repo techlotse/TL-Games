@@ -18,6 +18,11 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ## Released
 
+### v0.2.0
+
+A seventh game: Bagger - a gentle side-scrolling platform game where a
+friendly excavator runs, hops and digs up gems across three levels.
+
 ### v0.1.1
 
 Polish across the board: ten vehicle types in Build Garage, ten Colouring

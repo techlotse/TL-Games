@@ -23,6 +23,7 @@ const TONE_BG: Record<GameTone, string> = {
   race: 'bg-tile-race',
   colouring: 'bg-tile-colouring',
   find: 'bg-tile-find',
+  dig: 'bg-tile-dig',
 }
 
 /**

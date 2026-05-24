@@ -25,6 +25,7 @@
   --tile-race: 220 13% 83%;
   --tile-colouring: 296 30% 88%;
   --tile-find: 176 28% 85%;
+  --tile-dig: 38 48% 80%;
 
   /* Motion - kept intentionally gentle (180-220ms) */
   --dur-fast: 180ms;
@@ -57,6 +58,7 @@
   --tile-race: 220 11% 32%;
   --tile-colouring: 296 16% 33%;
   --tile-find: 178 16% 31%;
+  --tile-dig: 32 22% 33%;
 
   color-scheme: dark;
 }

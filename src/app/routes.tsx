@@ -9,12 +9,14 @@ import { ShapeSorting } from '@/games/shape-sorting/ShapeSorting'
 import { Race } from '@/games/race/Race'
 import { Colouring } from '@/games/colouring/Colouring'
 import { FindItem } from '@/games/find-item/FindItem'
+import { Dig } from '@/games/dig/Dig'
 import { GarageTile } from '@/games/build-garage/art'
 import { GardenTile } from '@/games/flower-garden/art'
 import { ShapesTile } from '@/games/shape-sorting/art'
 import { RaceTile } from '@/games/race/art'
 import { ColouringTile } from '@/games/colouring/art'
 import { FindTile } from '@/games/find-item/art'
+import { DigTile } from '@/games/dig/art'
 
 /** Screen registry. A tiny store-driven router keeps navigation native-ready. */
 export const ROUTES: Record<ScreenId, ComponentType> = {
@@ -25,10 +27,11 @@ export const ROUTES: Record<ScreenId, ComponentType> = {
   race: Race,
   colouring: Colouring,
   find: FindItem,
+  dig: Dig,
   parents: ParentScreen,
 }
 
-export type GameTone = 'garage' | 'garden' | 'shapes' | 'race' | 'colouring' | 'find'
+export type GameTone = 'garage' | 'garden' | 'shapes' | 'race' | 'colouring' | 'find' | 'dig'
 
 export interface GameMeta {
   id: GameId
@@ -47,4 +50,5 @@ export const GAMES: readonly GameMeta[] = [
   { id: 'race', label: t.gameRace, Tile: RaceTile, tone: 'race' },
   { id: 'colouring', label: t.gameColouring, Tile: ColouringTile, tone: 'colouring' },
   { id: 'find', label: t.gameFind, Tile: FindTile, tone: 'find' },
+  { id: 'dig', label: t.gameDig, Tile: DigTile, tone: 'dig' },
 ]

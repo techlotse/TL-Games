@@ -21,8 +21,8 @@ loud celebrations, no ads, no tracking, no accounts.
 ## What's inside
 
 - **App shell** - installable PWA, offline after first load, iPhone-first.
-- **Home screen** - six large, readable-free game tiles.
-- **Six games:**
+- **Home screen** - seven large, readable-free game tiles.
+- **Seven games:**
   1. **Build Garage** (`Werkstatt`) - *assembly*: build ten vehicle types in
      turn, part by part - from a little car to a digger.
   2. **Flower Garden** (`Blumengarten`) - *colour match*: match each flower to
@@ -34,6 +34,8 @@ loud celebrations, no ads, no tracking, no accounts.
      picture in - tap to fill a region, or sweep the brush to paint freely.
   6. **Find-an-item** (`Suchen`) - *searching*: find the item shown in the
      frame among the others scattered across the scene.
+  7. **Bagger** (`Bagger`) - *platforming*: run and hop a friendly
+     excavator through a construction site, digging up gems on the way home.
 - **Difficulty progression** - every game starts gentle and ramps up the
   longer the child plays, then resets to easy at the home screen.
 - **Light & dark themes** (calm, muted - never neon), saved on-device.
@@ -143,6 +145,7 @@ src/
     race/         Steering game with a gentle game loop
     colouring/    Colouring game - fill regions or finger-paint
     find-item/    Find-an-item searching game
+    dig/          Bagger - a side-scrolling platform game
   screens/        HomeScreen, ParentScreen
   store/          Zustand state + localStorage persistence
   theme/          tokens.css (CSS variables) + ThemeProvider

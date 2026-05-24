@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.2.0] - 2026-05-24
+
+A seventh game - the excavator's first proper adventure.
+
+### Added
+
+- **Bagger** (`Bagger`) - a new seventh game, and the first platform game in
+  Spielgarten. A friendly excavator runs and hops through a sunny construction
+  site across three hand-built levels, digging up gems and rolling home to its
+  depot. Press and hold to move, tap to jump. Forgiving as ever - a missed
+  jump just lifts the excavator gently back onto solid ground; no score, no
+  timer, no "game over". It has a picture-story intro, a cheerful arrival at
+  the depot, big touch controls, keyboard play, bounce pads and a parallax
+  world of hills, clouds and distant cranes.
+- A seventh home-screen tile.
+
 ## [0.1.1] - 2026-05-24
 
 Longer journeys in every game, and a more joyful finish.
@@ -155,7 +171,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/techlotse/TL-Games/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/techlotse/TL-Games/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/techlotse/TL-Games/compare/v0.0.8...v0.1.0
 [0.0.8]: https://github.com/techlotse/TL-Games/compare/v0.0.7...v0.0.8

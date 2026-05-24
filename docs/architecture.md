@@ -23,7 +23,7 @@ separated, so the project can later be wrapped as a native app
 | PWA | vite-plugin-pwa (injectManifest) + a hand-authored service worker |
 | Runtime (container) | nginx (non-root, static file server) |
 
-## The six games
+## The seven games
 
 | Game | Type | Mechanic |
 |---|---|---|
@@ -33,6 +33,7 @@ separated, so the project can later be wrapped as a native app
 | Race | Steering | Hold and move the car; dodge obstacles; collect ten to win. |
 | Colouring | Colouring | Pick a colour; tap to fill a region, or sweep the brush to paint. |
 | Find-an-item | Searching | Find the item shown in the frame among the others. |
+| Bagger | Platforming | Run and hop the excavator through a side-scrolling level. |
 
 Every game has a per-session **difficulty ramp**: it starts gentle, gets harder
 the longer the child plays, and resets when they return to the home screen
@@ -54,12 +55,14 @@ flowchart TD
   R --> G4[Race]
   R --> G5[Colouring]
   R --> G6[FindItem]
+  R --> G7[Bagger]
   G1 --> AB[AssemblyBoard]
   G2 --> MB[MatchingBoard + useMatchingGame]
   G3 --> MB
   G4 --> RL[useRaceGame loop]
   G5 --> CB[ColourBoard]
   G6 --> FB[FindBoard]
+  G7 --> DB[DigBoard]
   H --> ST[(Zustand store)]
   P --> ST
   ST --> LS[(localStorage)]
@@ -84,6 +87,7 @@ src/
     race/          Steering game (data, logic loop, art, screen)
     colouring/     Colouring game (data, logic, art, ColourBoard, screen)
     find-item/     Find-an-item game (data, logic, art, FindBoard, screen)
+    dig/           Bagger platform game (data, logic loop, art, DigBoard, screen)
   screens/      HomeScreen, ParentScreen
   store/        Zustand store (app state + persistence)
   theme/        CSS-variable tokens + ThemeProvider

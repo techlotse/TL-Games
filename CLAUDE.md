@@ -74,7 +74,7 @@ See `docs/architecture.md` for the full picture. Quick map:
 - `src/pwa/` - manifest, service worker, registration.
 - `src/i18n/de.ts` - all German strings.
 
-## 6. The six games
+## 6. The seven games
 
 Each game is a **distinct type of play** - keep it that way:
 
@@ -90,6 +90,8 @@ Each game is a **distinct type of play** - keep it that way:
   fill it or sweep the brush to paint. `useColouring` + `ColourBoard`.
 - **Find-an-item** (`find-item/`) - searching: find the shown item among
   the others scattered in the scene. `useFindItem` + `FindBoard`.
+- **Bagger** (`dig/`) - platforming: a side-scroller - run and hop the
+  excavator through hand-built levels. `useDigGame` + `DigBoard`.
 
 Every game ramps difficulty within a session and resets when the screen is
 left (the component unmounts). Keep difficulty as component-local state, not
@@ -97,7 +99,7 @@ global store state.
 
 ## 7. Adding a new game
 
-The home screen supports up to **6 tiles** (this build ships all 6). To add one:
+The home screen is a scrolling 2-column grid (this build ships 7). To add one:
 
 1. Create `src/games/<game>/`: `data.ts` (content), `logic.ts` (a headless
    rules hook), `art.tsx` (inline SVG), a board if the game needs one, and the
