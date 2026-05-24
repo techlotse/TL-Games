@@ -18,6 +18,12 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ## Released
 
+### v0.1.0
+
+A broad round of polish: six vehicle types in Build Garage, a goal in
+Race, flowers planted inside their pots, true freehand painting in
+Colouring, and dark mode as the default.
+
 ### v0.0.8
 
 Two more games - Colouring ("Malen") and Find-an-item ("Suchen") - bringing

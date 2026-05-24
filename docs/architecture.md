@@ -30,7 +30,7 @@ separated, so the project can later be wrapped as a native app
 | Build Garage | Assembly | Drag parts onto the vehicle; they snap into place. |
 | Flower Garden | Matching | Match each flower to the pot of its colour. |
 | Shape Sorting | Matching | Match each shape into its hole. |
-| Race | Steering | Hold a side to steer; dodge obstacles; collect stars. |
+| Race | Steering | Hold and move the car; dodge obstacles; collect ten to win. |
 | Colouring | Colouring | Pick a colour; tap to fill a region, or sweep the brush to paint. |
 | Find-an-item | Searching | Find the item shown in the frame among the others. |
 

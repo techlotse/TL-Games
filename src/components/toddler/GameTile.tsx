@@ -26,9 +26,9 @@ const TONE_BG: Record<GameTone, string> = {
 }
 
 /**
- * A home-screen game tile - a vertical card with large artwork on top and a
- * short word below. The whole card is one big tap target; the word is only a
- * hint for the accompanying parent.
+ * A home-screen game tile - a vertical card with large square artwork on top
+ * and a short word below. The whole card is one big tap target; the word is
+ * only a hint for the accompanying parent.
  */
 export function GameTile({ label, tone, Art, progress, onPress, className }: GameTileProps) {
   const calm = useCalmMotion()
@@ -43,15 +43,13 @@ export function GameTile({ label, tone, Art, progress, onPress, className }: Gam
       whileTap={calm ? undefined : { scale: 0.97 }}
       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'flex h-full w-full flex-col items-center gap-2 rounded-[2rem] p-3 text-center shadow-soft outline-none',
+        'flex w-full flex-col items-center gap-2 rounded-[2rem] p-3 text-center shadow-soft outline-none',
         TONE_BG[tone],
         className,
       )}
     >
-      <div className="flex w-full flex-1 items-center justify-center rounded-[1.5rem] bg-surface/55 p-2.5">
-        <div className="h-full w-full">
-          <Art />
-        </div>
+      <div className="flex aspect-square w-full items-center justify-center rounded-[1.5rem] bg-surface/55 p-2.5">
+        <Art />
       </div>
       <span className="text-tile font-extrabold text-ink">{label}</span>
       <ProgressDots value={progress} className="pb-0.5" />

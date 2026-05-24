@@ -39,7 +39,7 @@ export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
       screen: 'home',
-      theme: 'light',
+      theme: 'dark',
       highContrast: false,
       reducedMotion: false,
       progress: { ...EMPTY_PROGRESS },

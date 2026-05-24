@@ -10,8 +10,12 @@ import type { MatchingGame } from './useMatchingGame'
 
 export interface MatchingBoardProps {
   game: MatchingGame
+  /** Draggable item artwork. */
   renderItem: (key: MatchKey) => ReactNode
+  /** Target / outline artwork. `filled` is true once matched. */
   renderTarget: (key: MatchKey, filled: boolean) => ReactNode
+  /** Optional artwork for a matched target (defaults to `renderItem`). */
+  renderPlaced?: (key: MatchKey) => ReactNode
   onHome: () => void
   onComplete?: () => void
 }
@@ -22,7 +26,7 @@ interface TargetSlotProps {
   glowing: boolean
   shakeSeq: number
   renderTarget: (key: MatchKey, filled: boolean) => ReactNode
-  renderItem: (key: MatchKey) => ReactNode
+  renderFilled: (key: MatchKey) => ReactNode
   registerRef: (el: HTMLDivElement | null) => void
   onTap: () => void
 }
@@ -33,7 +37,7 @@ function TargetSlot({
   glowing,
   shakeSeq,
   renderTarget,
-  renderItem,
+  renderFilled,
   registerRef,
   onTap,
 }: TargetSlotProps) {
@@ -96,7 +100,7 @@ function TargetSlot({
             animate={{ opacity: 1, scale: 1 }}
             transition={calm ? { duration: 0 } : settleSpring}
           >
-            {renderItem(slotKey)}
+            {renderFilled(slotKey)}
           </motion.div>
         )}
       </AnimatePresence>
@@ -106,6 +110,7 @@ function TargetSlot({
 
 interface ItemCellProps {
   itemKey: MatchKey
+  scale: number
   placed: boolean
   selected: boolean
   floatDelay: number
@@ -117,6 +122,7 @@ interface ItemCellProps {
 
 function ItemCell({
   itemKey,
+  scale,
   placed,
   selected,
   floatDelay,
@@ -154,7 +160,12 @@ function ItemCell({
               onLetGo={onLetGo}
               onTap={onTap}
             >
-              {renderItem(itemKey)}
+              <div
+                className="flex h-full w-full items-center justify-center"
+                style={{ transform: `scale(${scale})` }}
+              >
+                {renderItem(itemKey)}
+              </div>
             </DraggablePiece>
           </motion.div>
         )}
@@ -164,14 +175,16 @@ function ItemCell({
 }
 
 /**
- * The shared play surface for the matching game. Targets sit on top, the
- * items tray below. Pieces can be dragged or tapped onto targets; wrong
- * choices bounce back, correct ones settle in. The row adapts to 3 - 5 items.
+ * The shared play surface for the matching games. Targets sit on top, the
+ * tray below. Pieces can be dragged or tapped onto targets; wrong choices
+ * bounce back, correct ones settle in. The tray may hold more pieces than
+ * there are targets - the extra ones are decoys with no home.
  */
 export function MatchingBoard({
   game,
   renderItem,
   renderTarget,
+  renderPlaced,
   onHome,
   onComplete,
 }: MatchingBoardProps) {
@@ -181,8 +194,12 @@ export function MatchingBoard({
   const targetRefs = useRef(new Map<MatchKey, HTMLElement>())
   const completedRef = useRef(false)
 
-  const count = round.keys.length
-  const cellBasis = `calc((100% - ${(count - 1) * 0.5}rem) / ${count})`
+  const renderFilled = renderPlaced ?? renderItem
+
+  const targetCount = round.targetOrder.length
+  const itemCount = round.items.length
+  const targetBasis = `calc((100% - ${(targetCount - 1) * 0.5}rem) / ${targetCount})`
+  const itemBasis = `calc((100% - ${(itemCount - 1) * 0.5}rem) / ${itemCount})`
 
   useEffect(() => {
     setActiveKey(null)
@@ -266,7 +283,7 @@ export function MatchingBoard({
             <div
               key={`${round.id}:t:${key}`}
               className="aspect-square shrink-0"
-              style={{ flexBasis: cellBasis }}
+              style={{ flexBasis: targetBasis }}
             >
               <TargetSlot
                 slotKey={key}
@@ -274,7 +291,7 @@ export function MatchingBoard({
                 glowing={round.id < 2 && activeKey === key}
                 shakeSeq={shake?.key === key ? shake.seq : 0}
                 renderTarget={renderTarget}
-                renderItem={renderItem}
+                renderFilled={renderFilled}
                 registerRef={registerTarget(key)}
                 onTap={() => handleTapTarget(key)}
               />
@@ -283,21 +300,22 @@ export function MatchingBoard({
         </div>
 
         <div className="flex w-full items-center justify-center gap-2">
-          {round.itemOrder.map((key, index) => (
+          {round.items.map((item, index) => (
             <div
-              key={`${round.id}:i:${key}`}
+              key={`${round.id}:i:${item.key}`}
               className="aspect-square shrink-0"
-              style={{ flexBasis: cellBasis }}
+              style={{ flexBasis: itemBasis }}
             >
               <ItemCell
-                itemKey={key}
-                placed={game.isPlaced(key)}
-                selected={activeKey === key}
+                itemKey={item.key}
+                scale={item.scale}
+                placed={game.isPlaced(item.key)}
+                selected={activeKey === item.key}
                 floatDelay={index * 0.4}
                 renderItem={renderItem}
-                onPickUp={() => setActiveKey(key)}
-                onLetGo={(point) => handleLetGo(key, point)}
-                onTap={() => handleTapItem(key)}
+                onPickUp={() => setActiveKey(item.key)}
+                onLetGo={(point) => handleLetGo(item.key, point)}
+                onTap={() => handleTapItem(item.key)}
               />
             </div>
           ))}

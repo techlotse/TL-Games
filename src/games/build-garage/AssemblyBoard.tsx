@@ -6,25 +6,25 @@ import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
 import { DraggablePiece } from '@/games/shared/DraggablePiece'
 import type { Point } from '@/games/shared/types'
 import { PartArt, VehicleScene } from './art'
-import type { Slot } from './data'
-import type { AssemblyGame, TrayPiece } from './logic'
+import { VEHICLE_VIEW, type Box, type Part } from './data'
+import type { AssemblyGame } from './logic'
 
 /* ------------------------------ Slot glow -------------------------------- */
 
-function SlotGlow({ slot }: { slot: Slot }) {
+function SlotGlow({ box }: { box: Box }) {
   const calm = useCalmMotion()
   return (
     <motion.span
-      className="pointer-events-none absolute rounded-full ring-4 ring-focus"
+      className="pointer-events-none absolute rounded-2xl ring-4 ring-focus"
       style={{
-        left: `${slot.x}%`,
-        top: `${slot.y}%`,
-        width: `${slot.size}%`,
-        aspectRatio: '1',
+        left: `${((box.x + box.w / 2) / VEHICLE_VIEW.w) * 100}%`,
+        top: `${((box.y + box.h / 2) / VEHICLE_VIEW.h) * 100}%`,
+        width: `${(box.w / VEHICLE_VIEW.w) * 100}%`,
+        height: `${(box.h / VEHICLE_VIEW.h) * 100}%`,
         transform: 'translate(-50%, -50%)',
       }}
       initial={{ opacity: 0 }}
-      animate={calm ? { opacity: 0.75 } : { opacity: [0.4, 0.9, 0.4], scale: [1, 1.08, 1] }}
+      animate={calm ? { opacity: 0.75 } : { opacity: [0.4, 0.9, 0.4], scale: [1, 1.05, 1] }}
       transition={calm ? { duration: 0 } : { duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
     />
   )
@@ -33,7 +33,7 @@ function SlotGlow({ slot }: { slot: Slot }) {
 /* ------------------------------ Tray cell -------------------------------- */
 
 interface TrayCellProps {
-  piece: TrayPiece
+  piece: Part
   placed: boolean
   selected: boolean
   floatDelay: number
@@ -58,7 +58,7 @@ function TrayCell({
         {placed ? (
           <motion.div
             key="socket"
-            className="absolute inset-[16%] rounded-full bg-surface-2 shadow-inset"
+            className="absolute inset-[18%] rounded-full bg-surface-2 shadow-inset"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={calmTween}
@@ -80,7 +80,7 @@ function TrayCell({
               onLetGo={onLetGo}
               onTap={onTap}
             >
-              <PartArt kind={piece.kind} />
+              <PartArt part={piece} />
             </DraggablePiece>
           </motion.div>
         )}
@@ -98,9 +98,10 @@ export interface AssemblyBoardProps {
 }
 
 /**
- * Build a vehicle by dragging or tapping each part onto the car. Placing is
+ * Build a vehicle by dragging or tapping each part onto it. Placing is
  * forgiving: drop a part anywhere on the vehicle and it snaps to the nearest
- * spot that fits. The vehicle is one coherent drawing, so parts always align.
+ * spot of the right kind. The glow, the tray piece and the placed part all
+ * come from one shared part definition, so they always line up.
  */
 export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) {
   const { round, isComplete } = game
@@ -126,7 +127,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
 
   const placeNearest = useCallback(
     (pieceId: string, kind: string, point: Point | null): boolean => {
-      const candidates = round.slots.filter(
+      const candidates = round.vehicle.parts.filter(
         (s) => s.kind === kind && !game.placedSlots.has(s.id),
       )
       if (candidates.length === 0) return false
@@ -136,8 +137,8 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
         const r = frame.getBoundingClientRect()
         let bestD = Infinity
         for (const s of candidates) {
-          const sx = r.left + (s.x / 100) * r.width
-          const sy = r.top + (s.y / 100) * r.height
+          const sx = r.left + ((s.box.x + s.box.w / 2) / VEHICLE_VIEW.w) * r.width
+          const sy = r.top + ((s.box.y + s.box.h / 2) / VEHICLE_VIEW.h) * r.height
           const d = (point.x - sx) ** 2 + (point.y - sy) ** 2
           if (d < bestD) {
             bestD = d
@@ -161,10 +162,10 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
       if (!point || !frame) return
       const r = frame.getBoundingClientRect()
       const inside =
-        point.x >= r.left - 28 &&
-        point.x <= r.right + 28 &&
-        point.y >= r.top - 28 &&
-        point.y <= r.bottom + 28
+        point.x >= r.left - 36 &&
+        point.x <= r.right + 36 &&
+        point.y >= r.top - 36 &&
+        point.y <= r.bottom + 36
       if (inside) placeNearest(pieceId, kind, point)
     },
     [placeNearest],
@@ -179,40 +180,34 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
     if (placeNearest(activePiece, activeKind, null)) setActivePiece(null)
   }, [activeKind, activePiece, placeNearest])
 
-  const trayCount = round.tray.length
-  const cellBasis = `calc((100% - ${(trayCount - 1) * 0.5}rem) / ${trayCount})`
-
   return (
     <div className="relative flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-[5vh] px-4">
+      <div className="flex flex-1 flex-col items-center justify-center gap-[3vh] px-3">
         {/* Build frame - the vehicle being assembled */}
         <div
           ref={frameRef}
           onClick={handleTapFrame}
           className="relative w-full max-w-[23rem]"
-          style={{ aspectRatio: '300 / 220' }}
+          style={{ aspectRatio: `${VEHICLE_VIEW.w} / ${VEHICLE_VIEW.h}` }}
         >
-          <VehicleScene placed={game.placedSlots} />
-          {round.slots.map((slot) =>
-            round.id < 2 && activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
-              <SlotGlow key={slot.id} slot={slot} />
-            ) : null,
-          )}
+          <VehicleScene vehicle={round.vehicle} placed={game.placedSlots} />
+          {round.id < 2 &&
+            round.vehicle.parts.map((slot) =>
+              activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
+                <SlotGlow key={slot.id} box={slot.box} />
+              ) : null,
+            )}
         </div>
 
         {/* Parts tray */}
-        <div className="flex w-full items-center justify-center gap-2">
+        <div className="flex w-full flex-wrap items-center justify-center gap-2.5">
           {round.tray.map((piece, index) => (
-            <div
-              key={`${round.id}:${piece.id}`}
-              className="aspect-square shrink-0"
-              style={{ flexBasis: cellBasis }}
-            >
+            <div key={`${round.id}:${piece.id}`} className="aspect-square w-[21.5%]">
               <TrayCell
                 piece={piece}
                 placed={game.placedPieces.has(piece.id)}
                 selected={activePiece === piece.id}
-                floatDelay={index * 0.35}
+                floatDelay={index * 0.3}
                 onPickUp={() => setActivePiece(piece.id)}
                 onLetGo={(point) => handleLetGo(piece.id, piece.kind, point)}
                 onTap={() => handleTapPiece(piece.id)}

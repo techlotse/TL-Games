@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.0] - 2026-05-24
+
+A broad round of polish across every game, plus a calmer first impression.
+
+### Added
+
+- **Build Garage** now builds six vehicle types in turn - car, truck, bus,
+  tractor, bulldozer and excavator - each with a few more parts than the last.
+- **Race** has a goal: collect ten happy items to fill the car's smile, which
+  brings a gentle "well done" and then another, slightly faster run.
+
+### Changed
+
+- **Build Garage** parts now line up exactly - every part's glow, tray piece
+  and placed drawing come from one shared definition.
+- **Flower Garden** flowers now stand planted *inside* their pots, and they
+  are six Swiss plants (Enzian, Alpenrose, Loewenzahn, Krokus, Edelweiss,
+  Mohn) with their German names shown for the parent.
+- **Shape Sorting** higher levels add extra shapes with no hole, and the
+  pieces come in different sizes - so the child sorts by shape, not size.
+- **Race** is now steered by pressing and holding the car and moving it from
+  side to side; the collision area is smaller, so tucking in just behind an
+  obstacle is forgiven.
+- **Colouring** - the brush is now true freehand: it paints wherever the
+  finger goes instead of filling whole regions. A freehand picture finishes
+  once enough of the sheet has been painted over.
+- **Dark mode is now the default** theme.
+- The home screen scrolls reliably in mobile browsers when a device is too
+  short to show all six tiles at once.
+
 ## [0.0.8] - 2026-05-24
 
 Two more games - the home screen is now full at six - and a gentler hint that
@@ -101,7 +131,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.0.8...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/techlotse/TL-Games/compare/v0.0.8...v0.1.0
 [0.0.8]: https://github.com/techlotse/TL-Games/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/techlotse/TL-Games/compare/v0.0.1...v0.0.7
 [0.0.1]: https://github.com/techlotse/TL-Games/releases/tag/v0.0.1

@@ -78,14 +78,14 @@ See `docs/architecture.md` for the full picture. Quick map:
 
 Each game is a **distinct type of play** - keep it that way:
 
-- **Build Garage** (`build-garage/`) - assembly: drag parts onto a vehicle.
-  `useBuildGarage` + `AssemblyBoard`.
+- **Build Garage** (`build-garage/`) - assembly: drag parts onto a vehicle;
+  six vehicle types in turn. `useBuildGarage` + `AssemblyBoard`.
 - **Flower Garden** (`flower-garden/`) - colour matching: match flowers to
   pots, on the shared engine. `useFlowerGarden` + `MatchingBoard`.
 - **Shape Sorting** (`shape-sorting/`) - matching: the shared engine,
   `useMatchingGame` + `MatchingBoard`.
 - **Race** (`race/`) - steering: a `requestAnimationFrame` loop in
-  `useRaceGame`; hold a side to steer, dodge obstacles, gentle speed ramp.
+  `useRaceGame`; hold and move the car, dodge obstacles, collect ten to win.
 - **Colouring** (`colouring/`) - colouring: pick a colour, tap a region to
   fill it or sweep the brush to paint. `useColouring` + `ColourBoard`.
 - **Find-an-item** (`find-item/`) - searching: find the shown item among

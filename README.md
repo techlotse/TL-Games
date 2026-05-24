@@ -23,13 +23,13 @@ loud celebrations, no ads, no tracking, no accounts.
 - **App shell** - installable PWA, offline after first load, iPhone-first.
 - **Home screen** - six large, readable-free game tiles.
 - **Six games:**
-  1. **Build Garage** (`Werkstatt`) - *assembly*: build a vehicle by dragging
-     each part onto it.
+  1. **Build Garage** (`Werkstatt`) - *assembly*: build six vehicle types in
+     turn - car, truck, bus, tractor, bulldozer, excavator - part by part.
   2. **Flower Garden** (`Blumengarten`) - *colour match*: match each flower to
      the plant pot of the same colour.
   3. **Shape Sorting** (`Formen`) - *shape match*: sort each block into its hole.
-  4. **Race** (`Rennen`) - *steering*: hold a side of the road to steer, drive
-     around the obstacles and collect the cheerful stars and hearts.
+  4. **Race** (`Rennen`) - *steering*: hold and move the car to drive around
+     the obstacles and collect ten cheerful items to fill its smile.
   5. **Colouring** (`Malen`) - *colouring*: pick a colour and colour the
      picture in - tap to fill a region, or sweep the brush to paint freely.
   6. **Find-an-item** (`Suchen`) - *searching*: find the item shown in the

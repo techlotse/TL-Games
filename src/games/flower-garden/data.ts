@@ -1,28 +1,36 @@
 /**
  * Flower Garden - static content.
  *
- * The game is a colour match: a flower is matched to the plant pot of the
- * same colour. Montessori focus: colour matching, classification, sorting.
+ * A colour-matching game: each flower is matched to the plant pot of the same
+ * colour, then it stands planted in the pot. The flowers are six plants seen
+ * across Switzerland; their German names are shown as a hint for the parent.
  */
 
-export interface FlowerColor {
+export type FlowerKey = 'enzian' | 'alpenrose' | 'loewenzahn' | 'krokus' | 'edelweiss' | 'mohn'
+
+export type PetalStyle = 'star' | 'round' | 'broad'
+
+export interface Flower {
+  /** German name - a hint for the accompanying parent. */
+  name: string
   petal: string
   petalDark: string
   center: string
+  style: PetalStyle
 }
 
-export const FLOWER_KEYS = ['rose', 'sunny', 'sky', 'mint', 'lilac'] as const
-export type FlowerKey = (typeof FLOWER_KEYS)[number]
-
-/** Soft, warm pastel garden palette. */
-export const FLOWER_COLORS: Record<FlowerKey, FlowerColor> = {
-  rose: { petal: '#E48AA6', petalDark: '#CE7090', center: '#F6DE9C' },
-  sunny: { petal: '#EBC255', petalDark: '#D4A833', center: '#E59A3C' },
-  sky: { petal: '#79A9D1', petalDark: '#5F8FBA', center: '#F6DE9C' },
-  mint: { petal: '#77BF9A', petalDark: '#5EA681', center: '#F6DE9C' },
-  lilac: { petal: '#B296D0', petalDark: '#997CB9', center: '#F6DE9C' },
+/** Six Swiss flowers, each a clear and distinct colour for matching. */
+export const FLOWERS: Record<FlowerKey, Flower> = {
+  enzian: { name: 'Enzian', petal: '#3F73B8', petalDark: '#335E97', center: '#F2D98C', style: 'star' },
+  alpenrose: { name: 'Alpenrose', petal: '#D96A86', petalDark: '#C2566F', center: '#F2D98C', style: 'round' },
+  loewenzahn: { name: 'Löwenzahn', petal: '#EBC24A', petalDark: '#D2A630', center: '#C8881F', style: 'star' },
+  krokus: { name: 'Krokus', petal: '#9B7BC4', petalDark: '#8366AE', center: '#F2D98C', style: 'round' },
+  edelweiss: { name: 'Edelweiss', petal: '#F1ECDC', petalDark: '#D7CFB8', center: '#E2B23C', style: 'star' },
+  mohn: { name: 'Mohn', petal: '#D64B45', petalDark: '#BE3C37', center: '#33302E', style: 'broad' },
 }
+
+export const FLOWER_KEYS = Object.keys(FLOWERS) as FlowerKey[]
 
 export const STEM_COLOR = '#6E9C5C'
 export const LEAF_COLOR = '#7EAC68'
-export const SOIL_COLOR = '#7C5839'
+export const SOIL_COLOR = '#6E4A30'

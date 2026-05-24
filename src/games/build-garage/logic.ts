@@ -1,16 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
 import { shuffle } from '@/lib/utils'
-import { slotsForLevel, type PartKind, type Slot } from './data'
-
-export interface TrayPiece {
-  id: string
-  kind: PartKind
-}
+import { vehicleForLevel, type Part, type Vehicle } from './data'
 
 export interface AssemblyRound {
   id: number
-  slots: Slot[]
-  tray: TrayPiece[]
+  vehicle: Vehicle
+  tray: Part[]
 }
 
 export interface AssemblyGame {
@@ -23,14 +18,13 @@ export interface AssemblyGame {
 }
 
 function buildRound(id: number): AssemblyRound {
-  const slots = slotsForLevel(id)
-  const tray = shuffle(slots.map((slot, index) => ({ id: `p${index}-${slot.kind}`, kind: slot.kind })))
-  return { id, slots, tray }
+  const vehicle = vehicleForLevel(id)
+  return { id, vehicle, tray: shuffle(vehicle.parts) }
 }
 
 /**
- * Build Garage game logic. Difficulty ramps within a session: each finished
- * vehicle gains one more part (3 -> 5). Resets when the screen is left.
+ * Build Garage game logic. Each completed vehicle is replaced by the next
+ * type - a little larger, a few more parts. Resets when the screen is left.
  */
 export function useBuildGarage(): AssemblyGame {
   const [round, setRound] = useState<AssemblyRound>(() => buildRound(0))
@@ -40,7 +34,7 @@ export function useBuildGarage(): AssemblyGame {
   const attempt = useCallback(
     (pieceId: string, slotId: string): 'correct' | 'wrong' => {
       const piece = round.tray.find((p) => p.id === pieceId)
-      const slot = round.slots.find((s) => s.id === slotId)
+      const slot = round.vehicle.parts.find((s) => s.id === slotId)
       if (!piece || !slot) return 'wrong'
       if (placedSlots.has(slotId) || placedPieces.has(pieceId)) return 'wrong'
       if (piece.kind !== slot.kind) return 'wrong'
@@ -57,7 +51,8 @@ export function useBuildGarage(): AssemblyGame {
     setPlacedPieces(new Set())
   }, [])
 
-  const isComplete = round.slots.length > 0 && placedSlots.size === round.slots.length
+  const isComplete =
+    round.vehicle.parts.length > 0 && placedSlots.size === round.vehicle.parts.length
 
   return useMemo(
     () => ({ round, placedSlots, placedPieces, isComplete, attempt, reset }),

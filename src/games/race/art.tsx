@@ -7,6 +7,8 @@ const C = {
   glass: '#C2E1EA',
   tyre: '#33302E',
   light: '#F4E08C',
+  face: '#33302E',
+  cheek: '#E2607A',
   cone: '#E8853A',
   coneBase: '#C76A2A',
   coneStripe: '#F2EAD9',
@@ -28,20 +30,39 @@ const C = {
   sparkle: '#F6D45E',
 }
 
-/** The player's car, seen from above and pointing up the road. */
-export function CarArt() {
+/**
+ * The player's car, seen from above. It has a friendly face on the bonnet;
+ * `smile` (0-1) deepens the grin and brings out rosy cheeks as happy items
+ * are collected.
+ */
+export function CarArt({ smile = 0 }: { smile?: number }) {
+  const s = Math.max(0, Math.min(1, smile))
+  const mouthDip = 4 + s * 15
   return (
     <svg viewBox="0 0 84 120" className="block h-auto w-full" role="img" aria-label="Auto">
-      <rect x="0" y="22" width="14" height="24" rx="6" fill={C.tyre} />
-      <rect x="70" y="22" width="14" height="24" rx="6" fill={C.tyre} />
-      <rect x="0" y="74" width="14" height="24" rx="6" fill={C.tyre} />
-      <rect x="70" y="74" width="14" height="24" rx="6" fill={C.tyre} />
+      <rect x="0" y="24" width="14" height="26" rx="6" fill={C.tyre} />
+      <rect x="70" y="24" width="14" height="26" rx="6" fill={C.tyre} />
+      <rect x="0" y="72" width="14" height="26" rx="6" fill={C.tyre} />
+      <rect x="70" y="72" width="14" height="26" rx="6" fill={C.tyre} />
       <rect x="10" y="4" width="64" height="112" rx="26" fill={C.carBody} />
-      <rect x="18" y="44" width="48" height="42" rx="16" fill={C.carDark} />
-      <path d="M21 45 Q42 31 63 45 L59 56 Q42 47 25 56 Z" fill={C.glass} />
-      <path d="M25 85 Q42 93 59 85 L56 96 Q42 101 28 96 Z" fill={C.glass} />
-      <circle cx="23" cy="15" r="6" fill={C.light} />
-      <circle cx="61" cy="15" r="6" fill={C.light} />
+      <rect x="16" y="64" width="52" height="42" rx="17" fill={C.carDark} />
+      <path d="M22 92 Q42 100 62 92 L59 103 Q42 108 25 103 Z" fill={C.glass} />
+      <circle cx="22" cy="14" r="6" fill={C.light} />
+      <circle cx="62" cy="14" r="6" fill={C.light} />
+      {/* Friendly face on the bonnet */}
+      <circle cx="24" cy="50" r="4.4" fill={C.cheek} opacity={s} />
+      <circle cx="60" cy="50" r="4.4" fill={C.cheek} opacity={s} />
+      <circle cx="31" cy="40" r="7" fill="#FBF7EC" />
+      <circle cx="53" cy="40" r="7" fill="#FBF7EC" />
+      <circle cx="31" cy="41" r="3.6" fill={C.face} />
+      <circle cx="53" cy="41" r="3.6" fill={C.face} />
+      <path
+        d={`M28 55 Q42 ${55 + mouthDip} 56 55`}
+        stroke={C.face}
+        strokeWidth="4.6"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   )
 }
@@ -185,7 +206,9 @@ export function RaceTile() {
         <rect x="-7" y="34" width="9" height="15" rx="4" fill={C.tyre} />
         <rect x="32" y="34" width="9" height="15" rx="4" fill={C.tyre} />
         <rect x="2" y="2" width="30" height="54" rx="13" fill={C.carBody} />
-        <path d="M8 22 Q17 14 26 22 L24 30 Q17 25 10 30 Z" fill={C.glass} />
+        <circle cx="12" cy="20" r="4" fill="#FBF7EC" />
+        <circle cx="22" cy="20" r="4" fill="#FBF7EC" />
+        <path d="M10 30 Q17 36 24 30" stroke={C.face} strokeWidth="3" fill="none" strokeLinecap="round" />
       </g>
     </svg>
   )

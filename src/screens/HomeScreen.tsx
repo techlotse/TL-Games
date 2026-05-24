@@ -8,8 +8,9 @@ import { ParentGate } from '@/components/toddler/ParentGate'
 import { t } from '@/i18n'
 
 /**
- * Home screen. Six big game tiles fill the screen in a 2-column grid; a small,
- * discreet button in the corner leads (via a hold-gate) to the parent area.
+ * Home screen. Six big game tiles in a 2-column grid; the grid scrolls if a
+ * device is too short to show all six. A small, discreet button in the corner
+ * leads (via a hold-gate) to the parent area.
  */
 export function HomeScreen() {
   const go = useAppStore((s) => s.go)
@@ -33,7 +34,7 @@ export function HomeScreen() {
         </button>
       </header>
 
-      <div className="safe-x grid flex-1 grid-cols-2 auto-rows-fr gap-3 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
+      <div className="safe-x grid min-h-0 flex-1 grid-cols-2 content-start gap-3 overflow-y-auto px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
         {GAMES.map((game) => (
           <GameTile
             key={game.id}
