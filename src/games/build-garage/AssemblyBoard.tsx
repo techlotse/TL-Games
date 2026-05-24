@@ -194,7 +194,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
         >
           <VehicleScene placed={game.placedSlots} />
           {round.slots.map((slot) =>
-            activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
+            round.id < 2 && activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
               <SlotGlow key={slot.id} slot={slot} />
             ) : null,
           )}

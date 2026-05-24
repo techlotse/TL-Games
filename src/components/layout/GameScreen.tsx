@@ -11,6 +11,8 @@ const TONE_WASH: Record<GameTone, string> = {
   garden: 'bg-tile-garden/35',
   shapes: 'bg-tile-shapes/35',
   race: 'bg-tile-race/35',
+  colouring: 'bg-tile-colouring/35',
+  find: 'bg-tile-find/35',
 }
 
 /**

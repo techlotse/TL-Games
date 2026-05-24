@@ -74,7 +74,7 @@ See `docs/architecture.md` for the full picture. Quick map:
 - `src/pwa/` - manifest, service worker, registration.
 - `src/i18n/de.ts` - all German strings.
 
-## 6. The four games
+## 6. The six games
 
 Each game is a **distinct type of play** - keep it that way:
 
@@ -86,6 +86,10 @@ Each game is a **distinct type of play** - keep it that way:
   `useMatchingGame` + `MatchingBoard`.
 - **Race** (`race/`) - steering: a `requestAnimationFrame` loop in
   `useRaceGame`; hold a side to steer, dodge obstacles, gentle speed ramp.
+- **Colouring** (`colouring/`) - colouring: pick a colour, tap a region to
+  fill it or sweep the brush to paint. `useColouring` + `ColourBoard`.
+- **Find-an-item** (`find-item/`) - searching: find the shown item among
+  the others scattered in the scene. `useFindItem` + `FindBoard`.
 
 Every game ramps difficulty within a session and resets when the screen is
 left (the component unmounts). Keep difficulty as component-local state, not
@@ -93,7 +97,7 @@ global store state.
 
 ## 7. Adding a new game
 
-The home screen supports up to **6 tiles** (this build ships 4). To add one:
+The home screen supports up to **6 tiles** (this build ships all 6). To add one:
 
 1. Create `src/games/<game>/`: `data.ts` (content), `logic.ts` (a headless
    rules hook), `art.tsx` (inline SVG), a board if the game needs one, and the

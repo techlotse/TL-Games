@@ -23,6 +23,8 @@ export const de = {
   gameGarden: 'Blumengarten',
   gameShapes: 'Formen',
   gameRace: 'Rennen',
+  gameColouring: 'Malen',
+  gameFind: 'Suchen',
 
   // Parent gate
   parentGateTitle: 'Für Eltern',

@@ -271,7 +271,7 @@ export function MatchingBoard({
               <TargetSlot
                 slotKey={key}
                 filled={game.isPlaced(key)}
-                glowing={activeKey === key}
+                glowing={round.id < 2 && activeKey === key}
                 shakeSeq={shake?.key === key ? shake.seq : 0}
                 renderTarget={renderTarget}
                 renderItem={renderItem}

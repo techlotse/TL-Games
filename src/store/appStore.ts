@@ -1,14 +1,21 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type GameId = 'garage' | 'garden' | 'shapes' | 'race'
+export type GameId = 'garage' | 'garden' | 'shapes' | 'race' | 'colouring' | 'find'
 export type ScreenId = 'home' | GameId | 'parents'
 export type ThemeName = 'light' | 'dark'
 
 /** Highest number of progress dots shown per game (kept small + calm). */
 export const MAX_PROGRESS = 3
 
-const EMPTY_PROGRESS: Record<GameId, number> = { garage: 0, garden: 0, shapes: 0, race: 0 }
+const EMPTY_PROGRESS: Record<GameId, number> = {
+  garage: 0,
+  garden: 0,
+  shapes: 0,
+  race: 0,
+  colouring: 0,
+  find: 0,
+}
 
 interface AppState {
   /** Current screen. Intentionally NOT persisted - the app always opens at home. */

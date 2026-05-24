@@ -22,6 +22,8 @@ export default {
         'tile-garden': 'hsl(var(--tile-garden) / <alpha-value>)',
         'tile-shapes': 'hsl(var(--tile-shapes) / <alpha-value>)',
         'tile-race': 'hsl(var(--tile-race) / <alpha-value>)',
+        'tile-colouring': 'hsl(var(--tile-colouring) / <alpha-value>)',
+        'tile-find': 'hsl(var(--tile-find) / <alpha-value>)',
       },
       borderRadius: {
         xl: '1.1rem',

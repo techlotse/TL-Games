@@ -23,7 +23,7 @@ separated, so the project can later be wrapped as a native app
 | PWA | vite-plugin-pwa (injectManifest) + a hand-authored service worker |
 | Runtime (container) | nginx (non-root, static file server) |
 
-## The four games
+## The six games
 
 | Game | Type | Mechanic |
 |---|---|---|
@@ -31,6 +31,8 @@ separated, so the project can later be wrapped as a native app
 | Flower Garden | Matching | Match each flower to the pot of its colour. |
 | Shape Sorting | Matching | Match each shape into its hole. |
 | Race | Steering | Hold a side to steer; dodge obstacles; collect stars. |
+| Colouring | Colouring | Pick a colour; tap to fill a region, or sweep the brush to paint. |
+| Find-an-item | Searching | Find the item shown in the frame among the others. |
 
 Every game has a per-session **difficulty ramp**: it starts gentle, gets harder
 the longer the child plays, and resets when they return to the home screen
@@ -38,8 +40,8 @@ the longer the child plays, and resets when they return to the home screen
 
 Shared systems live in `src/games/shared/`: `useMatchingGame` + `MatchingBoard`
 (the headless matching engine and its board, used by Shape Sorting and Flower
-Garden) and `DraggablePiece` (the forgiving drag/tap piece). Build Garage and
-Race each have their own logic and board.
+Garden) and `DraggablePiece` (the forgiving drag/tap piece). Build Garage,
+Race, Colouring and Find-an-item each have their own logic and board.
 
 ```mermaid
 flowchart TD
@@ -50,10 +52,14 @@ flowchart TD
   R --> G2[FlowerGarden]
   R --> G3[ShapeSorting]
   R --> G4[Race]
+  R --> G5[Colouring]
+  R --> G6[FindItem]
   G1 --> AB[AssemblyBoard]
   G2 --> MB[MatchingBoard + useMatchingGame]
   G3 --> MB
   G4 --> RL[useRaceGame loop]
+  G5 --> CB[ColourBoard]
+  G6 --> FB[FindBoard]
   H --> ST[(Zustand store)]
   P --> ST
   ST --> LS[(localStorage)]
@@ -76,6 +82,8 @@ src/
     flower-garden/ Colour-matching game (data, logic, art, screen)
     shape-sorting/ Shape-matching game (data, logic, art, screen)
     race/          Steering game (data, logic loop, art, screen)
+    colouring/     Colouring game (data, logic, art, ColourBoard, screen)
+    find-item/     Find-an-item game (data, logic, art, FindBoard, screen)
   screens/      HomeScreen, ParentScreen
   store/        Zustand store (app state + persistence)
   theme/        CSS-variable tokens + ThemeProvider

@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.0.8] - 2026-05-24
+
+Two more games - the home screen is now full at six - and a gentler hint that
+steps back once the child has the hang of a game.
+
+### Added
+
+- **Colouring** (`Malen`) - a new fifth game. Pick a colour, then colour the
+  picture: tap a region to fill it solid. From level 2 a tool toggle is
+  unlocked - keep tapping to fill, or pick the brush and sweep a finger to
+  paint freely. The picture gains regions as the child plays. There is no
+  "wrong" colour and no score.
+- **Find-an-item** (`Suchen`) - a new sixth game. One item is shown in a
+  frame; the child finds and taps that same item among the others scattered
+  across the scene, until every item is found. More items appear the longer
+  the child plays.
+- A fifth and sixth home-screen tile - the home screen is now full at six
+  games.
+
+### Changed
+
+- The destination hint in **Build Garage**, **Flower Garden** and **Shape
+  Sorting** now shows only on the first two rounds of a session, then steps
+  back so the child decides where each piece belongs. **Find-an-item** does
+  the same: the target glows in the scene on the first levels only.
+- Home tiles are now vertical cards - artwork above, a short word below - laid
+  out in a 2-column grid so all six games fit on screen without scrolling.
+
 ## [0.0.7] - 2026-05-23
 
 A fourth game, four distinct kinds of play, a gentle per-session difficulty
@@ -73,6 +101,7 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.0.7...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.0.8...HEAD
+[0.0.8]: https://github.com/techlotse/TL-Games/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/techlotse/TL-Games/compare/v0.0.1...v0.0.7
 [0.0.1]: https://github.com/techlotse/TL-Games/releases/tag/v0.0.1

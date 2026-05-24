@@ -21,11 +21,14 @@ const TONE_BG: Record<GameTone, string> = {
   garden: 'bg-tile-garden',
   shapes: 'bg-tile-shapes',
   race: 'bg-tile-race',
+  colouring: 'bg-tile-colouring',
+  find: 'bg-tile-find',
 }
 
 /**
- * A home-screen game tile. The whole tile is one big tap target with large
- * artwork; the short word is only a hint for the accompanying parent.
+ * A home-screen game tile - a vertical card with large artwork on top and a
+ * short word below. The whole card is one big tap target; the word is only a
+ * hint for the accompanying parent.
  */
 export function GameTile({ label, tone, Art, progress, onPress, className }: GameTileProps) {
   const calm = useCalmMotion()
@@ -40,18 +43,18 @@ export function GameTile({ label, tone, Art, progress, onPress, className }: Gam
       whileTap={calm ? undefined : { scale: 0.97 }}
       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'flex w-full flex-1 items-center gap-5 rounded-[2.25rem] p-4 text-left shadow-soft outline-none',
+        'flex h-full w-full flex-col items-center gap-2 rounded-[2rem] p-3 text-center shadow-soft outline-none',
         TONE_BG[tone],
         className,
       )}
     >
-      <div className="flex aspect-square h-full max-h-[9rem] shrink-0 items-center justify-center rounded-[1.7rem] bg-surface/55 p-3">
-        <Art />
+      <div className="flex w-full flex-1 items-center justify-center rounded-[1.5rem] bg-surface/55 p-2.5">
+        <div className="h-full w-full">
+          <Art />
+        </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <span className="text-2xl font-extrabold leading-tight text-ink">{label}</span>
-        <ProgressDots value={progress} />
-      </div>
+      <span className="text-tile font-extrabold text-ink">{label}</span>
+      <ProgressDots value={progress} className="pb-0.5" />
     </motion.button>
   )
 }

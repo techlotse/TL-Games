@@ -23,6 +23,8 @@
   --tile-garden: 138 38% 86%;
   --tile-shapes: 34 54% 86%;
   --tile-race: 220 13% 83%;
+  --tile-colouring: 296 30% 88%;
+  --tile-find: 176 28% 85%;
 
   /* Motion - kept intentionally gentle (180-220ms) */
   --dur-fast: 180ms;
@@ -53,6 +55,8 @@
   --tile-garden: 140 20% 29%;
   --tile-shapes: 32 26% 31%;
   --tile-race: 220 11% 32%;
+  --tile-colouring: 296 16% 33%;
+  --tile-find: 178 16% 31%;
 
   color-scheme: dark;
 }

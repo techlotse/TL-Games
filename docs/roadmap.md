@@ -18,6 +18,12 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ## Released
 
+### v0.0.8
+
+Two more games - Colouring ("Malen") and Find-an-item ("Suchen") - bringing
+the home screen to its full six tiles, plus a destination hint that steps
+back after the first rounds of a session.
+
 ### v0.0.5
 
 Four games - Build Garage (assembly), Flower Garden (colour matching),
@@ -31,7 +37,6 @@ on a shared engine. Containerised, with CI/CD and image security scanning.
 
 ## Near term (0.1.x)
 
-- A fifth and sixth game tile (the home screen supports up to six).
 - Optional, very gentle audio (soft confirmation tones) with a parent toggle,
   off by default.
 - A simple first-run visual hint for each game's gesture.

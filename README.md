@@ -21,8 +21,8 @@ loud celebrations, no ads, no tracking, no accounts.
 ## What's inside
 
 - **App shell** - installable PWA, offline after first load, iPhone-first.
-- **Home screen** - four large, readable-free game tiles.
-- **Four games:**
+- **Home screen** - six large, readable-free game tiles.
+- **Six games:**
   1. **Build Garage** (`Werkstatt`) - *assembly*: build a vehicle by dragging
      each part onto it.
   2. **Flower Garden** (`Blumengarten`) - *colour match*: match each flower to
@@ -30,6 +30,10 @@ loud celebrations, no ads, no tracking, no accounts.
   3. **Shape Sorting** (`Formen`) - *shape match*: sort each block into its hole.
   4. **Race** (`Rennen`) - *steering*: hold a side of the road to steer, drive
      around the obstacles and collect the cheerful stars and hearts.
+  5. **Colouring** (`Malen`) - *colouring*: pick a colour and colour the
+     picture in - tap to fill a region, or sweep the brush to paint freely.
+  6. **Find-an-item** (`Suchen`) - *searching*: find the item shown in the
+     frame among the others scattered across the scene.
 - **Difficulty progression** - every game starts gentle and ramps up the
   longer the child plays, then resets to easy at the home screen.
 - **Light & dark themes** (calm, muted - never neon), saved on-device.
@@ -82,7 +86,7 @@ docker compose up -d
 Available image tags:
 
 - `latest` - the most recent tagged release
-- `0.0.5`, `0.0` - specific semantic versions
+- `0.0.8`, `0.0` - specific semantic versions
 - `edge` - the latest build from `main`
 
 Build the image yourself with `docker build -t techlotse/tl-games:dev .`
@@ -97,8 +101,8 @@ records every release.
 Cut a release by pushing a Git tag:
 
 ```bash
-git tag v0.0.5
-git push origin v0.0.5
+git tag v0.0.8
+git push origin v0.0.8
 ```
 
 That triggers the publish workflow, which builds the image, scans it with
@@ -137,6 +141,8 @@ src/
     flower-garden/ Colour-matching game
     shape-sorting/ Shape-matching game
     race/         Steering game with a gentle game loop
+    colouring/    Colouring game - fill regions or finger-paint
+    find-item/    Find-an-item searching game
   screens/        HomeScreen, ParentScreen
   store/          Zustand state + localStorage persistence
   theme/          tokens.css (CSS variables) + ThemeProvider
