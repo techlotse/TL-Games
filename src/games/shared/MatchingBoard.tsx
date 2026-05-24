@@ -196,10 +196,11 @@ export function MatchingBoard({
 
   const renderFilled = renderPlaced ?? renderItem
 
-  const targetCount = round.targetOrder.length
-  const itemCount = round.items.length
-  const targetBasis = `calc((100% - ${(targetCount - 1) * 0.5}rem) / ${targetCount})`
-  const itemBasis = `calc((100% - ${(itemCount - 1) * 0.5}rem) / ${itemCount})`
+  // Targets and pieces lay out in a grid that wraps - so more of them grow
+  // the layout both down and across, never just shrinking a single row.
+  const MAX_COLS = 4
+  const targetCols = Math.min(round.targetOrder.length, MAX_COLS)
+  const itemCols = Math.min(round.items.length, MAX_COLS)
 
   useEffect(() => {
     setActiveKey(null)
@@ -277,14 +278,16 @@ export function MatchingBoard({
 
   return (
     <div className="relative flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center gap-[6vh] px-4">
-        <div className="flex w-full items-center justify-center gap-2">
+      <div className="flex flex-1 flex-col items-center justify-center gap-[4vh] px-4 py-3">
+        <div
+          className="grid w-full gap-2"
+          style={{
+            gridTemplateColumns: `repeat(${targetCols}, minmax(0, 1fr))`,
+            maxWidth: `${targetCols * 5.6}rem`,
+          }}
+        >
           {round.targetOrder.map((key) => (
-            <div
-              key={`${round.id}:t:${key}`}
-              className="aspect-square shrink-0"
-              style={{ flexBasis: targetBasis }}
-            >
+            <div key={`${round.id}:t:${key}`} className="aspect-square">
               <TargetSlot
                 slotKey={key}
                 filled={game.isPlaced(key)}
@@ -299,13 +302,15 @@ export function MatchingBoard({
           ))}
         </div>
 
-        <div className="flex w-full items-center justify-center gap-2">
+        <div
+          className="grid w-full gap-2"
+          style={{
+            gridTemplateColumns: `repeat(${itemCols}, minmax(0, 1fr))`,
+            maxWidth: `${itemCols * 5.6}rem`,
+          }}
+        >
           {round.items.map((item, index) => (
-            <div
-              key={`${round.id}:i:${item.key}`}
-              className="aspect-square shrink-0"
-              style={{ flexBasis: itemBasis }}
-            >
+            <div key={`${round.id}:i:${item.key}`} className="aspect-square">
               <ItemCell
                 itemKey={item.key}
                 scale={item.scale}

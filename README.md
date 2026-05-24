@@ -23,8 +23,8 @@ loud celebrations, no ads, no tracking, no accounts.
 - **App shell** - installable PWA, offline after first load, iPhone-first.
 - **Home screen** - six large, readable-free game tiles.
 - **Six games:**
-  1. **Build Garage** (`Werkstatt`) - *assembly*: build six vehicle types in
-     turn - car, truck, bus, tractor, bulldozer, excavator - part by part.
+  1. **Build Garage** (`Werkstatt`) - *assembly*: build ten vehicle types in
+     turn, part by part - from a little car to a digger.
   2. **Flower Garden** (`Blumengarten`) - *colour match*: match each flower to
      the plant pot of the same colour.
   3. **Shape Sorting** (`Formen`) - *shape match*: sort each block into its hole.

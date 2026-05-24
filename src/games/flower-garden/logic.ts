@@ -3,9 +3,16 @@ import { FLOWER_KEYS } from './data'
 
 /**
  * Flower Garden game logic. A colour-matching game: match each flower to the
- * plant pot of the same colour. Difficulty ramps within a session: each
- * finished round adds one more flower, from 3 up to 5.
+ * plant pot of the same colour. Difficulty ramps within a session over up to
+ * nine levels - more pots (3 -> 6), and from level 3 a few extra flowers whose
+ * colour has no pot, so the child must look closely.
  */
 export function useFlowerGarden(): MatchingGame {
-  return useMatchingGame({ keys: FLOWER_KEYS, count: 3, maxCount: 5 })
+  return useMatchingGame({
+    keys: FLOWER_KEYS,
+    count: 3,
+    maxCount: 6,
+    decoyFrom: 3,
+    maxDecoys: 3,
+  })
 }

@@ -298,8 +298,168 @@ const EXCAVATOR: Vehicle = {
   ],
 }
 
-/** Vehicles in order of difficulty - each completion brings the next type. */
-export const VEHICLES: readonly Vehicle[] = [CAR, TRUCK, BUS, TRACTOR, BULLDOZER, EXCAVATOR]
+const RACECAR: Vehicle = {
+  id: 'racecar',
+  label: 'Rennauto',
+  parts: [
+    {
+      id: 'body',
+      kind: 'body',
+      box: { x: 54, y: 92, w: 214, h: 64 },
+      shapes: [
+        { t: 'rect', x: 54, y: 118, w: 188, h: 34, rx: 16, fill: C.body },
+        { t: 'rect', x: 120, y: 92, w: 72, h: 32, rx: 12, fill: C.body },
+        { t: 'path', d: 'M236 120 L270 134 L236 144 Z', fill: C.body },
+        { t: 'rect', x: 130, y: 100, w: 46, h: 20, rx: 6, fill: C.glass },
+      ],
+    },
+    {
+      id: 'spoiler',
+      kind: 'spoiler',
+      box: { x: 40, y: 96, w: 46, h: 42 },
+      shapes: [
+        { t: 'rect', x: 40, y: 96, w: 46, h: 13, rx: 5, fill: C.metalDark },
+        { t: 'rect', x: 58, y: 104, w: 12, h: 30, fill: C.metalDark },
+      ],
+    },
+    { id: 'wheelRear', kind: 'wheel', box: { x: 74, y: 136, w: 48, h: 48 }, shapes: wheel(98, 160, 24) },
+    { id: 'wheelFront', kind: 'wheel', box: { x: 190, y: 136, w: 48, h: 48 }, shapes: wheel(214, 160, 24) },
+  ],
+}
+
+const GARBAGE: Vehicle = {
+  id: 'garbage',
+  label: 'Müllwagen',
+  parts: [
+    {
+      id: 'hopper',
+      kind: 'hopper',
+      box: { x: 52, y: 80, w: 142, h: 76 },
+      shapes: [
+        { t: 'rect', x: 52, y: 80, w: 142, h: 76, rx: 10, fill: C.body },
+        { t: 'rect', x: 60, y: 96, w: 126, h: 9, rx: 4, fill: C.bodyTrim },
+      ],
+    },
+    {
+      id: 'cab',
+      kind: 'cab',
+      box: { x: 200, y: 94, w: 54, h: 62 },
+      shapes: [
+        { t: 'rect', x: 200, y: 94, w: 54, h: 62, rx: 12, fill: C.cabin },
+        { t: 'rect', x: 210, y: 104, w: 30, h: 24, rx: 6, fill: C.glass },
+      ],
+    },
+    {
+      id: 'loader',
+      kind: 'loader',
+      box: { x: 24, y: 104, w: 44, h: 54 },
+      shapes: [{ t: 'path', d: 'M26 156 L42 104 L66 104 L50 156 Z', fill: C.metal }],
+    },
+    { id: 'wheelRear', kind: 'wheel', box: { x: 80, y: 142, w: 48, h: 48 }, shapes: wheel(104, 166, 24) },
+    { id: 'wheelFront', kind: 'wheel', box: { x: 196, y: 142, w: 48, h: 48 }, shapes: wheel(220, 166, 24) },
+  ],
+}
+
+const FIRETRUCK: Vehicle = {
+  id: 'firetruck',
+  label: 'Feuerwehr',
+  parts: [
+    {
+      id: 'body',
+      kind: 'body',
+      box: { x: 44, y: 106, w: 156, h: 50 },
+      shapes: [
+        { t: 'rect', x: 44, y: 106, w: 156, h: 50, rx: 10, fill: C.body },
+        { t: 'rect', x: 50, y: 138, w: 144, h: 12, rx: 6, fill: C.bodyTrim },
+      ],
+    },
+    {
+      id: 'cab',
+      kind: 'cab',
+      box: { x: 202, y: 96, w: 54, h: 60 },
+      shapes: [
+        { t: 'rect', x: 202, y: 96, w: 54, h: 60, rx: 12, fill: C.cabin },
+        { t: 'rect', x: 212, y: 106, w: 30, h: 24, rx: 6, fill: C.glass },
+      ],
+    },
+    {
+      id: 'ladder',
+      kind: 'ladder',
+      box: { x: 54, y: 84, w: 138, h: 16 },
+      shapes: [
+        { t: 'rect', x: 54, y: 84, w: 138, h: 16, rx: 8, fill: C.metal },
+        { t: 'rect', x: 78, y: 84, w: 4, h: 16, fill: C.metalDark },
+        { t: 'rect', x: 108, y: 84, w: 4, h: 16, fill: C.metalDark },
+        { t: 'rect', x: 138, y: 84, w: 4, h: 16, fill: C.metalDark },
+        { t: 'rect', x: 166, y: 84, w: 4, h: 16, fill: C.metalDark },
+      ],
+    },
+    {
+      id: 'light',
+      kind: 'light',
+      box: { x: 218, y: 76, w: 22, h: 16 },
+      shapes: [{ t: 'rect', x: 218, y: 76, w: 22, h: 16, rx: 6, fill: '#E8C24A' }],
+    },
+    { id: 'wheelRear', kind: 'wheel', box: { x: 74, y: 142, w: 48, h: 48 }, shapes: wheel(98, 166, 24) },
+    { id: 'wheelFront', kind: 'wheel', box: { x: 192, y: 142, w: 48, h: 48 }, shapes: wheel(216, 166, 24) },
+  ],
+}
+
+const CRANE: Vehicle = {
+  id: 'crane',
+  label: 'Kranwagen',
+  parts: [
+    {
+      id: 'body',
+      kind: 'body',
+      box: { x: 44, y: 114, w: 166, h: 44 },
+      shapes: [
+        { t: 'rect', x: 44, y: 114, w: 166, h: 44, rx: 10, fill: C.body },
+        { t: 'rect', x: 48, y: 142, w: 158, h: 12, rx: 6, fill: C.bodyTrim },
+      ],
+    },
+    {
+      id: 'cab',
+      kind: 'cab',
+      box: { x: 208, y: 104, w: 48, h: 54 },
+      shapes: [
+        { t: 'rect', x: 208, y: 104, w: 48, h: 54, rx: 12, fill: C.cabin },
+        { t: 'rect', x: 216, y: 112, w: 26, h: 22, rx: 6, fill: C.glass },
+      ],
+    },
+    {
+      id: 'boom',
+      kind: 'boom',
+      box: { x: 50, y: 48, w: 130, h: 84 },
+      shapes: [{ t: 'line', x1: 170, y1: 122, x2: 64, y2: 58, sw: 17, fill: C.body }],
+    },
+    {
+      id: 'hook',
+      kind: 'hook',
+      box: { x: 50, y: 52, w: 32, h: 64 },
+      shapes: [
+        { t: 'line', x1: 64, y1: 58, x2: 64, y2: 98, sw: 5, fill: C.metalDark },
+        { t: 'path', d: 'M56 98 Q54 114 70 110 Q78 104 70 98 Z', fill: C.metal },
+      ],
+    },
+    { id: 'wheelRear', kind: 'wheel', box: { x: 72, y: 142, w: 48, h: 48 }, shapes: wheel(96, 166, 24) },
+    { id: 'wheelFront', kind: 'wheel', box: { x: 152, y: 142, w: 48, h: 48 }, shapes: wheel(176, 166, 24) },
+  ],
+}
+
+/** Ten vehicles in order of difficulty - each completion brings the next type. */
+export const VEHICLES: readonly Vehicle[] = [
+  CAR,
+  RACECAR,
+  TRUCK,
+  GARBAGE,
+  BUS,
+  TRACTOR,
+  FIRETRUCK,
+  BULLDOZER,
+  CRANE,
+  EXCAVATOR,
+]
 
 /** The vehicle built at a given session level (the last one repeats). */
 export function vehicleForLevel(level: number): Vehicle {

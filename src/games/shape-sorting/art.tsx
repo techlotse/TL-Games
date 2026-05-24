@@ -1,16 +1,16 @@
-import {
-  BOARD_WOOD,
-  BOARD_WOOD_EDGE,
-  HOLE_DARK,
-  SHAPE_COLORS,
-  type ShapeKey,
-} from './data'
+import { BOARD_WOOD, BOARD_WOOD_EDGE, HOLE_DARK, SHAPE_COLORS, type ShapeKey } from './data'
 
 const STAR_PATH =
   'M50 20 L57.1 40.3 L78.5 40.7 L61.4 53.7 L67.6 74.3 L50 62 ' +
   'L32.4 74.3 L38.6 53.7 L21.5 40.7 L42.9 40.3 Z'
 
 const HEART_PATH = 'M50 78 C 20 58 23 30 50 43 C 77 30 80 58 50 78 Z'
+
+const HEXAGON_PATH = 'M50 24 L74 37 L74 63 L50 76 L26 63 L26 37 Z'
+
+const DIAMOND_PATH = 'M50 22 L76 50 L50 78 L24 50 Z'
+
+const PENTAGON_PATH = 'M50 24 L76 43 L66 73 L34 73 L24 43 Z'
 
 /** A single chunky, rounded shape - used for both the block and the hole. */
 function ShapePrimitive({ shape, color }: { shape: ShapeKey; color: string }) {
@@ -32,6 +32,14 @@ function ShapePrimitive({ shape, color }: { shape: ShapeKey; color: string }) {
       return <path d={STAR_PATH} {...style} />
     case 'heart':
       return <path d={HEART_PATH} {...style} />
+    case 'hexagon':
+      return <path d={HEXAGON_PATH} {...style} />
+    case 'diamond':
+      return <path d={DIAMOND_PATH} {...style} />
+    case 'oval':
+      return <ellipse cx={50} cy={50} rx={30} ry={22} {...style} />
+    case 'pentagon':
+      return <path d={PENTAGON_PATH} {...style} />
     default:
       return null
   }

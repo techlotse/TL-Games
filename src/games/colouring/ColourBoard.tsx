@@ -18,8 +18,8 @@ interface Dab {
 /** Freehand coverage is tracked over a 10 x 10 grid of the 200-unit sheet. */
 const COVER_CELLS = 10
 const COVER_SIZE = 200 / COVER_CELLS
-/** Painted cells needed for a freehand picture to count as coloured in. */
-const COVER_TARGET = 48
+/** Painted cells (~75% of the sheet) needed for a freehand picture to finish. */
+const COVER_TARGET = 74
 
 function cellIndex(x: number, y: number): number {
   const col = clamp(Math.floor(x / COVER_SIZE), 0, COVER_CELLS - 1)

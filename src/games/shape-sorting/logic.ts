@@ -2,10 +2,10 @@ import { useMatchingGame, type MatchingGame } from '@/games/shared/useMatchingGa
 import { SHAPE_KEYS } from './data'
 
 /**
- * Shape Sorting game logic. The classic sort-into-holes matching game with
- * three holes. Difficulty ramps within a session: from level 1 extra shapes
- * with no hole appear (up to 5 pieces for 3 holes), and the pieces come in
- * varied sizes - so the child must look at shape, not size.
+ * Shape Sorting game logic. Three holes throughout; difficulty ramps within a
+ * session over up to nine levels - from level 1 extra blocks with no hole are
+ * added (up to nine pieces for three holes), and the blocks come in varied
+ * sizes, so the child must sort by shape and not by size.
  */
 export function useShapeSorting(): MatchingGame {
   return useMatchingGame({
@@ -13,7 +13,7 @@ export function useShapeSorting(): MatchingGame {
     count: 3,
     maxCount: 3,
     decoyFrom: 1,
-    maxDecoys: 2,
+    maxDecoys: 6,
     varySize: true,
   })
 }

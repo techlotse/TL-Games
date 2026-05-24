@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.1] - 2026-05-24
+
+Longer journeys in every game, and a more joyful finish.
+
+### Added
+
+- **Build Garage** now has ten vehicle types - joining the line-up are a race
+  car, a garbage truck, a fire engine and a crane truck.
+- **Colouring** now has ten pictures, half of them vehicles (car, truck, bus,
+  tractor, digger).
+
+### Changed
+
+- **Build Garage** - a finished vehicle now drives cheerfully off the screen
+  before the well-done screen.
+- **Race** - reaching the goal is now a celebration: the car zooms off the
+  road in a shower of sparkles.
+- **Shape Sorting** and **Flower Garden** lay their pieces out in a grid, so a
+  busy round grows down the screen as well as across instead of only shrinking
+  a single row; both ramp difficulty over more levels.
+- **Colouring** - the freehand brush now needs about three-quarters of the
+  sheet painted before a picture counts as finished (it finished too soon
+  before).
+
 ## [0.1.0] - 2026-05-24
 
 A broad round of polish across every game, plus a calmer first impression.
@@ -131,7 +155,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/techlotse/TL-Games/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/techlotse/TL-Games/compare/v0.0.8...v0.1.0
 [0.0.8]: https://github.com/techlotse/TL-Games/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/techlotse/TL-Games/compare/v0.0.1...v0.0.7

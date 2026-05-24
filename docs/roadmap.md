@@ -18,6 +18,11 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ## Released
 
+### v0.1.1
+
+Polish across the board: ten vehicle types in Build Garage, ten Colouring
+pictures, grid layouts for the matching games, and more joyful finishes.
+
 ### v0.1.0
 
 A broad round of polish: six vehicle types in Build Garage, a goal in

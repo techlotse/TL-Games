@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { useAppStore } from '@/store/appStore'
 import { GameScreen } from '@/components/layout/GameScreen'
@@ -8,13 +8,24 @@ import { RACE, type GoodKind, type ObstacleKind } from './data'
 import { useRaceGame } from './logic'
 import { CarArt, GoodArt, ObstacleArt, SparkleArt } from './art'
 
+/** Where the cheerful celebration sparkles appear when the goal is reached. */
+const CELEBRATE = [
+  { x: 22, y: 30 },
+  { x: 74, y: 24 },
+  { x: 50, y: 15 },
+  { x: 30, y: 58 },
+  { x: 80, y: 52 },
+  { x: 60, y: 40 },
+  { x: 18, y: 46 },
+]
+
 /**
  * Game 4 - Race.
  * Press and hold the car, then move it from side to side. Drive AROUND the
  * obstacles and INTO the cheerful collectibles - each happy item fills the
- * car's smile a little more. Gather a whole row of them to finish the run;
- * a gentle "well done" then offers another, slightly faster, run. A bump just
- * pauses the car for a moment - there is no score and no "game over".
+ * car's smile. Gather a whole row of them and the car zooms happily off the
+ * road in a shower of sparkles, then a gentle "well done" offers another,
+ * slightly faster run. A bump just pauses the car for a moment.
  */
 export function Race() {
   const calm = useCalmMotion()
@@ -25,6 +36,7 @@ export function Race() {
   const fieldRef = useRef<HTMLDivElement | null>(null)
   const holdingRef = useRef(false)
   const recordedRef = useRef(false)
+  const [showOverlay, setShowOverlay] = useState(false)
 
   // A soft wobble when the car bumps an obstacle.
   useEffect(() => {
@@ -46,13 +58,23 @@ export function Race() {
     }
   }, [snapshot.collected, snapshot.done, calm, carControls])
 
-  // Record the round once the goal is reached.
+  // Reaching the goal: record the round, zoom the car off, then celebrate.
   useEffect(() => {
-    if (snapshot.done && !recordedRef.current) {
+    if (!snapshot.done) return
+    if (!recordedRef.current) {
       recordedRef.current = true
       recordRound('race')
     }
-  }, [snapshot.done, recordRound])
+    if (!calm) {
+      void carControls.start({
+        y: [0, 16, -820],
+        scale: [1, 1.14, 1.14],
+        transition: { duration: 1, ease: 'easeIn', times: [0, 0.18, 1] },
+      })
+    }
+    const timer = setTimeout(() => setShowOverlay(true), calm ? 250 : 980)
+    return () => clearTimeout(timer)
+  }, [snapshot.done, calm, carControls, recordRound])
 
   const steerTo = (clientX: number) => {
     const field = fieldRef.current
@@ -65,6 +87,8 @@ export function Race() {
   const handleAgain = () => {
     recordedRef.current = false
     holdingRef.current = false
+    setShowOverlay(false)
+    carControls.set({ y: 0, scale: 1, rotate: 0 })
     reset()
   }
 
@@ -159,6 +183,40 @@ export function Race() {
             </motion.div>
           ))}
 
+          {/* Celebration sparkles when the goal is reached */}
+          {snapshot.done &&
+            CELEBRATE.map((p, i) => (
+              <motion.div
+                key={`cel-${i}`}
+                className="pointer-events-none absolute"
+                style={{
+                  left: `${p.x}%`,
+                  top: `${p.y}%`,
+                  width: '18%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={
+                  calm
+                    ? { scale: 1, opacity: 0.9 }
+                    : { scale: [0, 1.2, 0.9, 1.15, 0.9], opacity: [0, 1, 0.85, 1, 0.85] }
+                }
+                transition={
+                  calm
+                    ? { duration: 0.2 }
+                    : {
+                        duration: 1.7,
+                        delay: i * 0.11,
+                        repeat: Infinity,
+                        repeatType: 'mirror',
+                        ease: 'easeInOut',
+                      }
+                }
+              >
+                <SparkleArt />
+              </motion.div>
+            ))}
+
           {/* Car */}
           <div
             className="pointer-events-none absolute"
@@ -176,7 +234,7 @@ export function Race() {
         </div>
 
         <AnimatePresence>
-          {snapshot.done && (
+          {showOverlay && (
             <CompletionOverlay key="done" onAgain={handleAgain} onHome={() => go('home')} />
           )}
         </AnimatePresence>

@@ -3,10 +3,10 @@
  *
  * The child picks a colour, then colours a simple outline picture. Early
  * levels are fill-only: tap a region and it fills solid. From level 2 a tool
- * toggle appears - keep tapping to fill, or pick the brush and sweep a finger
- * across the picture to paint it in. There is no "wrong" colour and no score.
+ * toggle appears - keep tapping to fill, or pick the brush for true freehand
+ * painting. There is no "wrong" colour and no score.
  *
- * All shape coordinates are in the picture's 200 x 200 viewBox.
+ * Ten pictures, half of them automobile-related, drawn in a 200 x 200 viewBox.
  */
 
 export type ColourId =
@@ -43,10 +43,7 @@ export const COLOUR_HEX: Record<ColourId, string> = Object.fromEntries(
   SWATCHES.map((s) => [s.id, s.hex]),
 ) as Record<ColourId, string>
 
-/**
- * Paper and outline colours for the colouring sheet. A colouring sheet reads
- * as paper in both themes, so these are intentionally literal (artwork).
- */
+/** Paper and outline colours for the colouring sheet. */
 export const SHEET = {
   paper: '#FCF8EE',
   ink: '#4A4036',
@@ -74,7 +71,8 @@ export interface Picture {
 
 export const PICTURE_VIEWBOX = '0 0 200 200'
 
-/** Picture 1 - a flower (3 regions). */
+/* ------------------------------- Pictures -------------------------------- */
+
 const FLOWER: Picture = {
   id: 'flower',
   decor: [],
@@ -101,7 +99,48 @@ const FLOWER: Picture = {
   ],
 }
 
-/** Picture 2 - a house (4 regions). */
+const CAR: Picture = {
+  id: 'car',
+  decor: [],
+  regions: [
+    { id: 'body', shapes: [{ kind: 'rect', x: 30, y: 104, w: 140, h: 46, rx: 20 }] },
+    { id: 'roof', shapes: [{ kind: 'rect', x: 68, y: 64, w: 64, h: 44, rx: 14 }] },
+    {
+      id: 'wheels',
+      shapes: [
+        { kind: 'circle', cx: 64, cy: 152, r: 24 },
+        { kind: 'circle', cx: 136, cy: 152, r: 24 },
+      ],
+    },
+  ],
+}
+
+const SUN: Picture = {
+  id: 'sun',
+  decor: [],
+  regions: [
+    {
+      id: 'rays',
+      shapes: [
+        {
+          kind: 'path',
+          d: 'M100 8 L121 40 L158 32 L150 69 L182 90 L150 111 L158 148 L121 140 L100 172 L79 140 L42 148 L50 111 L18 90 L50 69 L42 32 L79 40 Z',
+        },
+      ],
+    },
+    { id: 'core', shapes: [{ kind: 'circle', cx: 100, cy: 90, r: 46 }] },
+    {
+      id: 'cloud',
+      shapes: [
+        {
+          kind: 'path',
+          d: 'M40 182 Q28 182 28 170 Q28 158 42 161 Q46 146 63 151 Q76 142 85 157 Q100 155 98 170 Q104 173 99 182 Z',
+        },
+      ],
+    },
+  ],
+}
+
 const HOUSE: Picture = {
   id: 'house',
   decor: [],
@@ -113,7 +152,23 @@ const HOUSE: Picture = {
   ],
 }
 
-/** Picture 3 - a fish (5 regions). */
+const TRUCK: Picture = {
+  id: 'truck',
+  decor: [],
+  regions: [
+    { id: 'cargo', shapes: [{ kind: 'rect', x: 24, y: 84, w: 96, h: 64, rx: 10 }] },
+    { id: 'cab', shapes: [{ kind: 'rect', x: 124, y: 96, w: 52, h: 52, rx: 12 }] },
+    { id: 'window', shapes: [{ kind: 'rect', x: 132, y: 104, w: 30, h: 22, rx: 5 }] },
+    {
+      id: 'wheels',
+      shapes: [
+        { kind: 'circle', cx: 56, cy: 156, r: 20 },
+        { kind: 'circle', cx: 148, cy: 156, r: 20 },
+      ],
+    },
+  ],
+}
+
 const FISH: Picture = {
   id: 'fish',
   decor: [{ kind: 'circle', cx: 116, cy: 92, r: 6 }],
@@ -126,7 +181,31 @@ const FISH: Picture = {
   ],
 }
 
-/** Picture 4 - a sailing boat (6 regions). */
+const BUS: Picture = {
+  id: 'bus',
+  decor: [],
+  regions: [
+    { id: 'roofBody', shapes: [{ kind: 'rect', x: 26, y: 74, w: 148, h: 42, rx: 16 }] },
+    { id: 'lowerBody', shapes: [{ kind: 'rect', x: 26, y: 112, w: 148, h: 42, rx: 10 }] },
+    {
+      id: 'windows',
+      shapes: [
+        { kind: 'rect', x: 40, y: 82, w: 34, h: 24, rx: 5 },
+        { kind: 'rect', x: 86, y: 82, w: 34, h: 24, rx: 5 },
+        { kind: 'rect', x: 132, y: 82, w: 22, h: 24, rx: 5 },
+      ],
+    },
+    { id: 'door', shapes: [{ kind: 'rect', x: 150, y: 118, w: 22, h: 36, rx: 4 }] },
+    {
+      id: 'wheels',
+      shapes: [
+        { kind: 'circle', cx: 62, cy: 158, r: 20 },
+        { kind: 'circle', cx: 140, cy: 158, r: 20 },
+      ],
+    },
+  ],
+}
+
 const BOAT: Picture = {
   id: 'boat',
   decor: [{ kind: 'rect', x: 101, y: 26, w: 5, h: 100 }],
@@ -140,8 +219,46 @@ const BOAT: Picture = {
   ],
 }
 
-/** Pictures, ordered so the region count rises gently with the level. */
-export const PICTURES: readonly Picture[] = [FLOWER, HOUSE, FISH, BOAT]
+const TRACTOR: Picture = {
+  id: 'tractor',
+  decor: [],
+  regions: [
+    { id: 'body', shapes: [{ kind: 'rect', x: 54, y: 104, w: 108, h: 42, rx: 14 }] },
+    { id: 'exhaust', shapes: [{ kind: 'rect', x: 62, y: 62, w: 13, h: 46, rx: 6 }] },
+    { id: 'cabin', shapes: [{ kind: 'rect', x: 112, y: 62, w: 58, h: 46, rx: 12 }] },
+    { id: 'window', shapes: [{ kind: 'rect', x: 120, y: 70, w: 36, h: 28, rx: 5 }] },
+    { id: 'bigWheel', shapes: [{ kind: 'circle', cx: 146, cy: 148, r: 36 }] },
+    { id: 'smallWheel', shapes: [{ kind: 'circle', cx: 66, cy: 158, r: 24 }] },
+  ],
+}
+
+const DIGGER: Picture = {
+  id: 'digger',
+  decor: [],
+  regions: [
+    { id: 'track', shapes: [{ kind: 'rect', x: 28, y: 152, w: 118, h: 34, rx: 17 }] },
+    { id: 'body', shapes: [{ kind: 'rect', x: 48, y: 106, w: 92, h: 48, rx: 12 }] },
+    { id: 'cabin', shapes: [{ kind: 'rect', x: 52, y: 70, w: 50, h: 40, rx: 10 }] },
+    { id: 'window', shapes: [{ kind: 'rect', x: 58, y: 78, w: 30, h: 22, rx: 5 }] },
+    { id: 'exhaust', shapes: [{ kind: 'rect', x: 110, y: 74, w: 12, h: 34, rx: 5 }] },
+    { id: 'arm', shapes: [{ kind: 'path', d: 'M128 132 L168 86 L186 98 L146 146 Z' }] },
+    { id: 'bucket', shapes: [{ kind: 'path', d: 'M156 96 L196 92 L192 126 Q176 136 160 122 Z' }] },
+  ],
+}
+
+/** Ten pictures, ordered so the region count rises gently with the level. */
+export const PICTURES: readonly Picture[] = [
+  FLOWER,
+  CAR,
+  SUN,
+  HOUSE,
+  TRUCK,
+  FISH,
+  BUS,
+  BOAT,
+  TRACTOR,
+  DIGGER,
+]
 
 /** From this level on, the fill / paint tool toggle appears. */
 export const PAINT_UNLOCK_LEVEL = 2

@@ -2,11 +2,20 @@
  * Flower Garden - static content.
  *
  * A colour-matching game: each flower is matched to the plant pot of the same
- * colour, then it stands planted in the pot. The flowers are six plants seen
+ * colour, then it stands planted in the pot. The flowers are plants seen
  * across Switzerland; their German names are shown as a hint for the parent.
  */
 
-export type FlowerKey = 'enzian' | 'alpenrose' | 'loewenzahn' | 'krokus' | 'edelweiss' | 'mohn'
+export type FlowerKey =
+  | 'enzian'
+  | 'alpenrose'
+  | 'loewenzahn'
+  | 'krokus'
+  | 'edelweiss'
+  | 'mohn'
+  | 'feuerlilie'
+  | 'vergissmeinnicht'
+  | 'heidenelke'
 
 export type PetalStyle = 'star' | 'round' | 'broad'
 
@@ -19,7 +28,7 @@ export interface Flower {
   style: PetalStyle
 }
 
-/** Six Swiss flowers, each a clear and distinct colour for matching. */
+/** Nine Swiss flowers, each a clear and distinct colour for matching. */
 export const FLOWERS: Record<FlowerKey, Flower> = {
   enzian: { name: 'Enzian', petal: '#3F73B8', petalDark: '#335E97', center: '#F2D98C', style: 'star' },
   alpenrose: { name: 'Alpenrose', petal: '#D96A86', petalDark: '#C2566F', center: '#F2D98C', style: 'round' },
@@ -27,6 +36,9 @@ export const FLOWERS: Record<FlowerKey, Flower> = {
   krokus: { name: 'Krokus', petal: '#9B7BC4', petalDark: '#8366AE', center: '#F2D98C', style: 'round' },
   edelweiss: { name: 'Edelweiss', petal: '#F1ECDC', petalDark: '#D7CFB8', center: '#E2B23C', style: 'star' },
   mohn: { name: 'Mohn', petal: '#D64B45', petalDark: '#BE3C37', center: '#33302E', style: 'broad' },
+  feuerlilie: { name: 'Feuerlilie', petal: '#E58A3C', petalDark: '#CC7529', center: '#8A4A1E', style: 'broad' },
+  vergissmeinnicht: { name: 'Vergissmeinnicht', petal: '#8FB8E0', petalDark: '#739ECB', center: '#F2D98C', style: 'round' },
+  heidenelke: { name: 'Heidenelke', petal: '#C8478F', petalDark: '#AC3979', center: '#F2D98C', style: 'round' },
 }
 
 export const FLOWER_KEYS = Object.keys(FLOWERS) as FlowerKey[]

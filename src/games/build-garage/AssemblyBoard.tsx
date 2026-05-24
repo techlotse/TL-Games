@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { useCalmMotion, calmTween } from '@/lib/motion'
 import { hapticSuccess, hapticTap } from '@/lib/platform'
 import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
@@ -105,22 +105,35 @@ export interface AssemblyBoardProps {
  */
 export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) {
   const { round, isComplete } = game
+  const calm = useCalmMotion()
   const [activePiece, setActivePiece] = useState<string | null>(null)
+  const [showOverlay, setShowOverlay] = useState(false)
   const frameRef = useRef<HTMLDivElement | null>(null)
   const completedRef = useRef(false)
+  const driveControls = useAnimationControls()
 
   useEffect(() => {
     setActivePiece(null)
+    setShowOverlay(false)
     completedRef.current = false
-  }, [round.id])
+    driveControls.set({ x: 0 })
+  }, [round.id, driveControls])
 
+  // Finished vehicle: drive it off the screen, then the well-done screen.
   useEffect(() => {
-    if (isComplete && !completedRef.current) {
-      completedRef.current = true
-      hapticSuccess()
-      onComplete?.()
+    if (!isComplete || completedRef.current) return
+    completedRef.current = true
+    hapticSuccess()
+    onComplete?.()
+    if (!calm) {
+      void driveControls.start({
+        x: [0, -26, '138%'],
+        transition: { duration: 0.95, ease: 'easeIn', times: [0, 0.22, 1] },
+      })
     }
-  }, [isComplete, onComplete])
+    const timer = setTimeout(() => setShowOverlay(true), calm ? 250 : 900)
+    return () => clearTimeout(timer)
+  }, [isComplete, onComplete, calm, driveControls])
 
   const activeKind =
     activePiece != null ? (round.tray.find((p) => p.id === activePiece)?.kind ?? null) : null
@@ -190,7 +203,9 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
           className="relative w-full max-w-[23rem]"
           style={{ aspectRatio: `${VEHICLE_VIEW.w} / ${VEHICLE_VIEW.h}` }}
         >
-          <VehicleScene vehicle={round.vehicle} placed={game.placedSlots} />
+          <motion.div animate={driveControls} className="h-full w-full">
+            <VehicleScene vehicle={round.vehicle} placed={game.placedSlots} />
+          </motion.div>
           {round.id < 2 &&
             round.vehicle.parts.map((slot) =>
               activeKind === slot.kind && !game.placedSlots.has(slot.id) ? (
@@ -218,7 +233,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
       </div>
 
       <AnimatePresence>
-        {isComplete && (
+        {showOverlay && (
           <CompletionOverlay key="complete" onAgain={game.reset} onHome={onHome} />
         )}
       </AnimatePresence>
