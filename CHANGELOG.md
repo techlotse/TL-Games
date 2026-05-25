@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.2.1] - 2026-05-24
+
+A polish pass for Bagger, plus two fixes.
+
+### Added
+
+- **Bagger** now has six levels (up from three), and the excavator does a
+  happy victory hop with a burst of sparkles on reaching the depot.
+
+### Changed
+
+- **Bagger** has a richer, more modern look: shaded gradients, a more
+  detailed excavator, grassy platforms with flowers, layered hills, trees,
+  birds and a glowing sun.
+
+### Fixed
+
+- **Colouring** - a picture is now finished with a clear check button rather
+  than an unreliable automatic coverage check that often did not trigger.
+- **Build Garage** - the finished vehicle now actually drives off the screen
+  before the well-done screen (the animation had mismatched units).
+
 ## [0.2.0] - 2026-05-24
 
 A seventh game - the excavator's first proper adventure.
@@ -171,7 +193,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/techlotse/TL-Games/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/techlotse/TL-Games/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/techlotse/TL-Games/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/techlotse/TL-Games/compare/v0.0.8...v0.1.0

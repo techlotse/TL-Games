@@ -116,7 +116,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
     setActivePiece(null)
     setShowOverlay(false)
     completedRef.current = false
-    driveControls.set({ x: 0 })
+    driveControls.set({ x: '0%' })
   }, [round.id, driveControls])
 
   // Finished vehicle: drive it off the screen, then the well-done screen.
@@ -127,7 +127,7 @@ export function AssemblyBoard({ game, onHome, onComplete }: AssemblyBoardProps) 
     onComplete?.()
     if (!calm) {
       void driveControls.start({
-        x: [0, -26, '138%'],
+        x: ['0%', '-8%', '142%'],
         transition: { duration: 0.95, ease: 'easeIn', times: [0, 0.22, 1] },
       })
     }

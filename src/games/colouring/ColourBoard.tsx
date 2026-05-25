@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Brush, PaintBucket } from 'lucide-react'
-import { cn, clamp } from '@/lib/utils'
+import { Brush, Check, PaintBucket } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useCalmMotion } from '@/lib/motion'
 import { hapticSuccess, hapticTap } from '@/lib/platform'
 import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
@@ -13,18 +13,6 @@ interface Dab {
   x: number
   y: number
   c: string
-}
-
-/** Freehand coverage is tracked over a 10 x 10 grid of the 200-unit sheet. */
-const COVER_CELLS = 10
-const COVER_SIZE = 200 / COVER_CELLS
-/** Painted cells (~75% of the sheet) needed for a freehand picture to finish. */
-const COVER_TARGET = 74
-
-function cellIndex(x: number, y: number): number {
-  const col = clamp(Math.floor(x / COVER_SIZE), 0, COVER_CELLS - 1)
-  const row = clamp(Math.floor(y / COVER_SIZE), 0, COVER_CELLS - 1)
-  return row * COVER_CELLS + col
 }
 
 /** A single picture shape, drawn as the matching SVG element. */
@@ -109,10 +97,10 @@ export interface ColourBoardProps {
 
 /**
  * The colouring surface. Pick a colour, then colour the picture. The fill
- * tool fills a whole region with one tap; the brush is true freehand - sweep
- * a finger to paint, the strokes land wherever the finger goes. A fill
- * picture is done when every region has a colour; a freehand picture is done
- * once enough of the sheet has been painted over. Nothing is ever "wrong".
+ * tool fills a whole region with one tap; the brush is true freehand. A fill
+ * picture finishes on its own once every region has a colour; otherwise the
+ * child taps the big check button to say the picture is done. Nothing is
+ * ever "wrong".
  */
 export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
   const { round, fills, colour, tool, isComplete } = game
@@ -121,22 +109,20 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
   const paintingRef = useRef(false)
   const lastDabRef = useRef<{ x: number; y: number } | null>(null)
   const dabIdRef = useRef(0)
-  const paintedCellsRef = useRef<Set<number>>(new Set())
   const completedRef = useRef(false)
   const [dabs, setDabs] = useState<Dab[]>([])
-  const [coverage, setCoverage] = useState(0)
+  const [doneTapped, setDoneTapped] = useState(false)
 
   // Fresh sheet each level.
   useEffect(() => {
     setDabs([])
-    setCoverage(0)
-    paintedCellsRef.current = new Set()
+    setDoneTapped(false)
     paintingRef.current = false
     lastDabRef.current = null
     completedRef.current = false
   }, [round.id])
 
-  const complete = isComplete || coverage >= COVER_TARGET
+  const complete = isComplete || doneTapped
 
   useEffect(() => {
     if (complete && !completedRef.current) {
@@ -167,14 +153,8 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
       const dab: Dab = { id: dabIdRef.current++, x, y, c: COLOUR_HEX[colour] }
       setDabs((prev) => {
         const next = [...prev, dab]
-        return next.length > 240 ? next.slice(next.length - 240) : next
+        return next.length > 260 ? next.slice(next.length - 260) : next
       })
-      const cells = paintedCellsRef.current
-      const cell = cellIndex(x, y)
-      if (!cells.has(cell)) {
-        cells.add(cell)
-        setCoverage(cells.size)
-      }
     },
     [colour],
   )
@@ -282,30 +262,43 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
       </div>
 
       <div className="flex flex-col gap-3 pb-1">
-        {round.paintUnlocked && (
-          <div className="flex justify-center gap-3">
-            <ToolButton
-              label="Füllen"
-              active={tool === 'fill'}
-              onPress={() => {
-                game.setTool('fill')
-                hapticTap()
-              }}
-            >
-              <PaintBucket size={32} strokeWidth={2.4} aria-hidden />
-            </ToolButton>
-            <ToolButton
-              label="Pinsel"
-              active={tool === 'paint'}
-              onPress={() => {
-                game.setTool('paint')
-                hapticTap()
-              }}
-            >
-              <Brush size={32} strokeWidth={2.4} aria-hidden />
-            </ToolButton>
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-3">
+          {round.paintUnlocked && (
+            <>
+              <ToolButton
+                label="Füllen"
+                active={tool === 'fill'}
+                onPress={() => {
+                  game.setTool('fill')
+                  hapticTap()
+                }}
+              >
+                <PaintBucket size={32} strokeWidth={2.4} aria-hidden />
+              </ToolButton>
+              <ToolButton
+                label="Pinsel"
+                active={tool === 'paint'}
+                onPress={() => {
+                  game.setTool('paint')
+                  hapticTap()
+                }}
+              >
+                <Brush size={32} strokeWidth={2.4} aria-hidden />
+              </ToolButton>
+            </>
+          )}
+          <button
+            type="button"
+            aria-label="Fertig"
+            onClick={() => {
+              hapticTap()
+              setDoneTapped(true)
+            }}
+            className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[1.4rem] bg-accent text-surface shadow-soft outline-none transition-transform active:scale-95"
+          >
+            <Check size={36} strokeWidth={3.2} aria-hidden />
+          </button>
+        </div>
 
         <div className="grid grid-cols-4 gap-2.5">
           {SWATCHES.map((swatch) => (

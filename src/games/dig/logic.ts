@@ -18,7 +18,7 @@ export interface DigSnapshot {
   facing: number
   walking: boolean
   airborne: boolean
-  /** Gentle vertical bob for the walk cycle. */
+  /** Gentle vertical bob - the walk cycle, or the victory hop when won. */
   bob: number
   camX: number
   collected: string[]
@@ -51,6 +51,8 @@ interface Sim {
   lastSafe: { x: number; y: number }
   respawn: number
   won: boolean
+  wonTimer: number
+  wonSpawned: boolean
   lastTime: number
   nextId: number
 }
@@ -74,6 +76,8 @@ function createSim(level: DigLevel): Sim {
     lastSafe: { x: level.startX, y: py },
     respawn: 0,
     won: false,
+    wonTimer: 0,
+    wonSpawned: false,
     lastTime: 0,
     nextId: 1,
   }
@@ -95,8 +99,9 @@ export interface DigGame {
  * Bagger physics. A requestAnimationFrame loop runs while the screen is
  * mounted: run + hop with gravity, forgiving AABB platform collision, coyote
  * time and a jump buffer, bounce pads, gem pick-ups, a gentle return to safe
- * ground after a fall, and a camera that follows the excavator. Everything
- * resets when the player leaves the screen.
+ * ground after a fall, and a camera that follows the excavator. On reaching
+ * the depot the excavator does a happy victory hop. Everything resets when
+ * the player leaves the screen.
  */
 export function useDigGame(): DigGame {
   const levelIndexRef = useRef(0)
@@ -142,7 +147,19 @@ export function useDigGame(): DigGame {
       }
 
       if (sim.won) {
-        // Frozen in a happy pose at the depot.
+        // Victory: a happy hop and a burst of sparkles at the depot.
+        sim.wonTimer += ms
+        if (!sim.wonSpawned) {
+          sim.wonSpawned = true
+          for (let i = 0; i < 6; i += 1) {
+            sim.sparkles.push({
+              id: sim.nextId++,
+              x: sim.px + pw / 2 + (i - 2.5) * 24,
+              y: sim.py - 6 - (i % 2) * 20,
+              age: 0,
+            })
+          }
+        }
       } else if (sim.respawn > 0) {
         sim.respawn = Math.max(0, sim.respawn - ms)
       } else {
@@ -224,12 +241,14 @@ export function useDigGame(): DigGame {
         // ---- Gems ----
         for (const gem of level.gems) {
           if (sim.collected.has(gem.id)) continue
-          if (hits(sim.px, sim.py, pw, ph, {
-            x: gem.x - DIG.gemR,
-            y: gem.y - DIG.gemR,
-            w: DIG.gemR * 2,
-            h: DIG.gemR * 2,
-          })) {
+          if (
+            hits(sim.px, sim.py, pw, ph, {
+              x: gem.x - DIG.gemR,
+              y: gem.y - DIG.gemR,
+              w: DIG.gemR * 2,
+              h: DIG.gemR * 2,
+            })
+          ) {
             sim.collected.add(gem.id)
             sim.sparkles.push({ id: sim.nextId++, x: gem.x, y: gem.y, age: 0 })
             hapticTap()
@@ -244,21 +263,18 @@ export function useDigGame(): DigGame {
       }
 
       // ---- Camera ----
-      const camTarget = clamp(
-        sim.px + pw / 2 - DIG.camLead,
-        0,
-        level.width - DIG.viewW,
-      )
+      const camTarget = clamp(sim.px + pw / 2 - DIG.camLead, 0, level.width - DIG.viewW)
       sim.camX += (camTarget - sim.camX) * Math.min(1, dt * DIG.camEase)
 
       const walking = sim.respawn <= 0 && !sim.won && sim.onGround && Math.abs(sim.vx) > 1
+      const wonHop = sim.won ? -Math.abs(Math.sin(sim.wonTimer * 0.013)) * 18 : 0
       setSnapshot({
         px: sim.px,
         py: sim.py,
         facing: sim.facing,
         walking,
         airborne: sim.respawn <= 0 && !sim.won && !sim.onGround,
-        bob: walking ? Math.sin(sim.walkPhase) * 2.4 : 0,
+        bob: walking ? Math.sin(sim.walkPhase) * 2.4 : wonHop,
         camX: sim.camX,
         collected: Array.from(sim.collected),
         sparkles: sim.sparkles.slice(),

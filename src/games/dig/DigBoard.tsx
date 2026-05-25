@@ -7,10 +7,12 @@ import { RoundButton } from '@/components/toddler/RoundButton'
 import { DIG, levelForIndex } from './data'
 import type { DigGame, Move } from './logic'
 import {
+  Bird,
   BouncePad,
   Cloud,
   Crane,
   Depot,
+  DigDefs,
   DustPuff,
   Excavator,
   Gem,
@@ -19,6 +21,7 @@ import {
   PlatformRect,
   Sparkle,
   Sun,
+  Tree,
 } from './art'
 
 const SKY = 'linear-gradient(180deg,#9FD3EA 0%,#BFE6E2 68%,#D2EFD9 100%)'
@@ -65,7 +68,8 @@ function CtrlButton({
 function IntroScene() {
   return (
     <svg viewBox="0 0 300 150" className="w-full" aria-hidden>
-      <path d="M0 122 Q150 108 300 122 L300 150 L0 150 Z" fill="#73B05A" />
+      <DigDefs />
+      <path d="M0 122 Q150 108 300 122 L300 150 L0 150 Z" fill="url(#dg-grass)" />
       <g transform="translate(26 78) scale(1.05)">
         <Excavator />
       </g>
@@ -138,7 +142,8 @@ function WinOverlay({
         transition={calm ? { duration: 0 } : { ...settleSpring, delay: 0.05 }}
       >
         <svg viewBox="0 0 240 150" className="h-full w-full" aria-hidden>
-          <path d="M0 124 Q120 112 240 124 L240 150 L0 150 Z" fill="#73B05A" />
+          <DigDefs />
+          <path d="M0 124 Q120 112 240 124 L240 150 L0 150 Z" fill="url(#dg-grass)" />
           <g transform="translate(126 124) scale(0.62)">
             <Depot />
           </g>
@@ -204,12 +209,12 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
     game.setMove(m as Move)
   }, [game])
 
-  // Win: record the round, then show the win scene after a short beat.
+  // Win: record the round, then show the win scene after the victory hop.
   useEffect(() => {
     if (snapshot.won && !wonRef.current) {
       wonRef.current = true
       onComplete()
-      const timer = setTimeout(() => setShowWin(true), 760)
+      const timer = setTimeout(() => setShowWin(true), 1150)
       return () => clearTimeout(timer)
     }
   }, [snapshot.won, onComplete])
@@ -260,12 +265,14 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
     const hills: { x: number; s: number }[] = []
     for (let x = 90; x < reach; x += 360) hills.push({ x, s: 0.78 + ((x * 7) % 46) / 100 })
     const clouds: { x: number; y: number }[] = []
-    for (let x = 40, i = 0; x < reach; x += 232, i += 1) {
-      clouds.push({ x, y: 52 + (i % 3) * 46 })
-    }
+    for (let x = 40, i = 0; x < reach; x += 232, i += 1) clouds.push({ x, y: 52 + (i % 3) * 46 })
     const cranes: number[] = []
     for (let x = 320; x < reach; x += 740) cranes.push(x)
-    return { hills, clouds, cranes }
+    const trees: { x: number; s: number }[] = []
+    for (let x = 210, i = 0; x < reach; x += 286, i += 1) trees.push({ x, s: 0.72 + (i % 3) * 0.15 })
+    const birds: { x: number; y: number }[] = []
+    for (let x = 150, i = 0; x < reach; x += 350, i += 1) birds.push({ x, y: 64 + (i % 3) * 30 })
+    return { hills, clouds, cranes, trees, birds }
   }, [level])
 
   const camX = snapshot.camX
@@ -277,15 +284,16 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
         style={{ background: SKY }}
       >
         <svg viewBox="0 0 300 450" preserveAspectRatio="xMidYMid meet" className="h-full w-full">
-          <g transform="translate(246 64)">
+          <DigDefs />
+          <g transform="translate(248 60)">
             <Sun />
           </g>
 
           {/* Far parallax layer */}
           <g transform={`translate(${-camX * 0.4} 0)`}>
-            {farDecos.clouds.map((c, i) => (
-              <g key={`c${i}`} transform={`translate(${c.x} ${c.y})`}>
-                <Cloud />
+            {farDecos.hills.map((h, i) => (
+              <g key={`h${i}`} transform={`translate(${h.x} ${DIG.groundY}) scale(${h.s})`}>
+                <Hill far />
               </g>
             ))}
             {farDecos.cranes.map((x, i) => (
@@ -293,9 +301,19 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
                 <Crane />
               </g>
             ))}
-            {farDecos.hills.map((h, i) => (
-              <g key={`h${i}`} transform={`translate(${h.x} ${DIG.groundY}) scale(${h.s})`}>
-                <Hill far />
+            {farDecos.trees.map((t, i) => (
+              <g key={`t${i}`} transform={`translate(${t.x} ${DIG.groundY}) scale(${t.s})`}>
+                <Tree />
+              </g>
+            ))}
+            {farDecos.clouds.map((c, i) => (
+              <g key={`c${i}`} transform={`translate(${c.x} ${c.y})`}>
+                <Cloud />
+              </g>
+            ))}
+            {farDecos.birds.map((b, i) => (
+              <g key={`b${i}`} transform={`translate(${b.x} ${b.y})`}>
+                <Bird />
               </g>
             ))}
           </g>
@@ -306,7 +324,7 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
               <PlatformRect key={`s${i}`} rect={r} />
             ))}
             {level.bounces.map((b, i) => (
-              <BouncePad key={`b${i}`} rect={b} />
+              <BouncePad key={`p${i}`} rect={b} />
             ))}
             <g transform={`translate(${level.goalX - 36} ${DIG.groundY})`}>
               <Depot />
