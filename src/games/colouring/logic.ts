@@ -22,6 +22,8 @@ export interface ColouringGame {
   setTool: (tool: Tool) => void
   /** Colour a region with the currently selected colour. */
   paint: (regionId: string) => void
+  /** Start a fresh sheet for the picture at the given index. */
+  pick: (index: number) => void
   reset: () => void
 }
 
@@ -39,9 +41,9 @@ function toolFor(picture: Picture): Tool {
 }
 
 /**
- * Colouring game logic. The brush is available from the start. Difficulty
- * ramps within a session: each finished picture is replaced by the next one.
- * Resets when the screen is left.
+ * Colouring game logic. The brush is available from the start. When a picture
+ * is finished the child picks the next one from the gallery. Resets when the
+ * screen is left.
  */
 export function useColouring(): ColouringGame {
   const [round, setRound] = useState<ColouringRound>(() => buildRound(0))
@@ -56,19 +58,23 @@ export function useColouring(): ColouringGame {
     [colour],
   )
 
-  const reset = useCallback(() => {
-    const next = buildRound(round.id + 1)
+  const pick = useCallback((index: number) => {
+    const next = buildRound(index)
     setRound(next)
     setFills({})
     setTool(toolFor(next.picture))
-  }, [round.id])
+  }, [])
+
+  const reset = useCallback(() => {
+    pick(round.id + 1)
+  }, [pick, round.id])
 
   const isComplete =
     round.picture.regions.length > 0 &&
     round.picture.regions.every((region) => fills[region.id] !== undefined)
 
   return useMemo(
-    () => ({ round, fills, colour, tool, isComplete, setColour, setTool, paint, reset }),
-    [round, fills, colour, tool, isComplete, paint, reset],
+    () => ({ round, fills, colour, tool, isComplete, setColour, setTool, paint, pick, reset }),
+    [round, fills, colour, tool, isComplete, paint, pick, reset],
   )
 }

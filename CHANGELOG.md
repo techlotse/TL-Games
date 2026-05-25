@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.2.3] - 2026-05-24
+
+### Changed
+
+- **Colouring** - finishing a picture now opens a gallery of all twenty
+  pictures, so the child chooses which one to colour next instead of
+  following a fixed sequence.
+
+### Fixed
+
+- **Bagger** - the "well done" screen now appears reliably and its Weiter
+  button advances to the next level; its show-timer had been cancelled on
+  every animation frame.
+
 ## [0.2.2] - 2026-05-24
 
 More to colour, calmer matching, and a kinder platformer.
@@ -216,7 +230,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/techlotse/TL-Games/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/techlotse/TL-Games/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/techlotse/TL-Games/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/techlotse/TL-Games/compare/v0.1.1...v0.2.0

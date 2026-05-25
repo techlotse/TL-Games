@@ -210,14 +210,18 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
   }, [game])
 
   // Win: record the round, then show the win scene after the victory hop.
+  // onComplete is held in a ref so the show-win timer is never cancelled by
+  // the parent re-rendering (the game loop re-renders on every frame).
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
+
   useEffect(() => {
-    if (snapshot.won && !wonRef.current) {
-      wonRef.current = true
-      onComplete()
-      const timer = setTimeout(() => setShowWin(true), 1150)
-      return () => clearTimeout(timer)
-    }
-  }, [snapshot.won, onComplete])
+    if (!snapshot.won || wonRef.current) return
+    wonRef.current = true
+    onCompleteRef.current()
+    const timer = setTimeout(() => setShowWin(true), 1150)
+    return () => clearTimeout(timer)
+  }, [snapshot.won])
 
   // Keyboard play (desktop + accessibility).
   useEffect(() => {

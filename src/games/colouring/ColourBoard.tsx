@@ -1,11 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Brush, Check, PaintBucket } from 'lucide-react'
+import { Brush, Check, House, PaintBucket } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useCalmMotion } from '@/lib/motion'
+import { useCalmMotion, calmTween } from '@/lib/motion'
 import { hapticSuccess, hapticTap } from '@/lib/platform'
-import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
-import { COLOUR_HEX, PICTURE_VIEWBOX, SHEET, SWATCHES, type Shape } from './data'
+import { RoundButton } from '@/components/toddler/RoundButton'
+import {
+  COLOUR_HEX,
+  PICTURES,
+  PICTURE_VIEWBOX,
+  SHEET,
+  SWATCHES,
+  type Picture,
+  type Shape,
+} from './data'
 import type { ColouringGame } from './logic'
 
 /** One freehand brush stroke - a colour and a polyline of points. */
@@ -111,6 +119,64 @@ function StrokeEl({ stroke }: { stroke: Stroke }) {
   )
 }
 
+/** A small outline preview of a picture, for the picker. */
+function PictureThumb({ picture }: { picture: Picture }) {
+  return (
+    <svg viewBox={PICTURE_VIEWBOX} className="h-full w-full">
+      <rect x={0} y={0} width={200} height={200} rx={12} fill={SHEET.paper} />
+      {picture.regions.map((region) =>
+        region.shapes.map((shape, i) => (
+          <ShapeEl key={`${region.id}-${i}`} shape={shape} fill={SHEET.paper} />
+        )),
+      )}
+      {picture.decor.map((shape, i) => (
+        <ShapeEl key={`d-${i}`} shape={shape} fill={SHEET.ink} decor />
+      ))}
+    </svg>
+  )
+}
+
+/** The gallery shown when a picture is finished - pick the next one. */
+function PicturePicker({
+  onPick,
+  onHome,
+}: {
+  onPick: (index: number) => void
+  onHome: () => void
+}) {
+  return (
+    <motion.div
+      className="absolute inset-0 z-40 flex flex-col bg-background/95"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={calmTween}
+    >
+      <div className="safe-x flex items-center px-4 pt-3">
+        <RoundButton label="Zuhause" onPress={onHome} tone="surface" size="md">
+          <House size={28} strokeWidth={2.4} aria-hidden />
+        </RoundButton>
+      </div>
+      <div className="safe-x grid min-h-0 flex-1 grid-cols-3 content-start gap-3 overflow-y-auto px-4 py-3">
+        {PICTURES.map((picture, index) => (
+          <button
+            key={picture.id}
+            type="button"
+            aria-label={`Bild ${index + 1}`}
+            onClick={() => {
+              hapticTap()
+              onPick(index)
+            }}
+            className="aspect-square overflow-hidden rounded-[1.3rem] bg-surface p-2 shadow-soft outline-none transition-transform active:scale-95"
+          >
+            <PictureThumb picture={picture} />
+          </button>
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
 export interface ColourBoardProps {
   game: ColouringGame
   onHome: () => void
@@ -119,10 +185,10 @@ export interface ColourBoardProps {
 
 /**
  * The colouring surface. Pick a colour, then colour the picture. The fill
- * tool fills a whole region with one tap; the brush is true freehand and
- * its strokes always stay - painting never rubs out earlier strokes. A fill
- * picture finishes on its own once every region has a colour; otherwise the
- * child taps the big check button to say the picture is done.
+ * tool fills a whole region with one tap; the brush is true freehand and its
+ * strokes always stay. A fill picture finishes on its own once every region
+ * has a colour; otherwise the child taps the big check button. When a picture
+ * is done, a gallery opens to choose the next one.
  */
 export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
   const { round, fills, colour, tool, isComplete } = game
@@ -136,7 +202,7 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
   const [strokes, setStrokes] = useState<Stroke[]>([])
   const [doneTapped, setDoneTapped] = useState(false)
 
-  // Fresh sheet each level.
+  // Fresh sheet each picture.
   useEffect(() => {
     setStrokes([])
     setDoneTapped(false)
@@ -348,7 +414,9 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
       </div>
 
       <AnimatePresence>
-        {complete && <CompletionOverlay key="complete" onAgain={game.reset} onHome={onHome} />}
+        {complete && (
+          <PicturePicker key="picker" onPick={(index) => game.pick(index)} onHome={onHome} />
+        )}
       </AnimatePresence>
     </div>
   )
