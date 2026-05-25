@@ -246,22 +246,182 @@ const DIGGER: Picture = {
   ],
 }
 
-/** Ten pictures, ordered so the region count rises gently with the level. */
+/** A blank sheet - free painting, no outline. */
+const BLANK: Picture = { id: 'blank', decor: [], regions: [] }
+
+const CAT: Picture = {
+  id: 'cat',
+  decor: [
+    { kind: 'circle', cx: 84, cy: 80, r: 5 },
+    { kind: 'circle', cx: 116, cy: 80, r: 5 },
+    { kind: 'path', d: 'M93 92 L107 92 L100 100 Z' },
+  ],
+  regions: [
+    { id: 'tail', shapes: [{ kind: 'path', d: 'M142 154 Q182 150 176 108 Q168 132 148 136 Q160 152 142 154 Z' }] },
+    { id: 'body', shapes: [{ kind: 'ellipse', cx: 100, cy: 142, rx: 48, ry: 36 }] },
+    { id: 'head', shapes: [{ kind: 'circle', cx: 100, cy: 82, r: 42 }] },
+    {
+      id: 'ears',
+      shapes: [
+        { kind: 'path', d: 'M70 52 L58 18 L96 44 Z' },
+        { kind: 'path', d: 'M130 52 L142 18 L104 44 Z' },
+      ],
+    },
+  ],
+}
+
+const ROCKET: Picture = {
+  id: 'rocket',
+  decor: [],
+  regions: [
+    { id: 'flame', shapes: [{ kind: 'path', d: 'M76 132 Q86 178 100 150 Q114 178 124 132 Z' }] },
+    {
+      id: 'fins',
+      shapes: [
+        { kind: 'path', d: 'M70 110 L46 154 L70 148 Z' },
+        { kind: 'path', d: 'M130 110 L154 154 L130 148 Z' },
+      ],
+    },
+    { id: 'body', shapes: [{ kind: 'path', d: 'M100 22 Q132 64 130 134 L70 134 Q68 64 100 22 Z' }] },
+    { id: 'window', shapes: [{ kind: 'circle', cx: 100, cy: 80, r: 19 }] },
+  ],
+}
+
+const BUTTERFLY: Picture = {
+  id: 'butterfly',
+  decor: [],
+  regions: [
+    {
+      id: 'leftWing',
+      shapes: [
+        { kind: 'ellipse', cx: 66, cy: 80, rx: 32, ry: 30 },
+        { kind: 'ellipse', cx: 60, cy: 134, rx: 25, ry: 26 },
+      ],
+    },
+    {
+      id: 'rightWing',
+      shapes: [
+        { kind: 'ellipse', cx: 134, cy: 80, rx: 32, ry: 30 },
+        { kind: 'ellipse', cx: 140, cy: 134, rx: 25, ry: 26 },
+      ],
+    },
+    {
+      id: 'body',
+      shapes: [
+        { kind: 'ellipse', cx: 100, cy: 108, rx: 11, ry: 50 },
+        { kind: 'circle', cx: 100, cy: 52, r: 9 },
+      ],
+    },
+  ],
+}
+
+const BALLOON: Picture = {
+  id: 'balloon',
+  decor: [
+    { kind: 'rect', x: 78, y: 150, w: 3, h: 16 },
+    { kind: 'rect', x: 119, y: 150, w: 3, h: 16 },
+  ],
+  regions: [
+    { id: 'envelope', shapes: [{ kind: 'path', d: 'M100 28 Q152 34 152 100 Q152 132 100 152 Q48 132 48 100 Q48 34 100 28 Z' }] },
+    { id: 'stripe', shapes: [{ kind: 'path', d: 'M88 30 Q80 92 90 150 Q100 152 110 150 Q120 92 112 30 Q100 28 88 30 Z' }] },
+    { id: 'basket', shapes: [{ kind: 'rect', x: 82, y: 162, w: 36, h: 26, rx: 4 }] },
+  ],
+}
+
+const TRAIN: Picture = {
+  id: 'train',
+  decor: [],
+  regions: [
+    { id: 'carriage', shapes: [{ kind: 'rect', x: 18, y: 112, w: 64, h: 44, rx: 8 }] },
+    { id: 'body', shapes: [{ kind: 'rect', x: 88, y: 96, w: 92, h: 60, rx: 10 }] },
+    { id: 'funnel', shapes: [{ kind: 'rect', x: 100, y: 56, w: 22, h: 42, rx: 5 }] },
+    { id: 'cabin', shapes: [{ kind: 'rect', x: 140, y: 60, w: 40, h: 40, rx: 8 }] },
+    {
+      id: 'wheels',
+      shapes: [
+        { kind: 'circle', cx: 40, cy: 162, r: 14 },
+        { kind: 'circle', cx: 112, cy: 166, r: 16 },
+        { kind: 'circle', cx: 160, cy: 166, r: 16 },
+      ],
+    },
+  ],
+}
+
+const ICECREAM: Picture = {
+  id: 'icecream',
+  decor: [],
+  regions: [
+    { id: 'cone', shapes: [{ kind: 'path', d: 'M70 112 L130 112 L100 188 Z' }] },
+    { id: 'scoop1', shapes: [{ kind: 'circle', cx: 100, cy: 98, r: 36 }] },
+    { id: 'scoop2', shapes: [{ kind: 'circle', cx: 100, cy: 58, r: 31 }] },
+    { id: 'cherry', shapes: [{ kind: 'circle', cx: 100, cy: 28, r: 13 }] },
+  ],
+}
+
+const SMILEY: Picture = {
+  id: 'smiley',
+  decor: [
+    { kind: 'circle', cx: 74, cy: 84, r: 9 },
+    { kind: 'circle', cx: 126, cy: 84, r: 9 },
+    { kind: 'path', d: 'M60 112 Q100 164 140 112 Q100 138 60 112 Z' },
+  ],
+  regions: [
+    { id: 'face', shapes: [{ kind: 'circle', cx: 100, cy: 100, r: 74 }] },
+    { id: 'cheekLeft', shapes: [{ kind: 'circle', cx: 60, cy: 120, r: 13 }] },
+    { id: 'cheekRight', shapes: [{ kind: 'circle', cx: 140, cy: 120, r: 13 }] },
+  ],
+}
+
+const HEART: Picture = {
+  id: 'heart',
+  decor: [],
+  regions: [
+    { id: 'heart', shapes: [{ kind: 'path', d: 'M100 172 C 30 120 40 44 100 84 C 160 44 170 120 100 172 Z' }] },
+    { id: 'shine', shapes: [{ kind: 'path', d: 'M70 70 Q56 96 70 116 Q84 98 80 76 Q76 68 70 70 Z' }] },
+  ],
+}
+
+const STAR: Picture = {
+  id: 'star',
+  decor: [
+    { kind: 'circle', cx: 84, cy: 92, r: 6 },
+    { kind: 'circle', cx: 116, cy: 92, r: 6 },
+    { kind: 'path', d: 'M82 108 Q100 134 118 108 Q100 122 82 108 Z' },
+  ],
+  regions: [
+    { id: 'star', shapes: [{ kind: 'path', d: 'M100 22 L123 80 L185 84 L137 122 L153 182 L100 148 L47 182 L63 122 L15 84 L77 80 Z' }] },
+  ],
+}
+
+/** Twenty pictures - a blank canvas, everyday objects and three emojis. */
 export const PICTURES: readonly Picture[] = [
   FLOWER,
+  BLANK,
   CAR,
+  BUTTERFLY,
   SUN,
+  BALLOON,
   HOUSE,
+  SMILEY,
   TRUCK,
+  CAT,
   FISH,
+  HEART,
   BUS,
+  ROCKET,
+  ICECREAM,
   BOAT,
+  STAR,
+  TRAIN,
   TRACTOR,
   DIGGER,
 ]
 
-/** From this level on, the fill / paint tool toggle appears. */
-export const PAINT_UNLOCK_LEVEL = 2
+/**
+ * From this level the fill / paint toggle appears. It is 0 - the brush is
+ * available from the very start, so the child can free-style straight away.
+ */
+export const PAINT_UNLOCK_LEVEL = 0
 
 /** The picture shown at a given session level (the last one repeats). */
 export function pictureForLevel(level: number): Picture {

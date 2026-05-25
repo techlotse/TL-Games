@@ -16,6 +16,8 @@ export interface MatchingBoardProps {
   renderTarget: (key: MatchKey, filled: boolean) => ReactNode
   /** Optional artwork for a matched target (defaults to `renderItem`). */
   renderPlaced?: (key: MatchKey) => ReactNode
+  /** Number of rounds (from the start) on which the destination tip shows. */
+  hintRounds?: number
   onHome: () => void
   onComplete?: () => void
 }
@@ -185,6 +187,7 @@ export function MatchingBoard({
   renderItem,
   renderTarget,
   renderPlaced,
+  hintRounds = 2,
   onHome,
   onComplete,
 }: MatchingBoardProps) {
@@ -196,9 +199,9 @@ export function MatchingBoard({
 
   const renderFilled = renderPlaced ?? renderItem
 
-  // Targets and pieces lay out in a grid that wraps - so more of them grow
-  // the layout both down and across, never just shrinking a single row.
-  const MAX_COLS = 4
+  // Targets and pieces lay out in a grid that wraps - never more than three
+  // across - so more of them grow the layout down as well as across.
+  const MAX_COLS = 3
   const targetCols = Math.min(round.targetOrder.length, MAX_COLS)
   const itemCols = Math.min(round.items.length, MAX_COLS)
 
@@ -291,7 +294,7 @@ export function MatchingBoard({
               <TargetSlot
                 slotKey={key}
                 filled={game.isPlaced(key)}
-                glowing={round.id < 2 && activeKey === key}
+                glowing={round.id < hintRounds && activeKey === key}
                 shakeSeq={shake?.key === key ? shake.seq : 0}
                 renderTarget={renderTarget}
                 renderFilled={renderFilled}

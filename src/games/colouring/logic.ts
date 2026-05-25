@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { PAINT_UNLOCK_LEVEL, pictureForLevel, type ColourId, type Picture } from './data'
 
-/** Fill = tap a whole region solid. Paint = sweep a finger to paint it in. */
+/** Fill = tap a whole region solid. Paint = sweep a finger to free-paint. */
 export type Tool = 'fill' | 'paint'
 
 export interface ColouringRound {
@@ -33,17 +33,21 @@ function buildRound(id: number): ColouringRound {
   }
 }
 
+/** A blank canvas opens with the brush; an outline picture opens with fill. */
+function toolFor(picture: Picture): Tool {
+  return picture.regions.length === 0 ? 'paint' : 'fill'
+}
+
 /**
- * Colouring game logic. Difficulty ramps within a session: each finished
- * picture is replaced by one with more regions, and from level 2 the brush
- * (free finger-painting) is unlocked alongside tap-to-fill. Resets when the
- * screen is left.
+ * Colouring game logic. The brush is available from the start. Difficulty
+ * ramps within a session: each finished picture is replaced by the next one.
+ * Resets when the screen is left.
  */
 export function useColouring(): ColouringGame {
   const [round, setRound] = useState<ColouringRound>(() => buildRound(0))
   const [fills, setFills] = useState<Record<string, ColourId>>({})
   const [colour, setColour] = useState<ColourId>('red')
-  const [tool, setTool] = useState<Tool>('fill')
+  const [tool, setTool] = useState<Tool>(() => toolFor(pictureForLevel(0)))
 
   const paint = useCallback(
     (regionId: string) => {
@@ -53,10 +57,11 @@ export function useColouring(): ColouringGame {
   )
 
   const reset = useCallback(() => {
-    setRound((prev) => buildRound(prev.id + 1))
+    const next = buildRound(round.id + 1)
+    setRound(next)
     setFills({})
-    setTool('fill')
-  }, [])
+    setTool(toolFor(next.picture))
+  }, [round.id])
 
   const isComplete =
     round.picture.regions.length > 0 &&

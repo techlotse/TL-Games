@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.2.2] - 2026-05-24
+
+More to colour, calmer matching, and a kinder platformer.
+
+### Added
+
+- **Colouring** now has twenty pictures - including three emojis and a blank
+  canvas for free painting. The brush is available from the very first
+  picture, so a child can free-style straight away.
+
+### Changed
+
+- **Flower Garden** lays its pots at most three across, and shows the
+  destination tip only on the first level.
+- **Bagger** - the first three levels have no holes at all; on later levels a
+  fall now carries the excavator across to the far side of the gap, so play
+  always moves forward.
+
+### Fixed
+
+- **Colouring** - freehand brush strokes now always stay; painting a lot no
+  longer rubs out strokes painted earlier.
+
 ## [0.2.1] - 2026-05-24
 
 A polish pass for Bagger, plus two fixes.
@@ -193,7 +216,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/techlotse/TL-Games/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/techlotse/TL-Games/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/techlotse/TL-Games/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/techlotse/TL-Games/compare/v0.1.0...v0.1.1

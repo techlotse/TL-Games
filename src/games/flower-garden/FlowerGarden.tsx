@@ -29,6 +29,7 @@ export function FlowerGarden() {
     <GameScreen tone="garden">
       <MatchingBoard
         game={game}
+        hintRounds={1}
         onHome={() => go('home')}
         onComplete={() => recordRound('garden')}
         renderItem={(key) => <FlowerArt id={key} />}

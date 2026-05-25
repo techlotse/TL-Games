@@ -8,11 +8,11 @@ import { CompletionOverlay } from '@/components/toddler/CompletionOverlay'
 import { COLOUR_HEX, PICTURE_VIEWBOX, SHEET, SWATCHES, type Shape } from './data'
 import type { ColouringGame } from './logic'
 
-interface Dab {
+/** One freehand brush stroke - a colour and a polyline of points. */
+interface Stroke {
   id: number
-  x: number
-  y: number
   c: string
+  pts: number[]
 }
 
 /** A single picture shape, drawn as the matching SVG element. */
@@ -89,6 +89,28 @@ function ShapeEl({
   }
 }
 
+/** One freehand stroke as an SVG element. */
+function StrokeEl({ stroke }: { stroke: Stroke }) {
+  const { pts, c } = stroke
+  if (pts.length <= 2) {
+    return <circle cx={pts[0]} cy={pts[1]} r={9} fill={c} />
+  }
+  let d = ''
+  for (let i = 0; i < pts.length; i += 2) {
+    d += `${i === 0 ? 'M' : 'L'}${pts[i]} ${pts[i + 1]} `
+  }
+  return (
+    <path
+      d={d}
+      fill="none"
+      stroke={c}
+      strokeWidth={17}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  )
+}
+
 export interface ColourBoardProps {
   game: ColouringGame
   onHome: () => void
@@ -97,28 +119,30 @@ export interface ColourBoardProps {
 
 /**
  * The colouring surface. Pick a colour, then colour the picture. The fill
- * tool fills a whole region with one tap; the brush is true freehand. A fill
+ * tool fills a whole region with one tap; the brush is true freehand and
+ * its strokes always stay - painting never rubs out earlier strokes. A fill
  * picture finishes on its own once every region has a colour; otherwise the
- * child taps the big check button to say the picture is done. Nothing is
- * ever "wrong".
+ * child taps the big check button to say the picture is done.
  */
 export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
   const { round, fills, colour, tool, isComplete } = game
   const calm = useCalmMotion()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const paintingRef = useRef(false)
-  const lastDabRef = useRef<{ x: number; y: number } | null>(null)
-  const dabIdRef = useRef(0)
+  const lastPtRef = useRef<{ x: number; y: number } | null>(null)
+  const strokeIdRef = useRef(0)
+  const currentStrokeRef = useRef<Stroke | null>(null)
   const completedRef = useRef(false)
-  const [dabs, setDabs] = useState<Dab[]>([])
+  const [strokes, setStrokes] = useState<Stroke[]>([])
   const [doneTapped, setDoneTapped] = useState(false)
 
   // Fresh sheet each level.
   useEffect(() => {
-    setDabs([])
+    setStrokes([])
     setDoneTapped(false)
     paintingRef.current = false
-    lastDabRef.current = null
+    lastPtRef.current = null
+    currentStrokeRef.current = null
     completedRef.current = false
   }, [round.id])
 
@@ -148,17 +172,6 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
     return el?.getAttribute('data-region') ?? null
   }, [])
 
-  const addDab = useCallback(
-    (x: number, y: number) => {
-      const dab: Dab = { id: dabIdRef.current++, x, y, c: COLOUR_HEX[colour] }
-      setDabs((prev) => {
-        const next = [...prev, dab]
-        return next.length > 260 ? next.slice(next.length - 260) : next
-      })
-    },
-    [colour],
-  )
-
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<SVGSVGElement>) => {
       if (tool === 'fill') {
@@ -169,17 +182,23 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
         }
         return
       }
-      // Brush: start a freehand stroke.
+      // Brush: begin a freehand stroke.
       paintingRef.current = true
       svgRef.current?.setPointerCapture(event.pointerId)
       const point = toSvg(event.clientX, event.clientY)
       if (point) {
-        addDab(point.x, point.y)
-        lastDabRef.current = point
+        const stroke: Stroke = {
+          id: strokeIdRef.current++,
+          c: COLOUR_HEX[colour],
+          pts: [point.x, point.y],
+        }
+        currentStrokeRef.current = stroke
+        lastPtRef.current = point
+        setStrokes((prev) => [...prev, stroke])
       }
       hapticTap()
     },
-    [tool, game, regionAt, toSvg, addDab],
+    [tool, game, regionAt, toSvg, colour],
   )
 
   const handlePointerMove = useCallback(
@@ -187,18 +206,21 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
       if (!paintingRef.current || tool !== 'paint') return
       const point = toSvg(event.clientX, event.clientY)
       if (!point) return
-      const last = lastDabRef.current
-      if (!last || (point.x - last.x) ** 2 + (point.y - last.y) ** 2 >= 49) {
-        addDab(point.x, point.y)
-        lastDabRef.current = point
+      const cur = currentStrokeRef.current
+      const last = lastPtRef.current
+      if (cur && (!last || (point.x - last.x) ** 2 + (point.y - last.y) ** 2 >= 36)) {
+        cur.pts.push(point.x, point.y)
+        lastPtRef.current = point
+        setStrokes((prev) => [...prev])
       }
     },
-    [tool, toSvg, addDab],
+    [tool, toSvg],
   )
 
   const endStroke = useCallback((event: React.PointerEvent<SVGSVGElement>) => {
     paintingRef.current = false
-    lastDabRef.current = null
+    lastPtRef.current = null
+    currentStrokeRef.current = null
     try {
       svgRef.current?.releasePointerCapture(event.pointerId)
     } catch {
@@ -234,6 +256,8 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
               onPointerCancel={endStroke}
               onContextMenu={(event) => event.preventDefault()}
             >
+              <rect x={0} y={0} width={200} height={200} fill={SHEET.paper} />
+
               {round.picture.regions.map((region) => {
                 const filled = fills[region.id]
                 const fill = filled ? COLOUR_HEX[filled] : SHEET.paper
@@ -248,8 +272,8 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
               })}
 
               <g pointerEvents="none">
-                {dabs.map((dab) => (
-                  <circle key={dab.id} cx={dab.x} cy={dab.y} r={9} fill={dab.c} opacity={0.82} />
+                {strokes.map((stroke) => (
+                  <StrokeEl key={stroke.id} stroke={stroke} />
                 ))}
               </g>
 

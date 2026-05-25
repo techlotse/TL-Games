@@ -223,10 +223,21 @@ export function useDigGame(): DigGame {
         // ---- Safe ground for a gentle respawn ----
         if (sim.onGround) sim.lastSafe = { x: sim.px, y: sim.py }
 
-        // ---- Fell off: gently return to safe ground ----
+        // ---- Fell in a gap: carry across to the far side so play
+        // always moves forward; fall back to the last safe spot. ----
         if (sim.py > DIG.fallLine) {
-          sim.px = sim.lastSafe.x
-          sim.py = sim.lastSafe.y
+          let landX = sim.lastSafe.x
+          let landY = sim.lastSafe.y
+          let bestX = Infinity
+          for (const s of level.solids) {
+            if (s.y >= DIG.groundY - 1 && s.x + s.w > sim.px + pw && s.x < bestX) {
+              bestX = s.x
+              landX = clamp(s.x + 14, 0, level.width - pw)
+              landY = s.y - ph
+            }
+          }
+          sim.px = landX
+          sim.py = landY
           sim.vx = 0
           sim.vy = 0
           sim.onGround = true
