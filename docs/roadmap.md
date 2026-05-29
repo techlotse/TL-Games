@@ -18,6 +18,12 @@ Anything that conflicts with the list above is explicitly out of scope.
 
 ## Released
 
+### v0.3.0
+
+Every game now supports at least twenty levels of play - hand-crafted
+and procedurally generated where useful - and the home shell has a more
+refined look. In-game art polish continues in a follow-up release.
+
 ### v0.2.0
 
 A seventh game: Bagger - a gentle side-scrolling platform game where a

@@ -39,7 +39,7 @@ export const FIND = {
   rows: 3,
 } as const
 
-/** Number of items to scatter at a given session level. */
+/** Number of items to scatter at a given session level (rises every 2). */
 export function countForLevel(level: number): number {
-  return Math.min(FIND.startCount + level, FIND.maxCount)
+  return Math.min(FIND.startCount + Math.floor(level / 2), FIND.maxCount)
 }

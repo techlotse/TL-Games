@@ -461,7 +461,7 @@ export const VEHICLES: readonly Vehicle[] = [
   EXCAVATOR,
 ]
 
-/** The vehicle built at a given session level (the last one repeats). */
+/** The vehicle built at a given session level - cycles after the 10th. */
 export function vehicleForLevel(level: number): Vehicle {
-  return VEHICLES[Math.min(level, VEHICLES.length - 1)]
+  return VEHICLES[level % VEHICLES.length]
 }

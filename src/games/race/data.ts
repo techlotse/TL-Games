@@ -39,7 +39,7 @@ export const RACE = {
   /** The speed rises one step every 30 seconds. */
   speedIntervalMs: 30_000,
   /** Each completed run starts a little faster than the last. */
-  runSpeedStep: 4,
+  runSpeedStep: 1.5,
 
   /** A new item appears on this cadence. */
   spawnGapMs: 1_400,

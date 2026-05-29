@@ -15,5 +15,6 @@ export function useShapeSorting(): MatchingGame {
     decoyFrom: 1,
     maxDecoys: 6,
     varySize: true,
+    rampStride: 2,
   })
 }

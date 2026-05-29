@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { clamp } from '@/lib/utils'
 import { hapticTap } from '@/lib/platform'
-import { DIG, LEVELS, levelForIndex, type DigLevel, type Rect } from './data'
+import { DIG, TOTAL_LEVELS, levelForIndex, type DigLevel, type Rect } from './data'
 
 export interface Sparkle {
   id: number
@@ -310,7 +310,7 @@ export function useDigGame(): DigGame {
   }, [])
 
   const reset = useCallback(() => {
-    levelIndexRef.current = Math.min(levelIndexRef.current + 1, LEVELS.length - 1)
+    levelIndexRef.current = Math.min(levelIndexRef.current + 1, TOTAL_LEVELS - 1)
     simRef.current = createSim(levelForIndex(levelIndexRef.current))
   }, [])
 

@@ -42,6 +42,8 @@ export interface MatchingOptions {
   maxDecoys?: number
   /** When true, tray pieces are drawn at varied sizes. */
   varySize?: boolean
+  /** Levels per ramp step - higher = slower difficulty growth (default 1). */
+  rampStride?: number
 }
 
 /** Tray-piece scales when size variation is on - mostly normal, some smaller. */
@@ -53,17 +55,19 @@ const SCALES = [0.62, 0.8, 1, 1]
  * pieces with no home and pieces of varied size. Resets when the screen is left.
  */
 export function useMatchingGame(options: MatchingOptions): MatchingGame {
-  const { keys, count, maxCount, decoyFrom, maxDecoys = 0, varySize = false } = options
+  const { keys, count, maxCount, decoyFrom, maxDecoys = 0, varySize = false, rampStride = 1 } = options
   const targetCap = Math.min(maxCount ?? count, keys.length)
   const startCount = Math.min(count, targetCap)
 
   const build = useCallback(
     (id: number): MatchRound => {
-      const targetCount = Math.min(startCount + id, targetCap)
+      const step = Math.floor(id / rampStride)
+      const targetCount = Math.min(startCount + step, targetCap)
       const targets = sampleDistinct(keys, targetCount)
       let decoyCount = 0
       if (decoyFrom != null && id >= decoyFrom) {
-        decoyCount = Math.min(maxDecoys, id - decoyFrom + 1, keys.length - targetCount)
+        const decoyStep = Math.floor((id - decoyFrom) / rampStride) + 1
+        decoyCount = Math.min(maxDecoys, decoyStep, keys.length - targetCount)
       }
       const rest = keys.filter((k) => !targets.includes(k))
       const decoys = sampleDistinct(rest, decoyCount)
@@ -73,7 +77,7 @@ export function useMatchingGame(options: MatchingOptions): MatchingGame {
       }))
       return { id, keys: targets, targetOrder: shuffle(targets), items }
     },
-    [keys, startCount, targetCap, decoyFrom, maxDecoys, varySize],
+    [keys, startCount, targetCap, decoyFrom, maxDecoys, varySize, rampStride],
   )
 
   const [round, setRound] = useState<MatchRound>(() => build(0))

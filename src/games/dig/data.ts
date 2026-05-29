@@ -302,7 +302,86 @@ export const LEVELS: readonly DigLevel[] = [
   LEVEL_6,
 ]
 
-/** The level played at a given session level (the last one repeats). */
+/** Total session levels - the first six are hand-built, the rest generated. */
+export const TOTAL_LEVELS = 20
+
+/* ------------------------- Procedural generator -------------------------- */
+
+/** Seedable PRNG so each level index always produces the same level. */
+function rng(seed: number): () => number {
+  let s = (seed | 0) >>> 0
+  return () => {
+    s = (s + 0x6d2b79f5) >>> 0
+    let t = Math.imul(s ^ (s >>> 15), 1 | s)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+/**
+ * Build a level for index >= LEVELS.length. The generator scales width,
+ * platform count, bounce-pad count and gem count with the level index so
+ * later levels feel longer and more varied while staying playable.
+ */
+function generateLevel(index: number): DigLevel {
+  const spanIdx = index - LEVELS.length
+  const r = rng(index * 1031 + 17)
+  const width = 2400 + spanIdx * 150
+
+  const solids: Rect[] = []
+  let cursor = -60
+  const segCount = 5 + Math.floor(spanIdx / 2)
+  for (let i = 0; i < segCount; i += 1) {
+    const segW = 200 + Math.floor(r() * 220)
+    solids.push({ x: cursor, y: G, w: segW, h: GROUND_H })
+    cursor += segW
+    if (i < segCount - 1) cursor += 100 + Math.floor(r() * 18)
+  }
+  const lastGround = solids[solids.length - 1]
+  if (lastGround.x + lastGround.w < width + 60) {
+    lastGround.w = width + 60 - lastGround.x
+  }
+
+  const platCount = 5 + Math.floor(spanIdx / 2)
+  for (let i = 0; i < platCount; i += 1) {
+    const baseX = 200 + Math.floor(((width - 400) * (i + 1)) / (platCount + 1))
+    const px = baseX + Math.floor((r() - 0.5) * 80)
+    const py = 180 + Math.floor(r() * 130)
+    const pw = 90 + Math.floor(r() * 40)
+    solids.push({ x: px, y: py, w: pw, h: 22 })
+  }
+
+  const bounces: Rect[] = []
+  const bounceCount = 1 + Math.floor(spanIdx / 3)
+  for (let i = 0; i < bounceCount; i += 1) {
+    const bx = 600 + Math.floor(((width - 1200) * i) / Math.max(1, bounceCount - 1))
+    const by = 300 + Math.floor(r() * 18)
+    bounces.push({ x: bx, y: by, w: 78, h: 22 })
+  }
+
+  const gems: Gem[] = []
+  const gemCount = 9 + Math.floor(spanIdx * 0.6)
+  for (let i = 0; i < gemCount; i += 1) {
+    const gx =
+      180 + Math.floor(((width - 360) * i) / gemCount) + Math.floor((r() - 0.5) * 50)
+    const gy = 180 + Math.floor(r() * 180)
+    gems.push({ id: `g${i}`, x: gx, y: gy })
+  }
+
+  return {
+    id: index,
+    width,
+    startX: 70,
+    goalX: width - 80,
+    solids,
+    bounces,
+    gems,
+  }
+}
+
+/** The level played at a given session level (hand-built then generated). */
 export function levelForIndex(index: number): DigLevel {
-  return LEVELS[Math.min(index, LEVELS.length - 1)]
+  const i = Math.min(Math.max(index, 0), TOTAL_LEVELS - 1)
+  if (i < LEVELS.length) return LEVELS[i]
+  return generateLevel(i)
 }

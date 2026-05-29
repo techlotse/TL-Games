@@ -17,13 +17,13 @@ export interface GameTileProps {
 }
 
 const TONE_BG: Record<GameTone, string> = {
-  garage: 'bg-tile-garage',
-  garden: 'bg-tile-garden',
-  shapes: 'bg-tile-shapes',
-  race: 'bg-tile-race',
-  colouring: 'bg-tile-colouring',
-  find: 'bg-tile-find',
-  dig: 'bg-tile-dig',
+  garage: 'bg-gradient-to-br from-tile-garage to-tile-garage/70',
+  garden: 'bg-gradient-to-br from-tile-garden to-tile-garden/70',
+  shapes: 'bg-gradient-to-br from-tile-shapes to-tile-shapes/70',
+  race: 'bg-gradient-to-br from-tile-race to-tile-race/70',
+  colouring: 'bg-gradient-to-br from-tile-colouring to-tile-colouring/70',
+  find: 'bg-gradient-to-br from-tile-find to-tile-find/70',
+  dig: 'bg-gradient-to-br from-tile-dig to-tile-dig/70',
 }
 
 /**
@@ -44,7 +44,7 @@ export function GameTile({ label, tone, Art, progress, onPress, className }: Gam
       whileTap={calm ? undefined : { scale: 0.97 }}
       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'flex w-full flex-col items-center gap-2 rounded-[2rem] p-3 text-center shadow-soft outline-none',
+        'flex w-full flex-col items-center gap-2 rounded-[2rem] p-3 text-center shadow-lift outline-none ring-1 ring-ink/5',
         TONE_BG[tone],
         className,
       )}

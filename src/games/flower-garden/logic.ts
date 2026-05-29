@@ -14,5 +14,6 @@ export function useFlowerGarden(): MatchingGame {
     maxCount: 6,
     decoyFrom: 3,
     maxDecoys: 3,
+    rampStride: 2,
   })
 }

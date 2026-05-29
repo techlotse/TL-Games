@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.3.0] - 2026-05-24
+
+A longer journey in every game and a more refined look on the home screen.
+
+### Added
+
+- Every game now supports at least 20 levels of play:
+  - **Bagger** combines six hand-built levels with a deterministic procedural
+    generator for levels 7-20.
+  - **Werkstatt** continues to cycle its ten vehicle types past level 10.
+  - **Rennen** scales each run a little faster over twenty progressively
+    harder runs.
+  - **Blumengarten**, **Formen** and **Suchen** ramp their difficulty more
+    gradually, spanning twenty levels of play before plateauing.
+  - **Malen** already shipped twenty pictures and a free-style brush.
+
+### Changed
+
+- Home tiles now use a soft tonal gradient with a refined ring and lift
+  shadow, giving the home screen a more polished, modern look.
+- Tightened the matching-game ramp formula so target and decoy counts climb
+  every other level instead of every level.
+
+### Notes
+
+- Further visual polish across each game's in-play artwork is planned as a
+  follow-up - this release focuses on progression depth and the home shell.
+
 ## [0.2.3] - 2026-05-24
 
 ### Changed
@@ -230,7 +258,8 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/techlotse/TL-Games/compare/v0.2.3...v0.3.0
 [0.2.3]: https://github.com/techlotse/TL-Games/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/techlotse/TL-Games/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/techlotse/TL-Games/compare/v0.2.0...v0.2.1
