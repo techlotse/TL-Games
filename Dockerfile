@@ -7,7 +7,7 @@
 # cross-arch optional-dependency bug (npm/cli#4828). The dist/ output is just
 # static files, so it is architecture-independent and safe for every runtime image.
 # ----------------------------------------------------------------------------
-FROM --platform=$BUILDPLATFORM node:22-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM node:26-bookworm-slim AS build
 
 WORKDIR /app
 ENV CI=true
