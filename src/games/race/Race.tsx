@@ -76,6 +76,10 @@ export function Race() {
     return () => clearTimeout(timer)
   }, [snapshot.done, calm, carControls, recordRound])
 
+  // First-touch hint: show a pulsing ring around the car until the child
+  // touches the field for the first time.
+  const [hintDismissed, setHintDismissed] = useState(false)
+
   const steerTo = (clientX: number) => {
     const field = fieldRef.current
     if (!field) return
@@ -88,6 +92,7 @@ export function Race() {
     recordedRef.current = false
     holdingRef.current = false
     setShowOverlay(false)
+    setHintDismissed(false)
     carControls.set({ y: 0, scale: 1, rotate: 0 })
     reset()
   }
@@ -103,6 +108,7 @@ export function Race() {
           style={{ backgroundColor: '#6E7378' }}
           onPointerDown={(event) => {
             holdingRef.current = true
+            setHintDismissed(true)
             event.currentTarget.setPointerCapture(event.pointerId)
             steerTo(event.clientX)
           }}
@@ -216,6 +222,30 @@ export function Race() {
                 <SparkleArt />
               </motion.div>
             ))}
+
+          {/* First-touch hint: pulsing ring around the car */}
+          <AnimatePresence>
+            {!hintDismissed && !snapshot.done && (
+              <motion.div
+                key="hint-ring"
+                className="pointer-events-none absolute"
+                style={{
+                  left: `${snapshot.carX}%`,
+                  top: `${RACE.carY}%`,
+                  width: `${RACE.carW * 2.6}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                initial={{ opacity: 0 }}
+                animate={calm ? { opacity: 0.7 } : { opacity: [0.3, 0.85, 0.3], scale: [1, 1.12, 1] }}
+                exit={{ opacity: 0, scale: 1.3 }}
+                transition={calm ? { duration: 0 } : { duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
+                  <circle cx="50" cy="50" r="44" fill="none" stroke="#F4C84E" strokeWidth="5" strokeDasharray="8 6" />
+                </svg>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Car */}
           <div

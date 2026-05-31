@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import type { Rect } from './data'
 
 /** Bagger artwork palette (literal hex - this is game content). */
@@ -101,18 +102,24 @@ export function Excavator() {
           <circle cx={x} cy="35" r="1.8" fill={DC.hubDark} />
         </g>
       ))}
-      {/* boom + bucket */}
-      <path d="M30 16 L50 30" stroke="#C8722B" strokeWidth="6.5" strokeLinecap="round" />
-      <path
-        d="M44 26 L62 28 L59 41 Q50 46 44 38 Z"
-        fill={DC.metal}
-        stroke={DC.metalDark}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      {[47, 52, 57].map((x) => (
-        <path key={x} d={`M${x} 40 L${x + 3.4} 40 L${x + 1.7} 45 Z`} fill={DC.metalDark} />
-      ))}
+      {/* boom + bucket — gentle idle bob */}
+      <motion.g
+        animate={{ rotate: [0, 3, 0, -2, 0] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1.2 }}
+        style={{ originX: '30px', originY: '16px' }}
+      >
+        <path d="M30 16 L50 30" stroke="#C8722B" strokeWidth="6.5" strokeLinecap="round" />
+        <path
+          d="M44 26 L62 28 L59 41 Q50 46 44 38 Z"
+          fill={DC.metal}
+          stroke={DC.metalDark}
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        {[47, 52, 57].map((x) => (
+          <path key={x} d={`M${x} 40 L${x + 3.4} 40 L${x + 1.7} 45 Z`} fill={DC.metalDark} />
+        ))}
+      </motion.g>
       {/* body */}
       <rect x="1" y="13" width="33" height="19" rx="6.5" fill="url(#dg-body)" />
       <rect x="4" y="15.5" width="22" height="5" rx="2.5" fill={DC.bodyHi} opacity="0.7" />
@@ -154,8 +161,15 @@ export function DustPuff() {
 
 /** A grassy earth platform / piece of ground, drawn at its world rect. */
 export function PlatformRect({ rect: r }: { rect: Rect }) {
-  const blades: number[] = []
-  for (let x = r.x + 14; x < r.x + r.w - 10; x += 30) blades.push(x)
+  // Varied blade spacing: alternate 18px and 26px gaps for a natural look
+  const blades: { x: number; lean: number; h: number }[] = []
+  let bx = r.x + 10
+  let toggle = false
+  while (bx < r.x + r.w - 8) {
+    blades.push({ x: bx, lean: toggle ? 3 : -3, h: toggle ? 9 : 11 })
+    bx += toggle ? 18 : 26
+    toggle = !toggle
+  }
   return (
     <g>
       <rect x={r.x} y={r.y + 7} width={r.w} height={r.h - 7} rx="9" fill="url(#dg-dirt)" />
@@ -164,12 +178,10 @@ export function PlatformRect({ rect: r }: { rect: Rect }) {
       <circle cx={r.x + r.w * 0.72} cy={r.y + r.h * 0.7} r="2.6" fill={DC.pebble} />
       <rect x={r.x} y={r.y} width={r.w} height="16" rx="8" fill="url(#dg-grass)" />
       <rect x={r.x} y={r.y + 10} width={r.w} height="6" fill="#669F4F" />
-      {blades.map((x, i) => (
+      {blades.map(({ x, lean, h }, i) => (
         <path
-          key={x}
-          d={`M${x} ${r.y + 2} q ${i % 2 ? 3 : -3} -7 ${i % 2 ? 1 : -1} -10 q ${
-            i % 2 ? -2 : 2
-          } 5 ${i % 2 ? -3 : 3} 10 Z`}
+          key={i}
+          d={`M${x} ${r.y + 2} q ${lean} -${h} ${lean > 0 ? 1 : -1} -${h + 2} q ${-lean * 0.7} ${h * 0.5} ${lean > 0 ? -3 : 3} ${h + 2} Z`}
           fill={DC.grassBlade}
         />
       ))}

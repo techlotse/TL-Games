@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, ChevronUp, House, Play } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { ChevronRight, House, Play } from 'lucide-react'
 import { useCalmMotion, calmTween, settleSpring } from '@/lib/motion'
 import { RoundButton } from '@/components/toddler/RoundButton'
 import { DIG, levelForIndex } from './data'
@@ -24,44 +23,7 @@ import {
   Tree,
 } from './art'
 
-const SKY = 'linear-gradient(180deg,#9FD3EA 0%,#BFE6E2 68%,#D2EFD9 100%)'
-
-/* ------------------------------ Control pad ------------------------------ */
-
-function CtrlButton({
-  label,
-  big,
-  onDown,
-  onUp,
-  children,
-}: {
-  label: string
-  big?: boolean
-  onDown: () => void
-  onUp: () => void
-  children: ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onPointerDown={(event) => {
-        event.currentTarget.setPointerCapture(event.pointerId)
-        onDown()
-      }}
-      onPointerUp={onUp}
-      onPointerCancel={onUp}
-      onContextMenu={(event) => event.preventDefault()}
-      className={cn(
-        'pointer-events-auto flex touch-none items-center justify-center rounded-full',
-        'bg-surface/80 text-ink shadow-lift outline-none transition-transform active:scale-95',
-        big ? 'h-[5.4rem] w-[5.4rem]' : 'h-[4.6rem] w-[4.6rem]',
-      )}
-    >
-      {children}
-    </button>
-  )
-}
+const SKY = 'linear-gradient(180deg,#5BAED6 0%,#8ECFE8 38%,#BFE6E2 72%,#D2EFD9 100%)'
 
 /* ------------------------------ Intro story ------------------------------ */
 
@@ -370,42 +332,48 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
           </g>
         </svg>
 
-        {/* Touch controls */}
+        {/* Swipe zones — invisible, full-height thirds of the play area.
+            Left third = move left, right third = move right, top half = jump.
+            Multiple pointers are tracked independently so a child can hold a
+            direction and tap to jump with the same or another finger. */}
         {started && !snapshot.won && (
           <div className="pointer-events-none absolute inset-0">
-            <div className="safe-x absolute bottom-3 left-3 flex gap-2.5">
-              <CtrlButton
-                label="Nach links"
-                onDown={() => {
-                  leftRef.current = true
-                  applyMove()
-                }}
-                onUp={() => {
-                  leftRef.current = false
-                  applyMove()
-                }}
-              >
-                <ChevronLeft size={34} strokeWidth={2.8} aria-hidden />
-              </CtrlButton>
-              <CtrlButton
-                label="Nach rechts"
-                onDown={() => {
-                  rightRef.current = true
-                  applyMove()
-                }}
-                onUp={() => {
-                  rightRef.current = false
-                  applyMove()
-                }}
-              >
-                <ChevronRight size={34} strokeWidth={2.8} aria-hidden />
-              </CtrlButton>
-            </div>
-            <div className="safe-x absolute bottom-3 right-3">
-              <CtrlButton big label="Springen" onDown={() => game.jump()} onUp={() => {}}>
-                <ChevronUp size={42} strokeWidth={3} aria-hidden />
-              </CtrlButton>
-            </div>
+            {/* Left zone */}
+            <div
+              aria-label="Nach links"
+              className="pointer-events-auto absolute bottom-0 left-0 top-0 w-1/3 touch-none"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId)
+                leftRef.current = true
+                applyMove()
+              }}
+              onPointerUp={() => { leftRef.current = false; applyMove() }}
+              onPointerCancel={() => { leftRef.current = false; applyMove() }}
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            {/* Right zone */}
+            <div
+              aria-label="Nach rechts"
+              className="pointer-events-auto absolute bottom-0 right-0 top-0 w-1/3 touch-none"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId)
+                rightRef.current = true
+                applyMove()
+              }}
+              onPointerUp={() => { rightRef.current = false; applyMove() }}
+              onPointerCancel={() => { rightRef.current = false; applyMove() }}
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            {/* Jump zone — top half of the screen, full width */}
+            <div
+              aria-label="Springen"
+              className="pointer-events-auto absolute left-0 right-0 top-0 h-1/2 touch-none"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId)
+                game.jump()
+              }}
+              onContextMenu={(e) => e.preventDefault()}
+            />
           </div>
         )}
       </div>

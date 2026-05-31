@@ -48,14 +48,41 @@ export function PartArt({ part }: { part: Part }) {
       role="img"
       aria-label="Fahrzeugteil"
     >
-      <PartShapes part={part} />
+      <defs>
+        <filter id="part-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#3A2A18" floodOpacity="0.28" />
+        </filter>
+      </defs>
+      <g filter="url(#part-shadow)">
+        <PartShapes part={part} />
+      </g>
     </svg>
   )
 }
 
 /**
- * The whole vehicle as one coherent drawing. Each part is faint until it has
- * been placed, then fades in to full colour - so the parts always line up.
+ * A ghost outline for an unplaced part — dashed stroke in the part's first
+ * shape colour so the child can see exactly where each piece belongs.
+ */
+function GhostShapeEl({ shape }: { shape: DrawShape }) {
+  const stroke = shape.fill
+  const common = { fill: 'none', stroke, strokeWidth: 2.5, strokeDasharray: '5 4', opacity: 0.55 }
+  switch (shape.t) {
+    case 'rect':
+      return <rect x={shape.x} y={shape.y} width={shape.w} height={shape.h} rx={shape.rx} {...common} />
+    case 'circle':
+      return <circle cx={shape.cx} cy={shape.cy} r={shape.r} {...common} />
+    case 'path':
+      return <path d={shape.d} {...common} />
+    case 'line':
+      return null
+  }
+}
+
+/**
+ * The whole vehicle as one coherent drawing. Unplaced parts show as a dashed
+ * ghost outline so the child can see exactly where each piece belongs; placed
+ * parts fade in to full colour.
  */
 export function VehicleScene({
   vehicle,
@@ -73,16 +100,24 @@ export function VehicleScene({
       aria-label={vehicle.label}
     >
       <ellipse cx={VEHICLE_VIEW.w / 2} cy={203} rx={134} ry={13} fill="#000000" opacity={0.07} />
-      {vehicle.parts.map((part) => (
-        <motion.g
-          key={part.id}
-          initial={false}
-          animate={{ opacity: placed.has(part.id) ? 1 : 0.16 }}
-          transition={calm ? { duration: 0 } : calmTween}
-        >
-          <PartShapes part={part} />
-        </motion.g>
-      ))}
+      {vehicle.parts.map((part) =>
+        placed.has(part.id) ? (
+          <motion.g
+            key={part.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={calm ? { duration: 0 } : calmTween}
+          >
+            <PartShapes part={part} />
+          </motion.g>
+        ) : (
+          <g key={part.id}>
+            {part.shapes.map((shape, i) => (
+              <GhostShapeEl key={i} shape={shape} />
+            ))}
+          </g>
+        ),
+      )}
     </svg>
   )
 }
