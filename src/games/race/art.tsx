@@ -40,15 +40,38 @@ export function CarArt({ smile = 0 }: { smile?: number }) {
   const mouthDip = 4 + s * 15
   return (
     <svg viewBox="0 0 84 120" className="block h-auto w-full" role="img" aria-label="Auto">
+      <defs>
+        <linearGradient id="car-body-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#C24C3B" />
+          <stop offset="0.35" stopColor="#E8705E" />
+          <stop offset="1" stopColor="#C24C3B" />
+        </linearGradient>
+        <linearGradient id="car-dark-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#B03C2C" />
+          <stop offset="1" stopColor="#8C2E20" />
+        </linearGradient>
+      </defs>
+      {/* Tyres with hub detail */}
       <rect x="0" y="24" width="14" height="26" rx="6" fill={C.tyre} />
       <rect x="70" y="24" width="14" height="26" rx="6" fill={C.tyre} />
       <rect x="0" y="72" width="14" height="26" rx="6" fill={C.tyre} />
       <rect x="70" y="72" width="14" height="26" rx="6" fill={C.tyre} />
-      <rect x="10" y="4" width="64" height="112" rx="26" fill={C.carBody} />
-      <rect x="16" y="64" width="52" height="42" rx="17" fill={C.carDark} />
+      <circle cx="7" cy="37" r="3.5" fill="#5A5450" />
+      <circle cx="77" cy="37" r="3.5" fill="#5A5450" />
+      <circle cx="7" cy="85" r="3.5" fill="#5A5450" />
+      <circle cx="77" cy="85" r="3.5" fill="#5A5450" />
+      {/* Body with gradient */}
+      <rect x="10" y="4" width="64" height="112" rx="26" fill="url(#car-body-grad)" />
+      {/* Highlight stripe */}
+      <rect x="22" y="8" width="18" height="60" rx="9" fill="#FFFFFF" opacity="0.12" />
+      {/* Rear section */}
+      <rect x="16" y="64" width="52" height="42" rx="17" fill="url(#car-dark-grad)" />
       <path d="M22 92 Q42 100 62 92 L59 103 Q42 108 25 103 Z" fill={C.glass} />
+      {/* Headlights */}
       <circle cx="22" cy="14" r="6" fill={C.light} />
       <circle cx="62" cy="14" r="6" fill={C.light} />
+      <circle cx="22" cy="14" r="3.5" fill="#FFFDE0" />
+      <circle cx="62" cy="14" r="3.5" fill="#FFFDE0" />
       {/* Friendly face on the bonnet */}
       <circle cx="24" cy="50" r="4.4" fill={C.cheek} opacity={s} />
       <circle cx="60" cy="50" r="4.4" fill={C.cheek} opacity={s} />
@@ -72,8 +95,14 @@ export function CarArt({ smile = 0 }: { smile?: number }) {
 function Cone() {
   return (
     <g>
+      {/* Shadow */}
+      <ellipse cx="50" cy="88" rx="28" ry="6" fill="#000" opacity="0.12" />
       <rect x="22" y="74" width="56" height="16" rx="6" fill={C.coneBase} />
+      {/* Base highlight */}
+      <rect x="26" y="76" width="48" height="5" rx="3" fill="#D98040" opacity="0.5" />
       <path d="M50 12 L75 78 L25 78 Z" fill={C.cone} />
+      {/* Highlight on cone face */}
+      <path d="M50 18 L38 72 L50 72 Z" fill="#FFFFFF" opacity="0.14" />
       <path d="M39 42 L61 42 L65 56 L35 56 Z" fill={C.coneStripe} />
     </g>
   )
@@ -82,11 +111,15 @@ function Cone() {
 function Bush() {
   return (
     <g>
+      {/* Shadow */}
+      <ellipse cx="50" cy="84" rx="34" ry="7" fill="#000" opacity="0.10" />
       <circle cx="34" cy="62" r="24" fill={C.bushDark} />
       <circle cx="66" cy="62" r="24" fill={C.bushDark} />
       <circle cx="50" cy="44" r="26" fill={C.bush} />
       <circle cx="40" cy="58" r="20" fill={C.bush} />
       <circle cx="62" cy="58" r="20" fill={C.bush} />
+      {/* Highlight */}
+      <circle cx="42" cy="38" r="10" fill="#FFFFFF" opacity="0.14" />
     </g>
   )
 }
@@ -94,8 +127,12 @@ function Bush() {
 function Rock() {
   return (
     <g>
+      {/* Shadow */}
+      <ellipse cx="52" cy="80" rx="30" ry="7" fill="#000" opacity="0.12" />
       <ellipse cx="42" cy="60" rx="32" ry="26" fill={C.rockDark} />
       <ellipse cx="62" cy="56" rx="27" ry="23" fill={C.rock} />
+      {/* Highlight */}
+      <ellipse cx="56" cy="46" rx="10" ry="7" fill="#FFFFFF" opacity="0.22" />
     </g>
   )
 }
@@ -105,6 +142,9 @@ function Puddle() {
     <g>
       <ellipse cx="50" cy="56" rx="42" ry="26" fill={C.puddle} />
       <ellipse cx="40" cy="48" rx="16" ry="8" fill={C.puddleHi} />
+      {/* Ripple rings */}
+      <ellipse cx="50" cy="56" rx="42" ry="26" fill="none" stroke={C.puddleHi} strokeWidth="2" opacity="0.4" />
+      <ellipse cx="50" cy="56" rx="28" ry="16" fill="none" stroke={C.puddleHi} strokeWidth="1.5" opacity="0.3" />
     </g>
   )
 }
@@ -130,18 +170,37 @@ export function ObstacleArt({ kind }: { kind: ObstacleKind }) {
 
 function Star() {
   return (
-    <path
-      d="M50 16 L58.2 38.7 L82.3 39.5 L63.3 54.3 L70 77.5 L50 64 L30 77.5 L36.7 54.3 L17.7 39.5 L41.8 38.7 Z"
-      fill={C.star}
-      stroke={C.starEdge}
-      strokeWidth="6"
-      strokeLinejoin="round"
-    />
+    <g>
+      {/* Glow */}
+      <path
+        d="M50 16 L58.2 38.7 L82.3 39.5 L63.3 54.3 L70 77.5 L50 64 L30 77.5 L36.7 54.3 L17.7 39.5 L41.8 38.7 Z"
+        fill={C.starEdge}
+        opacity="0.35"
+        transform="scale(1.12) translate(-4 -4)"
+      />
+      <path
+        d="M50 16 L58.2 38.7 L82.3 39.5 L63.3 54.3 L70 77.5 L50 64 L30 77.5 L36.7 54.3 L17.7 39.5 L41.8 38.7 Z"
+        fill={C.star}
+        stroke={C.starEdge}
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      {/* Shine */}
+      <circle cx="40" cy="34" r="5" fill="#FFFFFF" opacity="0.35" />
+    </g>
   )
 }
 
 function Heart() {
-  return <path d="M50 82 C 14 58 18 26 50 42 C 82 26 86 58 50 82 Z" fill={C.heart} />
+  return (
+    <g>
+      {/* Glow */}
+      <path d="M50 82 C 14 58 18 26 50 42 C 82 26 86 58 50 82 Z" fill={C.heart} opacity="0.3" transform="scale(1.14) translate(-3.5 -3)" />
+      <path d="M50 82 C 14 58 18 26 50 42 C 82 26 86 58 50 82 Z" fill={C.heart} />
+      {/* Shine */}
+      <ellipse cx="38" cy="42" rx="7" ry="5" fill="#FFFFFF" opacity="0.35" transform="rotate(-20 38 42)" />
+    </g>
+  )
 }
 
 function Apple() {
@@ -155,8 +214,12 @@ function Apple() {
         strokeLinecap="round"
       />
       <ellipse cx="61" cy="19" rx="13" ry="8" fill={C.appleLeaf} transform="rotate(-28 61 19)" />
+      {/* Shadow */}
+      <ellipse cx="52" cy="86" rx="26" ry="7" fill="#000" opacity="0.10" />
       <circle cx="50" cy="58" r="33" fill={C.apple} />
+      {/* Highlight */}
       <ellipse cx="39" cy="47" rx="9" ry="6" fill={C.appleHi} />
+      <ellipse cx="34" cy="42" rx="5" ry="3.5" fill="#FFFFFF" opacity="0.3" />
     </g>
   )
 }

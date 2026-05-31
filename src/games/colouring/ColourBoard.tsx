@@ -36,7 +36,7 @@ function ShapeEl({
   decor?: boolean
 }) {
   const stroke = decor ? 'none' : SHEET.ink
-  const strokeWidth = decor ? 0 : 3
+  const strokeWidth = decor ? 0 : 4
   const style = decor ? { pointerEvents: 'none' as const } : undefined
   switch (shape.kind) {
     case 'rect':
@@ -407,7 +407,10 @@ export function ColourBoard({ game, onHome, onComplete }: ColourBoardProps) {
                   ? 'scale-105 ring-4 ring-focus ring-offset-2 ring-offset-background'
                   : 'scale-100',
               )}
-              style={{ backgroundColor: swatch.hex }}
+              style={{
+                backgroundColor: swatch.hex,
+                boxShadow: `inset 0 -3px 6px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.22)`,
+              }}
             />
           ))}
         </div>

@@ -29,6 +29,10 @@ export default defineConfig({
       manifest: pwaManifest,
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest}'],
+        // Icons are listed in the manifest icons array and the manifest itself
+        // is injected by vite-plugin-pwa; exclude both from the glob to avoid
+        // duplicate precache entries.
+        globIgnores: ['icons/**', '*.webmanifest'],
       },
       devOptions: {
         // Keep the dev server clean; offline behaviour is verified in builds.

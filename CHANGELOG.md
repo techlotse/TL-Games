@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-05-30
+
+### Changed
+- **Bagger controls** — replaced three on-screen buttons (left/right/jump) with
+  invisible swipe zones covering the play area: left third steers left, right
+  third steers right, top half jumps. One thumb is now sufficient; keyboard
+  controls are preserved.
+- **PWA theme-color** — `index.html` now uses a media-query pair so the browser
+  chrome matches the app background in both light (`#f3eee0`) and dark
+  (`#1d212b`) OS modes.
+- **PWA precache** — eliminated duplicate entries for icons and the web
+  manifest in the service worker precache list.
+
+### Improved (visual polish across all 7 games)
+- **Race** — richer car gradient with hub detail; obstacle/collectible art has
+  depth shadows and highlights; a pulsing dashed ring appears around the car on
+  first load to show where to touch, fading after the first pointer contact.
+- **Build Garage** — draggable parts now have a drop shadow; unplaced part
+  slots render as dashed ghost outlines instead of low-opacity solid colour.
+- **Flower Garden** — petal highlights on all bloom styles; stem highlight
+  stripe; wider leaves with highlight; pot rim highlight, body highlight, and
+  soil detail.
+- **Shape Sorting** — wooden board has subtle grain lines and a top highlight;
+  shape blocks have a drop shadow and bevel highlight edge.
+- **Colouring** — picture outline stroke increased from 3px to 4px for easier
+  region identification; colour swatches have an inner shadow to read as paint
+  blobs.
+- **Find-an-item** — scene background replaced with a warm radial gradient
+  (play-mat feel); scattered items have a drop shadow so they feel placed on a
+  surface.
+- **Bagger** — sky gradient deepened (richer blue at top, warm at horizon);
+  grass blades use varied spacing and heights for a natural look; excavator
+  bucket has a gentle idle bob animation.
+
 _Nothing yet._
 
 ## [0.3.0] - 2026-05-24

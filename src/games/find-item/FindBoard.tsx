@@ -42,7 +42,10 @@ function SceneItem({ placement, found, hint, wrongSeq, onTap }: SceneItemProps) 
       >
         <div
           className={found ? 'h-full w-full opacity-60' : 'h-full w-full'}
-          style={{ transform: `rotate(${placement.rot}deg)` }}
+          style={{
+            transform: `rotate(${placement.rot}deg)`,
+            filter: found ? 'none' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.18))',
+          }}
         >
           <ItemArt kind={placement.kind} />
         </div>
@@ -174,8 +177,14 @@ export function FindBoard({ game, onHome, onComplete }: FindBoardProps) {
         </div>
       </div>
 
-      {/* The scene to search */}
-      <div className="relative flex-1 overflow-hidden rounded-[1.6rem] bg-surface/55 shadow-soft">
+      {/* The scene to search — warm play-mat background */}
+      <div
+        className="relative flex-1 overflow-hidden rounded-[1.6rem] shadow-soft"
+        style={{
+          background:
+            'radial-gradient(ellipse at 30% 30%, #F5EDD8 0%, #EDE0C4 55%, #E4D4B0 100%)',
+        }}
+      >
         {round.items.map((item) => (
           <SceneItem
             key={`${round.id}:${item.id}`}
