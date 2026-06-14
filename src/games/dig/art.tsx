@@ -39,9 +39,25 @@ export function DigDefs() {
   return (
     <defs>
       <linearGradient id="dg-body" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#F4AC5C" />
-        <stop offset="1" stopColor="#D9762A" />
+        <stop offset="0" stopColor="#FBC279" />
+        <stop offset="0.45" stopColor="#EE9A48" />
+        <stop offset="1" stopColor="#C76F23" />
       </linearGradient>
+      <linearGradient id="dg-bolt" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#A5ABB0" />
+        <stop offset="1" stopColor="#5C6066" />
+      </linearGradient>
+      <filter id="dg-drop" x="-30%" y="-20%" width="160%" height="160%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" />
+        <feOffset dx="0" dy="1.8" result="off" />
+        <feComponentTransfer result="shadow">
+          <feFuncA type="linear" slope="0.28" />
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode in="shadow" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
       <linearGradient id="dg-cab" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#F8DA72" />
         <stop offset="1" stopColor="#E3AE3A" />
@@ -88,7 +104,7 @@ export function DigDefs() {
  */
 export function Excavator() {
   return (
-    <g>
+    <g filter="url(#dg-drop)">
       <ellipse cx="20" cy="44" rx="22" ry="3.8" fill="#000000" opacity="0.14" />
       {/* tracks */}
       <rect x="-3" y="29" width="46" height="15" rx="7.5" fill="url(#dg-track)" />
@@ -98,17 +114,35 @@ export function Excavator() {
       ))}
       {[3, 14, 26, 37].map((x) => (
         <g key={x}>
-          <circle cx={x} cy="35" r="4" fill={DC.hub} />
+          <circle cx={x} cy="35" r="4" fill="url(#dg-bolt)" />
           <circle cx={x} cy="35" r="1.8" fill={DC.hubDark} />
+          {/* tiny bolt rivet */}
+          <circle cx={x} cy="35" r="0.7" fill="#1A1816" />
         </g>
       ))}
+      {/* track bolt-row along the bottom */}
+      {[1, 7, 13, 19, 25, 31, 37].map((x) => (
+        <circle key={`b${x}`} cx={x} cy="42" r="0.9" fill="#1A1816" />
+      ))}
+      {/* hydraulic piston cylinder anchoring the boom to the body */}
+      <rect x="26" y="15" width="9" height="5" rx="2" fill="#8A9097" />
+      <rect x="26" y="15" width="9" height="1.4" rx="0.7" fill="#C0C5CA" />
       {/* boom + bucket — gentle idle bob */}
       <motion.g
         animate={{ rotate: [0, 3, 0, -2, 0] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1.2 }}
         style={{ originX: '30px', originY: '16px' }}
       >
+        {/* shadow on the boom for depth */}
+        <path d="M30.5 17.4 L50.5 31.4" stroke="#963F0F" strokeWidth="6.5" strokeLinecap="round" opacity="0.5" />
         <path d="M30 16 L50 30" stroke="#C8722B" strokeWidth="6.5" strokeLinecap="round" />
+        {/* boom highlight stripe */}
+        <path d="M30.2 14.8 L50.2 28.8" stroke="#EFAA67" strokeWidth="1.2" strokeLinecap="round" opacity="0.7" />
+        {/* hydraulic pivot ring */}
+        <circle cx="30" cy="16" r="2.2" fill="#5C6066" />
+        <circle cx="30" cy="16" r="1.1" fill="#1A1816" />
+        <circle cx="50" cy="30" r="2" fill="#5C6066" />
+        <circle cx="50" cy="30" r="1" fill="#1A1816" />
         <path
           d="M44 26 L62 28 L59 41 Q50 46 44 38 Z"
           fill={DC.metal}
@@ -116,6 +150,8 @@ export function Excavator() {
           strokeWidth="1.6"
           strokeLinejoin="round"
         />
+        {/* bucket highlight along the top edge */}
+        <path d="M44.5 27 L61 28.6" stroke="#D5DBE0" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
         {[47, 52, 57].map((x) => (
           <path key={x} d={`M${x} 40 L${x + 3.4} 40 L${x + 1.7} 45 Z`} fill={DC.metalDark} />
         ))}
@@ -130,6 +166,9 @@ export function Excavator() {
       <rect x="13" y="-1" width="20" height="17" rx="5" fill="url(#dg-cab)" />
       <rect x="16" y="2.5" width="11" height="9" rx="2.5" fill={DC.glass} />
       <path d="M16 4 L21 2.5 L19 11.5 L16 11.5 Z" fill="#FFFFFF" opacity="0.5" />
+      {/* warning beacon on top of the cab */}
+      <circle cx="11" cy="-2" r="1.6" fill="#E55E3F" />
+      <circle cx="11" cy="-2.5" r="0.8" fill="#FBE2C8" opacity="0.85" />
       {/* friendly face */}
       <circle cx="23" cy="22" r="3.3" fill="#FFFFFF" />
       <circle cx="31" cy="22" r="3.3" fill="#FFFFFF" />
@@ -178,6 +217,12 @@ export function PlatformRect({ rect: r }: { rect: Rect }) {
       <circle cx={r.x + r.w * 0.72} cy={r.y + r.h * 0.7} r="2.6" fill={DC.pebble} />
       <rect x={r.x} y={r.y} width={r.w} height="16" rx="8" fill="url(#dg-grass)" />
       <rect x={r.x} y={r.y + 10} width={r.w} height="6" fill="#669F4F" />
+      {/* soft grass highlight catching the light */}
+      <rect x={r.x + 4} y={r.y + 1.5} width={r.w - 8} height="1.6" rx="0.8" fill="#B0DE92" opacity="0.65" />
+      {/* small stones poking from the soil */}
+      <ellipse cx={r.x + r.w * 0.18} cy={r.y + r.h * 0.45} rx="2.6" ry="1.4" fill="#8A6B4C" />
+      <ellipse cx={r.x + r.w * 0.55} cy={r.y + r.h * 0.78} rx="2.2" ry="1.2" fill="#7A5F40" />
+      <ellipse cx={r.x + r.w * 0.85} cy={r.y + r.h * 0.5} rx="1.8" ry="1" fill="#8A6B4C" />
       {blades.map(({ x, lean, h }, i) => (
         <path
           key={i}

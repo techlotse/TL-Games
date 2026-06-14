@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-30
+
+A focused Bagger overhaul for 3-year-old playability and a more refined look.
+
+### Changed
+
+- **Bagger controls** simplified to one finger: holding the bottom half of
+  the play area drives the excavator forward; tapping the top half jumps. No
+  managing left/right, no reverse. Keyboard play still supports both
+  directions for desktop.
+- **Bagger levels** are now flat all the way through. All twenty levels are
+  one continuous ground strip with the gems on the path - no required
+  platform climbing, no bounce mats. Length and gem count still scale with
+  the level index for a sense of progression.
+- **Bagger visuals** pushed toward a more refined, near-realistic look:
+  three-stop body gradient on the excavator, a hydraulic piston cylinder at
+  the boom shoulder, pivot bolts on the tracks and boom joints, a boom
+  highlight stripe, a bucket highlight edge, a warning beacon on the cab,
+  an SVG drop-shadow filter that gives the whole excavator depth, a soft
+  grass top-light, and small stones scattered through the soil.
+
 ## [0.4.0] - 2026-05-30
 
 ### Changed
@@ -292,7 +313,9 @@ First public MVP - a calm, Montessori-inspired toddler game platform.
 - Strict Content-Security-Policy and hardening headers served by nginx.
 - Container runs as a non-root user with a read-only root filesystem.
 
-[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/techlotse/TL-Games/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/techlotse/TL-Games/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/techlotse/TL-Games/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/techlotse/TL-Games/compare/v0.2.3...v0.3.0
 [0.2.3]: https://github.com/techlotse/TL-Games/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/techlotse/TL-Games/compare/v0.2.1...v0.2.2

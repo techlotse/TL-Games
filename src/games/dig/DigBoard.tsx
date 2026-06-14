@@ -332,29 +332,18 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
           </g>
         </svg>
 
-        {/* Swipe zones — invisible, full-height thirds of the play area.
-            Left third = move left, right third = move right, top half = jump.
-            Multiple pointers are tracked independently so a child can hold a
-            direction and tap to jump with the same or another finger. */}
+        {/* One-finger touch controls for a 3-year-old:
+            Bottom half = hold to drive forward (the excavator only goes
+            forward). Top half = tap to jump. Multiple fingers are tracked
+            independently so a child can hold forward AND tap to jump.
+            Keyboard (Arrow keys / Space) still supports both directions for
+            desktop and accessibility. */}
         {started && !snapshot.won && (
           <div className="pointer-events-none absolute inset-0">
-            {/* Left zone */}
+            {/* Drive-forward zone — bottom half, full width */}
             <div
-              aria-label="Nach links"
-              className="pointer-events-auto absolute bottom-0 left-0 top-0 w-1/3 touch-none"
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId)
-                leftRef.current = true
-                applyMove()
-              }}
-              onPointerUp={() => { leftRef.current = false; applyMove() }}
-              onPointerCancel={() => { leftRef.current = false; applyMove() }}
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            {/* Right zone */}
-            <div
-              aria-label="Nach rechts"
-              className="pointer-events-auto absolute bottom-0 right-0 top-0 w-1/3 touch-none"
+              aria-label="Fahren"
+              className="pointer-events-auto absolute bottom-0 left-0 right-0 h-1/2 touch-none"
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId)
                 rightRef.current = true
@@ -364,7 +353,7 @@ export function DigBoard({ game, onHome, onComplete }: DigBoardProps) {
               onPointerCancel={() => { rightRef.current = false; applyMove() }}
               onContextMenu={(e) => e.preventDefault()}
             />
-            {/* Jump zone — top half of the screen, full width */}
+            {/* Jump zone — top half, full width */}
             <div
               aria-label="Springen"
               className="pointer-events-auto absolute left-0 right-0 top-0 h-1/2 touch-none"

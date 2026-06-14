@@ -84,212 +84,127 @@ const LEVEL_1: DigLevel = {
   width: 1500,
   startX: 70,
   goalX: 1380,
-  solids: [
-    { x: -60, y: G, w: 1620, h: GROUND_H },
-    { x: 560, y: 300, w: 124, h: 24 },
-    { x: 1060, y: 286, w: 132, h: 24 },
-  ],
+  solids: [{ x: -60, y: G, w: 1620, h: GROUND_H }],
   bounces: [],
   gems: [
-    { id: 'g0', x: 220, y: 344 },
-    { id: 'g1', x: 430, y: 300 },
-    { id: 'g2', x: 622, y: 262 },
-    { id: 'g3', x: 700, y: 344 },
-    { id: 'g4', x: 910, y: 304 },
-    { id: 'g5', x: 1126, y: 248 },
-    { id: 'g6', x: 1300, y: 344 },
+    { id: 'g0', x: 266, y: 340 },
+    { id: 'g1', x: 393, y: 346 },
+    { id: 'g2', x: 520, y: 345 },
+    { id: 'g3', x: 646, y: 344 },
+    { id: 'g4', x: 773, y: 343 },
+    { id: 'g5', x: 900, y: 342 },
+    { id: 'g6', x: 1026, y: 341 },
+    { id: 'g7', x: 1153, y: 340 },
   ],
 }
 
 const LEVEL_2: DigLevel = {
   id: 1,
-  width: 2050,
+  width: 1700,
   startX: 70,
-  goalX: 1920,
-  solids: [
-    { x: -60, y: G, w: 2170, h: GROUND_H },
-    { x: 560, y: 296, w: 120, h: 24 },
-    { x: 1000, y: 282, w: 120, h: 24 },
-    { x: 1232, y: 320, w: 92, h: 22 },
-    { x: 1520, y: 262, w: 134, h: 24 },
-  ],
-  bounces: [{ x: 1720, y: 310, w: 78, h: 22 }],
+  goalX: 1580,
+  solids: [{ x: -60, y: G, w: 1820, h: GROUND_H }],
+  bounces: [],
   gems: [
-    { id: 'g0', x: 210, y: 344 },
-    { id: 'g1', x: 415, y: 296 },
-    { id: 'g2', x: 620, y: 258 },
-    { id: 'g3', x: 700, y: 344 },
-    { id: 'g4', x: 845, y: 300 },
-    { id: 'g5', x: 1060, y: 244 },
-    { id: 'g6', x: 1278, y: 282 },
-    { id: 'g7', x: 1430, y: 300 },
-    { id: 'g8', x: 1587, y: 224 },
-    { id: 'g9', x: 1757, y: 250 },
+    { id: 'g0', x: 274, y: 340 },
+    { id: 'g1', x: 408, y: 346 },
+    { id: 'g2', x: 542, y: 345 },
+    { id: 'g3', x: 676, y: 344 },
+    { id: 'g4', x: 810, y: 343 },
+    { id: 'g5', x: 944, y: 342 },
+    { id: 'g6', x: 1078, y: 341 },
+    { id: 'g7', x: 1212, y: 340 },
+    { id: 'g8', x: 1346, y: 346 },
   ],
 }
 
 const LEVEL_3: DigLevel = {
   id: 2,
-  width: 2600,
+  width: 1900,
   startX: 70,
-  goalX: 2470,
-  solids: [
-    { x: -60, y: G, w: 2720, h: GROUND_H },
-    { x: 520, y: 300, w: 110, h: 22 },
-    { x: 760, y: 250, w: 110, h: 22 },
-    { x: 1110, y: 296, w: 96, h: 22 },
-    { x: 1330, y: 250, w: 110, h: 22 },
-    { x: 1500, y: 196, w: 120, h: 22 },
-    { x: 1920, y: 286, w: 96, h: 22 },
-    { x: 2180, y: 246, w: 130, h: 24 },
-  ],
-  bounces: [
-    { x: 1015, y: 312, w: 78, h: 22 },
-    { x: 1790, y: 300, w: 78, h: 22 },
-  ],
+  goalX: 1780,
+  solids: [{ x: -60, y: G, w: 2020, h: GROUND_H }],
+  bounces: [],
   gems: [
-    { id: 'g0', x: 200, y: 344 },
-    { id: 'g1', x: 380, y: 296 },
-    { id: 'g2', x: 575, y: 262 },
-    { id: 'g3', x: 705, y: 344 },
-    { id: 'g4', x: 815, y: 212 },
-    { id: 'g5', x: 980, y: 300 },
-    { id: 'g6', x: 1052, y: 196 },
-    { id: 'g7', x: 1158, y: 256 },
-    { id: 'g8', x: 1385, y: 210 },
-    { id: 'g9', x: 1560, y: 156 },
-    { id: 'g10', x: 1830, y: 196 },
-    { id: 'g11', x: 1968, y: 246 },
-    { id: 'g12', x: 2245, y: 206 },
-    { id: 'g13', x: 2380, y: 344 },
+    { id: 'g0', x: 280, y: 340 },
+    { id: 'g1', x: 420, y: 346 },
+    { id: 'g2', x: 560, y: 345 },
+    { id: 'g3', x: 700, y: 344 },
+    { id: 'g4', x: 840, y: 343 },
+    { id: 'g5', x: 980, y: 342 },
+    { id: 'g6', x: 1120, y: 341 },
+    { id: 'g7', x: 1260, y: 340 },
+    { id: 'g8', x: 1400, y: 346 },
+    { id: 'g9', x: 1540, y: 345 },
   ],
 }
 
 const LEVEL_4: DigLevel = {
   id: 3,
-  width: 2360,
+  width: 2100,
   startX: 70,
-  goalX: 2230,
-  solids: [
-    { x: -60, y: G, w: 400, h: GROUND_H },
-    { x: 445, y: G, w: 320, h: GROUND_H },
-    { x: 875, y: G, w: 300, h: GROUND_H },
-    { x: 1285, y: G, w: 330, h: GROUND_H },
-    { x: 1725, y: G, w: 635, h: GROUND_H },
-    { x: 530, y: 296, w: 108, h: 22 },
-    { x: 960, y: 262, w: 108, h: 22 },
-    { x: 1350, y: 298, w: 100, h: 22 },
-    { x: 1500, y: 240, w: 108, h: 22 },
-    { x: 1980, y: 282, w: 118, h: 24 },
-  ],
-  bounces: [
-    { x: 1080, y: 312, w: 78, h: 22 },
-    { x: 2140, y: 300, w: 78, h: 22 },
-  ],
+  goalX: 1980,
+  solids: [{ x: -60, y: G, w: 2220, h: GROUND_H }],
+  bounces: [],
   gems: [
-    { id: 'g0', x: 200, y: 344 },
-    { id: 'g1', x: 430, y: 300 },
-    { id: 'g2', x: 584, y: 258 },
-    { id: 'g3', x: 690, y: 344 },
-    { id: 'g4', x: 1014, y: 224 },
-    { id: 'g5', x: 1120, y: 264 },
-    { id: 'g6', x: 1230, y: 300 },
-    { id: 'g7', x: 1400, y: 344 },
-    { id: 'g8', x: 1554, y: 202 },
-    { id: 'g9', x: 2035, y: 244 },
-    { id: 'g10', x: 2170, y: 196 },
+    { id: 'g0', x: 285, y: 340 },
+    { id: 'g1', x: 430, y: 346 },
+    { id: 'g2', x: 575, y: 345 },
+    { id: 'g3', x: 720, y: 344 },
+    { id: 'g4', x: 865, y: 343 },
+    { id: 'g5', x: 1010, y: 342 },
+    { id: 'g6', x: 1155, y: 341 },
+    { id: 'g7', x: 1300, y: 340 },
+    { id: 'g8', x: 1445, y: 346 },
+    { id: 'g9', x: 1590, y: 345 },
+    { id: 'g10', x: 1735, y: 344 },
   ],
 }
 
 const LEVEL_5: DigLevel = {
   id: 4,
-  width: 2810,
+  width: 2300,
   startX: 70,
-  goalX: 2680,
-  solids: [
-    { x: -60, y: G, w: 360, h: GROUND_H },
-    { x: 405, y: G, w: 280, h: GROUND_H },
-    { x: 795, y: G, w: 250, h: GROUND_H },
-    { x: 1155, y: G, w: 270, h: GROUND_H },
-    { x: 1535, y: G, w: 300, h: GROUND_H },
-    { x: 1945, y: G, w: 865, h: GROUND_H },
-    { x: 480, y: 294, w: 100, h: 22 },
-    { x: 730, y: 248, w: 100, h: 22 },
-    { x: 1080, y: 290, w: 96, h: 22 },
-    { x: 1260, y: 244, w: 104, h: 22 },
-    { x: 1440, y: 194, w: 110, h: 22 },
-    { x: 1660, y: 256, w: 100, h: 22 },
-    { x: 2090, y: 280, w: 110, h: 22 },
-    { x: 2320, y: 226, w: 120, h: 24 },
-  ],
-  bounces: [
-    { x: 920, y: 308, w: 78, h: 22 },
-    { x: 2040, y: 312, w: 78, h: 22 },
-  ],
+  goalX: 2180,
+  solids: [{ x: -60, y: G, w: 2420, h: GROUND_H }],
+  bounces: [],
   gems: [
-    { id: 'g0', x: 190, y: 344 },
-    { id: 'g1', x: 420, y: 294 },
-    { id: 'g2', x: 560, y: 344 },
-    { id: 'g3', x: 762, y: 206 },
-    { id: 'g4', x: 955, y: 218 },
-    { id: 'g5', x: 1110, y: 248 },
-    { id: 'g6', x: 1310, y: 202 },
-    { id: 'g7', x: 1492, y: 150 },
-    { id: 'g8', x: 1700, y: 214 },
-    { id: 'g9', x: 1900, y: 300 },
-    { id: 'g10', x: 2075, y: 214 },
-    { id: 'g11', x: 2370, y: 182 },
-    { id: 'g12', x: 2560, y: 344 },
+    { id: 'g0', x: 289, y: 340 },
+    { id: 'g1', x: 438, y: 346 },
+    { id: 'g2', x: 587, y: 345 },
+    { id: 'g3', x: 736, y: 344 },
+    { id: 'g4', x: 886, y: 343 },
+    { id: 'g5', x: 1035, y: 342 },
+    { id: 'g6', x: 1184, y: 341 },
+    { id: 'g7', x: 1333, y: 340 },
+    { id: 'g8', x: 1483, y: 346 },
+    { id: 'g9', x: 1632, y: 345 },
+    { id: 'g10', x: 1781, y: 344 },
+    { id: 'g11', x: 1930, y: 343 },
   ],
 }
 
 const LEVEL_6: DigLevel = {
   id: 5,
-  width: 3270,
+  width: 2500,
   startX: 70,
-  goalX: 3080,
-  solids: [
-    { x: -60, y: G, w: 340, h: GROUND_H },
-    { x: 385, y: G, w: 260, h: GROUND_H },
-    { x: 755, y: G, w: 240, h: GROUND_H },
-    { x: 1105, y: G, w: 250, h: GROUND_H },
-    { x: 1465, y: G, w: 260, h: GROUND_H },
-    { x: 1835, y: G, w: 250, h: GROUND_H },
-    { x: 2195, y: G, w: 280, h: GROUND_H },
-    { x: 2585, y: G, w: 685, h: GROUND_H },
-    { x: 460, y: 298, w: 96, h: 22 },
-    { x: 690, y: 248, w: 96, h: 22 },
-    { x: 900, y: 300, w: 90, h: 22 },
-    { x: 1180, y: 262, w: 100, h: 22 },
-    { x: 1400, y: 210, w: 104, h: 22 },
-    { x: 1560, y: 158, w: 110, h: 22 },
-    { x: 1770, y: 240, w: 96, h: 22 },
-    { x: 2000, y: 286, w: 96, h: 22 },
-    { x: 2280, y: 240, w: 100, h: 22 },
-    { x: 2520, y: 200, w: 110, h: 22 },
-    { x: 2770, y: 262, w: 124, h: 24 },
-  ],
-  bounces: [
-    { x: 830, y: 312, w: 78, h: 22 },
-    { x: 1640, y: 300, w: 78, h: 22 },
-    { x: 2350, y: 312, w: 78, h: 22 },
-  ],
+  goalX: 2380,
+  solids: [{ x: -60, y: G, w: 2620, h: GROUND_H }],
+  bounces: [],
   gems: [
-    { id: 'g0', x: 180, y: 344 },
-    { id: 'g1', x: 340, y: 300 },
-    { id: 'g2', x: 504, y: 254 },
-    { id: 'g3', x: 615, y: 344 },
-    { id: 'g4', x: 736, y: 204 },
-    { id: 'g5', x: 865, y: 216 },
-    { id: 'g6', x: 1050, y: 300 },
-    { id: 'g7', x: 1228, y: 218 },
-    { id: 'g8', x: 1450, y: 166 },
-    { id: 'g9', x: 1675, y: 112 },
-    { id: 'g10', x: 1882, y: 200 },
-    { id: 'g11', x: 2046, y: 242 },
-    { id: 'g12', x: 2388, y: 216 },
-    { id: 'g13', x: 2572, y: 156 },
-    { id: 'g14', x: 2900, y: 344 },
+    { id: 'g0', x: 292, y: 340 },
+    { id: 'g1', x: 445, y: 346 },
+    { id: 'g2', x: 598, y: 345 },
+    { id: 'g3', x: 751, y: 344 },
+    { id: 'g4', x: 904, y: 343 },
+    { id: 'g5', x: 1057, y: 342 },
+    { id: 'g6', x: 1210, y: 341 },
+    { id: 'g7', x: 1362, y: 340 },
+    { id: 'g8', x: 1515, y: 346 },
+    { id: 'g9', x: 1668, y: 345 },
+    { id: 'g10', x: 1821, y: 344 },
+    { id: 'g11', x: 1974, y: 343 },
+    { id: 'g12', x: 2127, y: 342 },
   ],
 }
 
@@ -302,7 +217,7 @@ export const LEVELS: readonly DigLevel[] = [
   LEVEL_6,
 ]
 
-/** Total session levels - the first six are hand-built, the rest generated. */
+/** Total session levels - hand-crafted + procedurally generated, flat. */
 export const TOTAL_LEVELS = 20
 
 /* ------------------------- Procedural generator -------------------------- */
@@ -319,52 +234,22 @@ function rng(seed: number): () => number {
 }
 
 /**
- * Build a level for index >= LEVELS.length. The generator scales width,
- * platform count, bounce-pad count and gem count with the level index so
- * later levels feel longer and more varied while staying playable.
+ * Build a flat level for index >= LEVELS.length. Length and gem count grow
+ * with the level index; the ground is always one continuous strip and every
+ * gem is reachable by simply driving forward - no required platforming.
  */
 function generateLevel(index: number): DigLevel {
   const spanIdx = index - LEVELS.length
   const r = rng(index * 1031 + 17)
-  const width = 2400 + spanIdx * 150
+  const width = 2500 + spanIdx * 140
+  const gemCount = 14 + spanIdx
 
-  const solids: Rect[] = []
-  let cursor = -60
-  const segCount = 5 + Math.floor(spanIdx / 2)
-  for (let i = 0; i < segCount; i += 1) {
-    const segW = 200 + Math.floor(r() * 220)
-    solids.push({ x: cursor, y: G, w: segW, h: GROUND_H })
-    cursor += segW
-    if (i < segCount - 1) cursor += 100 + Math.floor(r() * 18)
-  }
-  const lastGround = solids[solids.length - 1]
-  if (lastGround.x + lastGround.w < width + 60) {
-    lastGround.w = width + 60 - lastGround.x
-  }
-
-  const platCount = 5 + Math.floor(spanIdx / 2)
-  for (let i = 0; i < platCount; i += 1) {
-    const baseX = 200 + Math.floor(((width - 400) * (i + 1)) / (platCount + 1))
-    const px = baseX + Math.floor((r() - 0.5) * 80)
-    const py = 180 + Math.floor(r() * 130)
-    const pw = 90 + Math.floor(r() * 40)
-    solids.push({ x: px, y: py, w: pw, h: 22 })
-  }
-
-  const bounces: Rect[] = []
-  const bounceCount = 1 + Math.floor(spanIdx / 3)
-  for (let i = 0; i < bounceCount; i += 1) {
-    const bx = 600 + Math.floor(((width - 1200) * i) / Math.max(1, bounceCount - 1))
-    const by = 300 + Math.floor(r() * 18)
-    bounces.push({ x: bx, y: by, w: 78, h: 22 })
-  }
-
+  const solids: Rect[] = [{ x: -60, y: G, w: width + 120, h: GROUND_H }]
   const gems: Gem[] = []
-  const gemCount = 9 + Math.floor(spanIdx * 0.6)
+  const span = width - 240
   for (let i = 0; i < gemCount; i += 1) {
-    const gx =
-      180 + Math.floor(((width - 360) * i) / gemCount) + Math.floor((r() - 0.5) * 50)
-    const gy = 180 + Math.floor(r() * 180)
+    const gx = 140 + Math.floor((span * (i + 0.5)) / gemCount + (r() - 0.5) * 50)
+    const gy = 340 + Math.floor(r() * 8)
     gems.push({ id: `g${i}`, x: gx, y: gy })
   }
 
@@ -374,7 +259,7 @@ function generateLevel(index: number): DigLevel {
     startX: 70,
     goalX: width - 80,
     solids,
-    bounces,
+    bounces: [],
     gems,
   }
 }
